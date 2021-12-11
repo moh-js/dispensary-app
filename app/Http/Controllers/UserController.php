@@ -138,6 +138,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+
         if ($user->trashed()) {
             $this->authorize('user-activate');
             $user->restore();
@@ -149,6 +150,15 @@ class UserController extends Controller
         }
 
         flash("User $action successfully");
+        return redirect()->route('users.index');
+    }
+
+    public function destroyPermanently(User $user)
+    {
+        $this->authorize('user-delete');
+        $user->delete();
+
+        flash("User removed permanently successfully");
         return redirect()->route('users.index');
     }
 

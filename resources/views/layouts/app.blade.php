@@ -46,7 +46,7 @@
 
 </head>
 
-<body>
+<body class="">
     @auth
 
     <!-- [ Pre-loader ] start -->
@@ -69,7 +69,7 @@
              [
                 'title' => 'Dashboard', 'url' => route('dashboard'), 'permission' => request()->user()->hasAnyPermission('dashboard'), 'icon' => 'feather icon-home', 'childrens' => collect(),
             ], [
-                'title' => 'Users', 'url' => '#', 'permission' => request()->user()->hasAnyPermission('user-view', 'user-add', 'user-update', 'user-delete', 'user-activate', 'user-deactivate'), 'icon' => 'feather icon-user', 'childrens' => collect([
+                'title' => 'Users', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission('user-view', 'user-add', 'user-update', 'user-delete', 'user-activate', 'user-deactivate'), 'icon' => 'feather icon-user', 'childrens' => collect([
                     [
                         'title' => 'List', 'url' => route('users.index'), 'permission' => request()->user()->hasAnyPermission('user-view')
 
@@ -78,9 +78,18 @@
                     ]
                 ]),
             ], [
-                'title' => 'Inventory', 'url' => '#', 'permission' => request()->user()->hasAnyPermission('item-view'), 'icon' => 'feather icon-layers', 'childrens' => collect($inventoryNav),
+                'title' => 'Inventory', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission('item-view'), 'icon' => 'feather icon-layers', 'childrens' => collect($inventoryNav),
             ], [
                 'title' => 'POS', 'url' => route('pos.index'), 'permission' => request()->user()->hasAnyPermission('item-view'), 'icon' => 'feather icon-shopping-cart', 'childrens' => collect(),
+            ], [
+                'title' => 'Configuration', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import']), 'icon' => 'feather icon-settings', 'childrens' => collect([
+                    [
+                        'title' => 'General', 'url' => route('general.index'), 'permission' => request()->user()->hasAnyPermission('configuration-general')
+                    ], [
+                    'title' => 'Data Import', 'url' => route('data.index'), 'permission' => request()->user()->hasAnyPermission('configuration-data-import')
+
+                    ]
+                ]),
             ]
         ]);
     @endphp
@@ -125,10 +134,11 @@
         <div class="container">
             <div class="m-header">
                 <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
-                <a href="#!" class="b-brand">
+                <a href="{{ url('/') }}" class="b-brand">
                     <!-- ========   change your logo hear   ============ -->
-                    <img src="assets/images/logo.png" alt="" class="logo">
-                    <img src="assets/images/logo-icon.png" alt="" class="logo-thumb">
+                    {{-- <img src="{{ asset('image/must_logo.png') }}" alt="" width="50" class="logo"> --}}
+                    <strong>MUST DISPENSARY</strong>
+                    {{-- <img src="assets/images/logo-icon.png" alt="" class="logo-thumb"> --}}
                 </a>
                 <a href="#!" class="mob-toggler">
                     <i class="feather icon-more-vertical"></i>

@@ -3,16 +3,20 @@
 namespace App\Models;
 
 use Spatie\Sluggable\HasSlug;
+use OwenIt\Auditing\Auditable;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable as ContractsAuditable;
 
-class Unit extends Model
+class Unit extends Model implements ContractsAuditable
 {
     use HasFactory;
     use HasSlug;
     use SoftDeletes;
+    use Auditable;
+
 
     protected $guarded = [];
 

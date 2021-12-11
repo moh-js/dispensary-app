@@ -24,7 +24,12 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return view('patient.add');
+        $this->authorize('patient-add');
+
+        $patient_id = 'must-d-'.rand(111,211121);
+        return view('patient.add', [
+            'patient_id' => $patient_id
+        ]);
     }
 
     /**
@@ -35,7 +40,23 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('patient-add');
+
+        $request->validate([
+            "patient_id" => ['required', 'string'],
+            "first_name" => ['required', 'string'],
+            "middle_name" => ['nullable', 'string'],
+            "last_name" => ['required', 'string'],
+            "dob" => ['date', 'required'],
+            "phone" => ['string', 'required'],
+            "gender" => ['string', 'required'],
+            "address" => ['string', 'required']
+        ]);
+
+        $data = $request->except(['_token']);
+
+        flash('Patient added successfully');
+        return redirect()->route('patient.show', Patient::firstOrCreate($data)->patient_id);
     }
 
     /**
@@ -46,6 +67,8 @@ class PatientController extends Controller
      */
     public function show(Patient $patient)
     {
+        $this->authorize('patient-view');
+
         return view('patient.show', [
             'user' => $patient
         ]);

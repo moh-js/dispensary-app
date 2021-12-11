@@ -13,14 +13,14 @@
 <div class="card">
     <div class="card-header"><h5>Add New Patient</h5></div>
     <div class="card-body">
-        <form action="{{ route('users.store') }}" method="post">
+        <form action="{{ route('patient.store') }}" method="post">
             @csrf
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
                       <label for="patient_id">Patient ID</label>
                       <input type="text"
-                        class="form-control @error('patient_id') is-invalid @enderror" name="patient_id" value="{{ old('patient_id') }}" id="patient_id" placeholder="Patient ID">
+                        class="form-control @error('patient_id') is-invalid @enderror" name="patient_id" value="{{ old('patient_id')??$patient_id }}" id="patient_id" placeholder="Patient ID">
                         @error('patient_id')
                             <div class="invalid-feedback">
                                 {{ $message }}

@@ -11,6 +11,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\BillingController;
+use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\PatientController;
 use  Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
@@ -53,6 +54,7 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
 
     // Patient
     Route::get('patient/add', [PatientController::class, 'create'])->name('patient.create');
+    Route::post('patient/add', [PatientController::class, 'store'])->name('patient.store');
     Route::get('patient/{patient}/show', [PatientController::class, 'show'])->name('patient.show');
 
     // Service Bill
@@ -61,6 +63,14 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::delete('bill/{billService}', [BillingController::class, 'removeBillService'])->name('bill.service.delete');
     Route::get('completed/{receipt_id?}/bill', [BillingController::class, 'completedBill'])->name('bill.completed');
     Route::post('bill/{invoice_id?}/complete', [BillingController::class, 'completeBill'])->name('bill.complete');
+
+    // Configuration
+    Route::get('general', [ConfigurationController::class, 'generalPage'])->name('general.index');
+    Route::post('general', [ConfigurationController::class, 'generalPage'])->name('general.import');
+
+    Route::get('data-import', [ConfigurationController::class, 'dataPage'])->name('data.index');
+    Route::post('service/data-import', [ConfigurationController::class, 'serviceImport'])->name('service.data.import');
+    Route::post('item/data-import', [ConfigurationController::class, 'itemImport'])->name('item.data.import');
 });
 
 Route::get('/test', function ()

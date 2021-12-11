@@ -15,6 +15,8 @@ class BillingController extends Controller
 {
     public function patientBillPage(Patient $patient, $invoice_id = null)
     {
+        $this->authorize('bill-show');
+
         $order = Order::where('invoice_id', $invoice_id)->first();
 
         return view('patient.bill', [
@@ -25,6 +27,8 @@ class BillingController extends Controller
 
     public function addBillService(Request $request, Patient $patient, $invoice_id = null)
     {
+        $this->authorize('bill-add');
+
         // $request->validate([]);
 
         // Retrieve order instance or create when not found
@@ -67,6 +71,8 @@ class BillingController extends Controller
 
     public function removeBillService(OrderService $billService)
     {
+        $this->authorize('bill-remove-single');
+
         if ($billService->order->status == 'pending') {
             $billService->delete();
             flash('Bill Service deleted successfully');
@@ -80,6 +86,8 @@ class BillingController extends Controller
 
     public function completeBill($invoice_id)
     {
+        $this->authorize('bill-complete');
+
         $order = Order::where('invoice_id', $invoice_id)->first();
 
         foreach ($order->items as $orderService) {
@@ -121,6 +129,8 @@ class BillingController extends Controller
 
     public function completedBill($receipt_id)
     {
+        $this->authorize('bill-completed');
+
         $order = Order::where('receipt_id', $receipt_id)->first();
 
         if (!is_file(public_path($order->receipt_file))) {

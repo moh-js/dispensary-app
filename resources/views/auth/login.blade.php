@@ -7,8 +7,8 @@
                 <div class="row align-items-center text-center">
                     <div class="col-md-12">
                         <div class="card-body">
-                            <img src="assets/images/logo-dark.png" alt="" class="img-fluid mb-4">
-                            <h4 class="mb-3 f-w-400">Signin</h4>
+                            <img src="{{ asset('image/must_logo.png') }}" alt="" width="200" class="img-fluid mb-4">
+                            <h4 class="mb-3 f-w-400">MUST Dispensary</h4>
                             <form action="{{ route('login') }}" method="post">
                                 @csrf
                                 <div class="form-group mb-3">

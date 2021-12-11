@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
+use OwenIt\Auditing\Auditable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use OwenIt\Auditing\Contracts\Auditable as ContractsAuditable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements ContractsAuditable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use Auditable;
 
     /**
      * The attributes that are mass assignable.

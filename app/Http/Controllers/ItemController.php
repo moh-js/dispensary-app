@@ -16,6 +16,8 @@ class ItemController extends Controller
      */
     public function index(InventoryCategory $category)
     {
+        $this->authorize('item-view');
+
         $items = $category->items;
 
         return view('inventory.index', [
@@ -31,6 +33,8 @@ class ItemController extends Controller
      */
     public function create(InventoryCategory $category)
     {
+        $this->authorize('item-add');
+
         return view('inventory.add', [
             'category' => $category
         ]);
@@ -44,6 +48,8 @@ class ItemController extends Controller
      */
     public function store(Request $request, InventoryCategory $category)
     {
+        $this->authorize('item-add');
+
         $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:items,name'],
             'short_name' => ['nullable', 'string', 'max:255'],
@@ -94,6 +100,8 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
+        $this->authorize('item-update');
+
         //
     }
 
@@ -106,7 +114,9 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        //
+        $this->authorize('item-update');
+
+
     }
 
     /**
@@ -122,6 +132,8 @@ class ItemController extends Controller
 
     public function managementPage()
     {
+        $this->authorize('item-management');
+
         return view('inventory.management', [
             'items' => Item::all()
         ]);
@@ -129,6 +141,8 @@ class ItemController extends Controller
 
     public function issue(Request $request)
     {
+        $this->authorize('item-issue');
+
 
         $request->validate([
             'item_id' => ['required', 'integer'],
