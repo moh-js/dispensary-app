@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use Mpdf\Mpdf;
+use App\Models\Unit;
 use App\Models\Order;
 use App\Models\Patient;
 use App\Models\Service;
 use App\Models\OrderService;
+use App\Models\ServiceCategory;
 use Illuminate\Http\Request;
+use App\Traits\ReceiptGenerator;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Validator;
 use  Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
 class BillingController extends Controller
 {
+    use ReceiptGenerator;
+
     public function patientBillPage(Patient $patient, $invoice_id = null)
     {
         $this->authorize('bill-show');
@@ -29,16 +35,31 @@ class BillingController extends Controller
     {
         $this->authorize('bill-add');
 
-        // $request->validate([]);
+        $service_name = strtolower((ServiceCategory::find($request->category)->name)??'');
+
+        $validator = Validator::make($request->toArray(), [
+            'unit' => ['required_if:category,1',],
+            'category' => ['required', 'integer'],
+            'quantity' => ['required', 'integer'],
+            'service' => ['required', 'integer'],
+        ], [
+            'required_if' => ':attribute field is required when service category is '. $service_name
+        ]);
+
+        if($validator->fails()) {
+            foreach ($validator->errors()->toArray() as $error) {
+                flash()->error($error[0]);
+            }
+            return back()->withInput();
+        }
 
         // Retrieve order instance or create when not found
         if ($invoice_id) {
             $order = Order::where('invoice_id', $invoice_id)->first();
         } else {
             $order = $patient->orders()->firstOrCreate([
+                'patient_id' => $patient->id,
                 'invoice_id' => rand(1,23232),
-                'patient_id' => $patient->id
-            ], [
                 'order_date' => now(),
                 'cashier_id' => auth()->id(),
             ]);
@@ -58,8 +79,7 @@ class BillingController extends Controller
         $order->items()->firstOrCreate([
             'service_id' => $service->id,
             'unit_id' => $request->unit,
-            'service_category_id' => $request->category
-        ], [
+            'service_category_id' => $request->category,
             'sub_total' => $service->price,
             'total_price' => $service->price * $request->quantity,
             'quantity' => $request->quantity
@@ -103,7 +123,7 @@ class BillingController extends Controller
 
         $order->update([
             'total_price' => $order->items()->sum('total_price'),
-            'receipt_id' => rand(1212,21212121),
+            'receipt_id' => $this->generate($order),
             'cashier_id' => auth()->id(),
             'status' => 'completed',
             'payment_type' => request()->payment_mode

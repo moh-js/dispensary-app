@@ -69,7 +69,7 @@
                     <td>P.O Box 131, Mbeya</td>
                 </tr>
                 <tr>
-                    <td>+255 535 343 343</td>
+                    <td>+255 25 250 3016</td>
                 </tr>
             </tbody>
         </table>
@@ -98,11 +98,11 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td class="text-left">&nbsp;&nbsp;{{ $order->patient->phone }}</td>
+                    <td class="text-left">&nbsp;&nbsp;0{{ $order->patient->phone }}</td>
                 </tr>
                 <tr>
                     <th class="text-left">Mode of Payment</th>
-                    <td class="text-left"><strong>: </strong>{{ title_case($order->payment_type) }}</td>
+                    <td class="text-left"><strong>: </strong>{{ strtoupper($order->payment_type) }}</td>
                 </tr>
             </tbody>
         </table>

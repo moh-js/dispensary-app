@@ -15,7 +15,7 @@ class Order extends Model implements ContractsAuditable
     protected $guarded = [];
 
     protected $casts = [
-        'order_date' => 'date'
+        'order_date' => 'datetime'
     ];
 
     public function items()

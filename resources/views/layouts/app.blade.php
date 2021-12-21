@@ -23,6 +23,8 @@
 
     <!-- prism css -->
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/prism-coy.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/select2.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <!-- vendor css -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
@@ -61,7 +63,7 @@
         $inventoryNav = collect([]);
         foreach (App\Models\InventoryCategory::all() as $category) {
             $inventoryNav->push([
-                'title' => $category->name, 'url' => route('items.index', $category->slug), 'permission' => request()->user()->hasAnyPermission('user-view')
+                'title' => title_case($category->name), 'url' => route('items.index', $category->slug), 'permission' => request()->user()->hasAnyPermission('item-view')
             ]);
         }
 
@@ -69,18 +71,20 @@
              [
                 'title' => 'Dashboard', 'url' => route('dashboard'), 'permission' => request()->user()->hasAnyPermission('dashboard'), 'icon' => 'feather icon-home', 'childrens' => collect(),
             ], [
-                'title' => 'Users', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission('user-view', 'user-add', 'user-update', 'user-delete', 'user-activate', 'user-deactivate'), 'icon' => 'feather icon-user', 'childrens' => collect([
+                'title' => 'Users Mgt', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission('user-view', 'user-add', 'user-update', 'user-delete', 'user-activate', 'user-deactivate'), 'icon' => 'feather icon-users', 'childrens' => collect([
                     [
                         'title' => 'List', 'url' => route('users.index'), 'permission' => request()->user()->hasAnyPermission('user-view')
 
                     ], [
                         'title' => 'Add', 'url' => route('users.add'), 'permission' => request()->user()->hasAnyPermission('user-add')
+                    ], [
+                        'title' => 'Role', 'url' => route('roles.index'), 'permission' => request()->user()->hasAnyPermission('user-add')
                     ]
                 ]),
             ], [
                 'title' => 'Inventory', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission('item-view'), 'icon' => 'feather icon-layers', 'childrens' => collect($inventoryNav),
-            ], [
-                'title' => 'POS', 'url' => route('pos.index'), 'permission' => request()->user()->hasAnyPermission('item-view'), 'icon' => 'feather icon-shopping-cart', 'childrens' => collect(),
+            // ], [
+            //     'title' => 'POS', 'url' => route('pos.index'), 'permission' => request()->user()->hasAnyPermission('item-view'), 'icon' => 'feather icon-shopping-cart', 'childrens' => collect(),
             ], [
                 'title' => 'Configuration', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import']), 'icon' => 'feather icon-settings', 'childrens' => collect([
                     [
@@ -88,6 +92,14 @@
                     ], [
                     'title' => 'Data Import', 'url' => route('data.index'), 'permission' => request()->user()->hasAnyPermission('configuration-data-import')
 
+                    ]
+                ]),
+            ], [
+                'title' => 'Reports', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import']), 'icon' => 'feather icon-clipboard', 'childrens' => collect([
+                    [
+                        'title' => 'Inventory Ledgers', 'url' => route('inventory-ledger.index'), 'permission' => request()->user()->hasAnyPermission('configuration-general')
+                    ], [
+                    'title' => 'Dispensing', 'url' => route('dispensing.index'), 'permission' => request()->user()->hasAnyPermission('configuration-data-import')
                     ]
                 ]),
             ]
@@ -350,6 +362,11 @@
     <!-- prism Js -->
     <script src="{{ asset('assets/js/plugins/prism.js') }}"></script>
 
+    <script src="{{ asset('assets/js/analytics.js') }}"></script>
+    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    <script src="{{ asset('assets/js/plugins/select2.full.min.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/form-select-custom.js') }}"></script>
+
     @livewireScripts
 
 
@@ -391,9 +408,6 @@
             });
         });
     </script>
-
-    <script src="{{ asset('assets/js/analytics.js') }}"></script>
-    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 
     @stack('js')
 

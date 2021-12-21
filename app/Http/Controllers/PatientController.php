@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Patient;
+use App\Traits\PatientIdGenerator;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
+    use PatientIdGenerator;
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +28,9 @@ class PatientController extends Controller
     {
         $this->authorize('patient-add');
 
-        $patient_id = 'must-d-'.rand(111,211121);
+        $patient = Patient::all()->last();
+        $patient_id = $this->generate($patient->id + 1);
+
         return view('patient.add', [
             'patient_id' => $patient_id
         ]);

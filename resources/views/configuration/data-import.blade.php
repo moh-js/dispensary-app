@@ -11,9 +11,14 @@
             <div class="row">
                 <div class="form-group col-sm-12">
                     <div class="custom-file">
-                        <input type="file" id="service-upload" onchange="checkFileInput('service')" class="custom-file-input" name="file">
+                        <input type="file" id="service-upload" onchange="checkFileInput('service')" class="custom-file-input" name="service_file">
                         <label for="file" id="service-label" class="custom-file-label">Excel File</label>
                     </div>
+                    @error('service_file')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
 
                 <div class="form-group col-sm-12">
@@ -31,9 +36,14 @@
             <div class="row">
                 <div class="form-group col-sm-12">
                     <div class="custom-file">
-                        <input type="file" id="item-upload" onchange="checkFileInput('item')" class="custom-file-input" name="file">
+                        <input type="file" id="item-upload" onchange="checkFileInput('item')" class="custom-file-input" name="item_file">
                         <label for="file" id="item-label" class="custom-file-label">Excel File</label>
                     </div>
+                    @error('item_file')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
 
                 <div class="form-group col-sm-12">

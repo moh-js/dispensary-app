@@ -29,6 +29,16 @@ class Service extends Model implements ContractsAuditable
             ->saveSlugsTo('slug');
     }
 
+    public function getProperNameAttribute()
+    {
+        if ($this->service_category_id == 1) {
+            $manufacturer = ($this->item->manufacturer)? (" - {$this->item->manufacturer}"): '';
+            return $this->item->name. ' - '. $this->item->package_type. $manufacturer ." [ {$this->price} Tsh]";
+        } else {
+            return $this->name;
+        }
+    }
+
     /**
      * Get the route key for the model.
      *

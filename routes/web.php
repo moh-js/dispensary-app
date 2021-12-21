@@ -13,6 +13,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RoleController;
 use  Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
@@ -35,6 +37,15 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
         Route::put('/{user}/edit', [UserController::class, 'update'])->name('users.update');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
+
+    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('role/add', [RoleController::class, 'create'])->name('roles.add');
+    Route::get('role/{role}', [RoleController::class, 'show'])->name('roles.show');
+    Route::post('role/{role}/grant-permission', [RoleController::class, 'grantPermission'])->name('roles.grant');
+    Route::put('role/{role}', [RoleController::class, 'update'])->name('roles.update');
+    Route::post('role/add', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('role/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::delete('role/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
     // Inventory
     Route::get('item/{category}/inventory', [ItemController::class, 'index'])->name('items.index');
@@ -68,9 +79,16 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::get('general', [ConfigurationController::class, 'generalPage'])->name('general.index');
     Route::post('general', [ConfigurationController::class, 'generalPage'])->name('general.import');
 
+    // Importing Data
     Route::get('data-import', [ConfigurationController::class, 'dataPage'])->name('data.index');
     Route::post('service/data-import', [ConfigurationController::class, 'serviceImport'])->name('service.data.import');
     Route::post('item/data-import', [ConfigurationController::class, 'itemImport'])->name('item.data.import');
+
+    // Report
+    Route::get('/reports/inventory-ledgers', [ReportController::class, 'inventoryLedgersPage'])->name('inventory-ledger.index');
+    Route::post('/reports/inventory-ledgers', [ReportController::class, 'inventoryLedgersSearch'])->name('inventory-ledger.search');
+
+    Route::get('/reports/dispensing', [ReportController::class, 'dispensingPage'])->name('dispensing.index');
 });
 
 Route::get('/test', function ()

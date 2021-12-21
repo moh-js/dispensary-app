@@ -119,7 +119,7 @@
             <div class="col-sm-4">
                 <div class="form-group">
                     <label for="to"><strong>To</strong></label>
-                    <select name="to" id="to" class="form-control @error('to') is-invalid @enderror">
+                    <select name="to" id="to" class="form-control select2 @error('to') is-invalid @enderror">
                         <option selected value="{{ null }}">Choose...</option>
                         @foreach ($units as $unit)
                             <option {{ old('to') == $unit->id? 'selected':'' }} value="{{ $unit->id }}" {{ old('to') == $unit->id? 'selected':''}}>{{ $unit->name }}</option>
@@ -162,8 +162,8 @@
             <div class="col-sm-6">
                 <div class="form-group">
                     <label for="issued_date"><strong>Issued Date</strong></label>
-                  <input type="date"
-                    class="form-control @error('issued_date') is-invalid @enderror" name="issued_date" value="{{old('issued_date')??now()->format('Y-m-d')}}" id="issued_date">
+                  <input type="datetime-local" max="{{ now()->format('Y-m-d\TH:i') }}"
+                    class="form-control @error('issued_date') is-invalid @enderror" name="issued_date" value="{{old('issued_date')??now()->format('Y-m-d\TH:i')}}" id="issued_date">
                     @error('issued_date')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -182,4 +182,5 @@
     </form>
 
     @endif
+
 </div>
