@@ -84,4 +84,14 @@ class Item extends Model implements ContractsAuditable
     {
         return $this->hasOne(Service::class);
     }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return Item::withTrashed()->where('slug', $value)->first();
+    }
+
+    public function getOrderServiceByOrderID($order_id)
+    {
+        return $this->service->orderServices()->where('order_id', $order_id)->first();
+    }
 }

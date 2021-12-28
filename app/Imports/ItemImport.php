@@ -64,17 +64,17 @@ class ItemImport implements OnEachRow, WithHeadingRow, WithChunkReading
             $this->updateItems($item, 6, $row['store_qty']);
         }
 
-        if ($row['dispensing_qty']) {
-            $this->updateItems($item, 1, $row['dispensing_qty']);
-        }
+        // if ($row['dispensing_qty']) {
+        //     $this->updateItems($item, 1, $row['dispensing_qty']);
+        // }
 
-        if ($row['lab_qty']) {
-            $this->updateItems($item, 2, $row['lab_qty']);
-        }
+        // if ($row['lab_qty']) {
+        //     $this->updateItems($item, 2, $row['lab_qty']);
+        // }
 
-        if ($row['injection_qty']) {
-            $this->updateItems($item, 5, $row['injection_qty']);
-        }
+        // if ($row['injection_qty']) {
+        //     $this->updateItems($item, 5, $row['injection_qty']);
+        // }
     }
 
     public function updateItems($item, $unit_id, $remain) {

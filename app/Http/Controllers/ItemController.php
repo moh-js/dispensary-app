@@ -18,12 +18,13 @@ class ItemController extends Controller
     {
         $this->authorize('item-view');
 
-        $items = $category->items;
+        $items = Item::withTrashed()->where('inventory_category_id', $category->id)->paginate(20);
 
         return view('inventory.index', [
             'items' => $items,
             'category' => $category
         ]);
+
     }
 
     /**
@@ -102,7 +103,9 @@ class ItemController extends Controller
     {
         $this->authorize('item-update');
 
-        //
+        return view('inventory.edit', [
+            'item' => $item
+        ]);
     }
 
     /**
@@ -116,6 +119,34 @@ class ItemController extends Controller
     {
         $this->authorize('item-update');
 
+        $request->validate([
+            'name' => ['required', 'string', 'max:255', "unique:items,name,$item->id,id"],
+            'short_name' => ['nullable', 'string', 'max:255'],
+            "quantity" => ['required', 'integer'],
+            "package_type" => ['nullable', 'string'],
+            "manufacture" => ['nullable', 'string'],
+            "service_name" => ['sometimes', 'string', "unique:services,name,{$item->service->id},id"],
+            "service_price" => ['sometimes', 'integer'],
+            "price" => ['nullable', 'integer'],
+            "expire_date" => ['nullable', 'date']
+        ]);
+
+        $data = collect($request->except(['_token', 'service_name', 'service_price']))->filter()->toArray();
+
+        $item->update($data);
+
+        if ($item->inventory_category_id == 1 || $item->inventory_category_id == 2) {
+            $service_category_id = 1;
+
+            $item->service->update([
+                'name' => $request->service_name??$request->name,
+                'price' => $request->service_price,
+                'service_category_id' => $service_category_id
+            ]);
+        }
+
+        flash("$item->name updated successfully");
+        return redirect()->route('items.index', $item->inventoryCategory->slug);
 
     }
 
@@ -127,7 +158,24 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+        if ($item->trashed()) {
+            $this->authorize('item-activate');
+            $item->restore();
+            $action = 'restored';
+        } else {
+            $this->authorize('item-deactivate');
+
+            if ($item->units()->sum('remain')) {
+                flash()->error('Item cannot be deleted');
+                return back();
+            }
+
+            $item->delete();
+            $action = 'deleted';
+        }
+
+        flash("Item $action successfully");
+        return redirect()->route('items.index', $item->inventoryCategory->slug);
     }
 
     public function managementPage()

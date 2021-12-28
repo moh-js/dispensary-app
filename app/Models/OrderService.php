@@ -27,4 +27,10 @@ class OrderService extends Model implements ContractsAuditable
     {
         return $this->belongsTo(Service::class, 'service_id');
     }
+
+    public function scopeMedicine($query)
+    {
+        $query->where('service_category_id', 1);
+    }
+
 }

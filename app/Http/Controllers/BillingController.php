@@ -59,9 +59,12 @@ class BillingController extends Controller
         } else {
             $order = $patient->orders()->firstOrCreate([
                 'patient_id' => $patient->id,
-                'invoice_id' => rand(1,23232),
                 'order_date' => now(),
                 'cashier_id' => auth()->id(),
+            ]);
+
+            $order->update([
+                'invoice_id' => $this->generate($order, 'invoice'),
             ]);
         }
 
@@ -176,7 +179,7 @@ class BillingController extends Controller
 
         // Generate PDF for Receipt
         $pdf = PDF::loadView('invoice', ['order' => $order] ,[] ,[
-        'format' => [80,$pageHeigt],
+        'format' => [80,$pageHeigt+10],
         'default_font_size' => '10'
         ]);
 

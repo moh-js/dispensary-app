@@ -21,7 +21,7 @@
                   <select name="service" wire:model="service_id" {{ $disabledServiceInput? 'disabled':'' }} id="service" class="form-control">
                       <option value="{{ null }}" selected>Choose...</option>
                       @foreach ($services as $service)
-                        <option value="{{ $service->id }}">{{ $service->proper_name }}</option>
+                        <option value="{{ $service->id }}">{{ strtoupper($service->proper_name) }}</option>
                       @endforeach
                   </select>
                 </div>

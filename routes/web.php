@@ -51,9 +51,9 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::get('item/{category}/inventory', [ItemController::class, 'index'])->name('items.index');
     Route::get('item/{category}/add', [ItemController::class, 'create'])->name('items.add');
     Route::post('item/{category}/add', [ItemController::class, 'store'])->name('items.store');
-    Route::get('item/{category}/edit', [ItemController::class, 'edit'])->name('items.edit');
-    Route::put('item/{category}/edit', [ItemController::class, 'update'])->name('items.update');
-    Route::delete('item/{category}/destroy', [ItemController::class, 'destroy'])->name('items.destroy');
+    Route::get('item/{item}/edit', [ItemController::class, 'edit'])->name('items.edit');
+    Route::put('item/{item}/edit', [ItemController::class, 'update'])->name('items.update');
+    Route::delete('item/{item}/destroy', [ItemController::class, 'destroy'])->name('items.destroy');
     Route::get('inventory/management', [ItemController::class, 'managementPage'])->name('items.management');
     Route::post('inventory/management', [ItemController::class, 'issue'])->name('items.issue');
 
@@ -89,6 +89,7 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::post('/reports/inventory-ledgers', [ReportController::class, 'inventoryLedgersSearch'])->name('inventory-ledger.search');
 
     Route::get('/reports/dispensing', [ReportController::class, 'dispensingPage'])->name('dispensing.index');
+    Route::post('/reports/dispensing', [ReportController::class, 'dispensingSearch'])->name('dispensing.search');
 });
 
 Route::get('/test', function ()

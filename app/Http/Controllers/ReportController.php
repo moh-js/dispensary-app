@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use App\Models\Unit;
+use App\Models\Order;
 use App\Models\Ledger;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,6 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ReportController extends Controller
 {
+    /*
+    * Hours
+    */
     protected $today = 24;
     protected $week = 168;
     protected $month = 730;
@@ -17,16 +22,47 @@ class ReportController extends Controller
     protected $year = 8760;
 
 
-    public function dispensingPage()
+    public function dispensingPage(Request $request)
     {
-        $this->authorize('reoprt-dispensing-view');
+        $this->authorize('report-dispensing-view');
 
-        return view('reports.dispensing');
+        $when = $request['when']??'today';
+
+        $orders = Order::whereHas('items', function (Builder $query)
+        {
+            $query->where('service_category_id', 1);
+        })
+        ->where('status', 'completed')
+        ->when($when, function ($query) use ($when)
+        {
+            $hours = $this->$when;
+            $query->whereBetween('created_at', [now()->subHours($hours), now()]);
+        })
+        ->with(['items'])
+        ->get();
+
+        $itemIds = collect();
+
+        foreach ($orders as $key => $order) {
+            foreach ($order->items as $item) {
+                if($item->service_category_id == 1) {
+                    $itemIds->push($item->service->item_id);
+                }
+            }
+        }
+
+        $items = Item::whereIn('id', $itemIds->unique())->get();
+
+        return view('reports.dispensing', [
+            'items' => $items,
+            'when' => $when,
+            'orders' => $orders
+        ]);
     }
 
     public function inventoryLedgersPage(Request $request)
     {
-        $this->authorize('reoprt-inventory-ledger-view');
+        $this->authorize('report-inventory-ledger-view');
 
         $unit =  $request['unit'];
         $when =  $request['when'];
@@ -44,7 +80,7 @@ class ReportController extends Controller
         {
             $query->whereHas('unit', function (Builder $query) use ($unit)
             {
-                $query->where('slug', "$unit");
+                $query->where('slug', $unit);
             });
         })
         ->when($when, function ($query) use ($when)
@@ -65,11 +101,20 @@ class ReportController extends Controller
 
     public function inventoryLedgersSearch(Request $request)
     {
-        $this->authorize('reoprt-inventory-ledger-view');
+        $this->authorize('report-inventory-ledger-view');
 
         return redirect()->route('inventory-ledger.index', [
             'name' => $request->name,
             'unit' => $request->unit,
+            'when' => $request->when,
+        ]);
+    }
+
+    public function dispensingSearch(Request $request)
+    {
+        $this->authorize('report-dispensing-view');
+
+        return redirect()->route('dispensing.index', [
             'when' => $request->when,
         ]);
     }

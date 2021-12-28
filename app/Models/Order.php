@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Auditable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Contracts\Auditable as ContractsAuditable;
 
 class Order extends Model implements ContractsAuditable
@@ -31,5 +32,13 @@ class Order extends Model implements ContractsAuditable
     public function cashier()
     {
         return $this->belongsTo(User::class, 'cashier_id');
+    }
+
+    public function getOrderItemById($item_id)
+    {
+        return $this->items()->whereHas('service', function (Builder $query) use ($item_id)
+        {
+            $query->where('item_id', $item_id);
+        })->first();
     }
 }

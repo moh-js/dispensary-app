@@ -39,6 +39,10 @@ class Service extends Model implements ContractsAuditable
         }
     }
 
+    public function orderServices()
+    {
+        return $this->hasMany(OrderService::class, 'service_id');
+    }
     /**
      * Get the route key for the model.
      *

@@ -11,7 +11,7 @@ trait ReceiptGenerator
      * @param Order $order
      * @return string $receipt_id
      */
-    public function generate($order)
+    public function generate($order, $type = null)
     {
         // format MYYDDMM{000000ID}
 
@@ -36,11 +36,17 @@ trait ReceiptGenerator
             }
         } while ($reset);
 
+        if ($type == 'invoice') {
+            $code = 'MI';
+        } else {
+            $code = 'MR';
+        }
+
         $date = now()->format('yz');
         $length = strlen($initialLimit);
         $string = substr(str_repeat(0, $length).$id, - $length);
 
-        $receipt_id = 'M'.$date.$string;
+        $receipt_id = $code.$date.$string;
         return $receipt_id;
     }
 }

@@ -28,8 +28,8 @@
                     <tbody>
                         @foreach ($items as $key => $item)
                             <tr>
-                                <td scope="row">1</td>
-                                <td>{{ $item->name }}</td>
+                                <td scope="row">{{ $items->firstItem() + $key }}</td>
+                                <td>{{ strtoupper($item->name) }}</td>
                                 <td>{{ $item->itemUnits()->sum('remain') }}</td>
                                 <td>{{ $item->expire_date?$item->expire_date->format('dS M Y'):'' }}</td>
                                 <td>{{ $item->price }}</td>
@@ -61,6 +61,9 @@
                         @endforeach
                     </tbody>
             </table>
+        </div>
+        <div class="float-right">
+            {{ $items->links('pagination::bootstrap-4') }}
         </div>
     </div>
 </div>
