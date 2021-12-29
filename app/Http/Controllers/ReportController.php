@@ -43,7 +43,7 @@ class ReportController extends Controller
 
         $itemIds = collect();
 
-        foreach ($orders as $key => $order) {
+        foreach ($orders as $order) {
             foreach ($order->items as $item) {
                 if($item->service_category_id == 1) {
                     $itemIds->push($item->service->item_id);

@@ -24,24 +24,26 @@ class ItemImport implements OnEachRow, WithHeadingRow, WithChunkReading
         $category = InventoryCategory::where('name', $row['category'])->first();
 
         // Save Item
-        $item = Item::firstOrCreate([
+        $item = Item::updateOrCreate([
             'name' => $row['name'],
+            'inventory_category_id' => $category->id,
+        ], [
             'short_name' => $row['short_name'],
             'manufacturer' => $row['manufacturer'],
             'package_type' => $row['package_type'],
             'price' => $row['price'],
             'quantity' => $row['quantity'],
-            'inventory_category_id' => $category->id,
         ]);
 
         // Create its service bill
         if ($category->id == 1 || $category->id == 2) {
             $service_category_id = 1;
 
-            $item->service()->firstOrCreate([
+            $item->service()->updateOrCreate([
                 'name' => "{$row['name']} - {$row['package_type']}",
-                'price' => $row['price'],
                 'service_category_id' => $service_category_id
+            ], [
+                'price' => $row['price'],
             ]);
         }
 
