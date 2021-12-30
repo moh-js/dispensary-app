@@ -4,7 +4,7 @@
             <div class="form-group d-inline">
               {{-- <label for="">Search Inventory</label> --}}
               <input type="text"
-                class="form-control @error('name') is-invalid @enderror" id="query" placeholder="Search Inventory" wire:model.defer="query">
+                class="form-control @error('name') is-invalid @enderror" id="query" placeholder="Search Inventory" wire:model="query">
                 @error('query')
                     <div class="invalid-feedback">
                         {{ $message }}

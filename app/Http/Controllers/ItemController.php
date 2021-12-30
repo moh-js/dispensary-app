@@ -178,12 +178,12 @@ class ItemController extends Controller
         return redirect()->route('items.index', $item->inventoryCategory->slug);
     }
 
-    public function managementPage()
+    public function managementPage(Item $item)
     {
         $this->authorize('item-management');
 
         return view('inventory.management', [
-            'items' => Item::all()
+            'item_id' => $item->id
         ]);
     }
 

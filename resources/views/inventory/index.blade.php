@@ -50,6 +50,9 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
 
+                                        <a href="{{ route('items.management.with-item', $item->slug) }}" class="ml-3" title="Manage Item"><i class="feather icon-sliders"></i></a>
+
+
                                         <a href="javascript:void(0)" onclick="$('#{{ $item->slug }}').submit()" title="Deactivate" class="text-danger ml-3">
                                             <i class="fas fa-trash"></i>
                                         </a>

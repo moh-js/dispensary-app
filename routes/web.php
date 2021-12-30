@@ -55,6 +55,7 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::put('item/{item}/edit', [ItemController::class, 'update'])->name('items.update');
     Route::delete('item/{item}/destroy', [ItemController::class, 'destroy'])->name('items.destroy');
     Route::get('inventory/management', [ItemController::class, 'managementPage'])->name('items.management');
+    Route::get('inventory/{item}/management', [ItemController::class, 'managementPage'])->name('items.management.with-item');
     Route::post('inventory/management', [ItemController::class, 'issue'])->name('items.issue');
 
     // POS

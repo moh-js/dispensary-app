@@ -57,8 +57,11 @@
                                     {{ $order->patient->patient_id }}
                                 </td>
                                 @foreach ($items as $item)
-                                    <td class="text-center">
-                                        {{ ($order->getOrderItemById($item->id)->quantity)??'' }}
+                                    @php
+                                        $orderItem = $order->getOrderItemById($item->id)
+                                    @endphp
+                                    <td style="cursor: pointer" class="text-center" title="{{ $item->name }}">
+                                        {{ ($orderItem->quantity)??'' }}
                                     </td>
                                 @endforeach
                                 <td>
@@ -77,7 +80,7 @@
                                     $total_quantity = (($item->getOrderServiceByOrderID($order->id)->quantity)??0) + $total_quantity;
                                 @endphp
                                 @endforeach
-                                <td class="text-center">{{ $total_quantity }}</td>
+                                <td style="cursor: pointer" class="text-center" title="{{ $item->name }}">{{ $total_quantity }}</td>
                             @endforeach
                         </tr>
                     </tbody>

@@ -9,6 +9,7 @@ use Livewire\Component;
 class InventoryManagementForm extends Component
 {
     public $items;
+    public $item_id;
     public $units;
     public $item;
     public $from;
@@ -27,6 +28,10 @@ class InventoryManagementForm extends Component
             $this->showForm(old('item_id'));
 
             $this->updatedType(1);
+        }
+
+        if ($this->item_id) {
+            $this->showForm($this->item_id);
         }
     }
 
@@ -50,6 +55,13 @@ class InventoryManagementForm extends Component
             $this->loading = false;
         } else {
 
+        }
+    }
+
+    public function updatedQuery()
+    {
+        if (strlen($this->query) > 3) {
+            $this->search();
         }
     }
 
