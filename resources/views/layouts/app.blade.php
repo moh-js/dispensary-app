@@ -149,7 +149,7 @@
                 <a href="{{ url('/') }}" class="b-brand">
                     <!-- ========   change your logo hear   ============ -->
                     {{-- <img src="{{ asset('image/must_logo.png') }}" alt="" width="50" class="logo"> --}}
-                    <strong>MUST DISPENSARY</strong>
+                    <strong>{{ strtoupper(getAppName()) }}</strong>
                     {{-- <img src="assets/images/logo-icon.png" alt="" class="logo-thumb"> --}}
                 </a>
                 <a href="#!" class="mob-toggler">

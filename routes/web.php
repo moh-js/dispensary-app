@@ -78,7 +78,7 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
 
     // Configuration
     Route::get('general', [ConfigurationController::class, 'generalPage'])->name('general.index');
-    Route::post('general', [ConfigurationController::class, 'generalPage'])->name('general.import');
+    Route::post('general', [ConfigurationController::class, 'updateGeneralConfig'])->name('general.save');
 
     // Importing Data
     Route::get('data-import', [ConfigurationController::class, 'dataPage'])->name('data.index');

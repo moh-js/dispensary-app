@@ -63,13 +63,13 @@
                     <td rowspan="3">
                         <img src="{{ public_path('image/must_logo.png') }}" width="80" alt="logo">
                     </td>
-                    <td>MUST Dispensary</td>
+                    <td>{{ getAppName() }}</td>
                 </tr>
                 <tr>
-                    <td>P.O Box 131, Mbeya</td>
+                    <td>{{ getAppAddress() }}</td>
                 </tr>
                 <tr>
-                    <td>+255 25 250 3016</td>
+                    <td>{{ getAppPhone() }}</td>
                 </tr>
             </tbody>
         </table>
@@ -158,7 +158,7 @@
                     <td width="25"></td>
                     <td width="25"></td>
                     <td class="text-right">Total</td>
-                    <td class="text-right">{{ number_format($order->total_price) }} Tsh</td>
+                    <td class="text-right">{{ number_format($order->total_price) }} {{ getAppCurrency() }}</td>
                 </tr>
             </tbody>
         </table>
