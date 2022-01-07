@@ -46,7 +46,7 @@
 									</div>
 								</div>
                                 <div class="col-md-4">
-                                    <a href="#" class="btn btn-primary btn-sm d-md-block mb-md-2">Encounter</a>
+                                    <a href="#" class="btn btn-primary btn-sm d-md-block mb-md-2"><i class="feather"></i> Encounter</a>
                                     <a href="{{ route('bill.patient.page', $user->patient_id) }}" class="btn btn-danger btn-sm d-md-block">Service Bill</a>
                                 </div>
 							</div>

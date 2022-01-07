@@ -29,6 +29,11 @@ class Order extends Model implements ContractsAuditable
         return $this->belongsTo(Patient::class);
     }
 
+    public function encounter()
+    {
+        return $this->belongsTo(Encounter::class);
+    }
+
     public function cashier()
     {
         return $this->belongsTo(User::class, 'cashier_id');

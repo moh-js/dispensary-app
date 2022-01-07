@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
@@ -91,38 +92,41 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
 
     Route::get('/reports/dispensing', [ReportController::class, 'dispensingPage'])->name('dispensing.index');
     Route::post('/reports/dispensing', [ReportController::class, 'dispensingSearch'])->name('dispensing.search');
+
+    Route::get('/{encounter}/encounter', [EncounterController::class, 'index'])->name('encounter');
+    Route::post('/encounter', [EncounterController::class, 'createEncounter'])->name('encounter.create');
 });
 
-Route::get('/test', function ()
-{
+// Route::get('/test', function ()
+// {
 
 
-    $mpdf=new mPDF();
+//     $mpdf=new mPDF();
 
-    $mpdf->WriteHTML(View::make('invoice', [], [])->render());
-    $pageHeigt = $mpdf->y;
-    unset($mpdf);
+//     $mpdf->WriteHTML(View::make('invoice', [], [])->render());
+//     $pageHeigt = $mpdf->y;
+//     unset($mpdf);
 
-    $pdf = PDF::loadView('invoice', [] ,[] ,[
-      'format' => [80,$pageHeigt],
-      'default_font_size' => '10'
-    ]);
+//     $pdf = PDF::loadView('invoice', [] ,[] ,[
+//       'format' => [80,$pageHeigt],
+//       'default_font_size' => '10'
+//     ]);
 
-    $pdfString = $pdf->output();
-    return dd($pdfString);
+//     $pdfString = $pdf->output();
+//     return dd($pdfString);
 
-$connector = new WindowsPrintConnector("XP-80C");
+// $connector = new WindowsPrintConnector("XP-80C");
 
-$printer = new Printer($connector);
-// $pdf->save(storage_path('app/public/file.pdf'));
-// return storage_path('app/public/file.pdf');
-// $pdfPath = public_path('storage/file.pdf');
+// $printer = new Printer($connector);
+// // $pdf->save(storage_path('app/public/file.pdf'));
+// // return storage_path('app/public/file.pdf');
+// // $pdfPath = public_path('storage/file.pdf');
 
-// $pages = ImagickEscposImage::loadPdf($pdfPath, 80);
-// foreach ($pages as $page) {
-    // $printer -> graphics($page);
-// }
+// // $pages = ImagickEscposImage::loadPdf($pdfPath, 80);
+// // foreach ($pages as $page) {
+//     // $printer -> graphics($page);
+// // }
 
-$printer -> cut();
-$printer -> close();
-});
+// $printer -> cut();
+// $printer -> close();
+// });

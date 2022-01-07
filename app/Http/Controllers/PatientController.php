@@ -29,7 +29,7 @@ class PatientController extends Controller
         $this->authorize('patient-add');
 
         $patient = Patient::all()->last();
-        $patient_id = $this->generate($patient->id + 1);
+        $patient_id = $this->generate((($patient->id)??0) + 1);
 
         return view('patient.add', [
             'patient_id' => $patient_id
