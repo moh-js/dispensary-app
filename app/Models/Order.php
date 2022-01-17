@@ -19,6 +19,8 @@ class Order extends Model implements ContractsAuditable
         'order_date' => 'datetime'
     ];
 
+    protected $with = ['items'];
+
     public function items()
     {
         return $this->hasMany(OrderService::class, 'order_id');

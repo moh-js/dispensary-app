@@ -18,7 +18,7 @@ class CreateServicesTable extends Migration
             $table->foreignId('item_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('service_category_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('name')->unique();
-            $table->float('price');
+            $table->float('price')->nullable();
             $table->softDeletes();
             $table->string('slug')->nullable();
             $table->timestamps();

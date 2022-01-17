@@ -23,19 +23,6 @@
 
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="short_name"><strong>Short Name</strong></label>
-                        <input type="text"
-                        class="form-control @error('short_name') is-invalid @enderror" name="short_name" value="{{ old('short_name') }}" id="short_name" placeholder="Short Name">
-                        @error('short_name')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="form-group">
                         <label for="quantity"><strong>Quantity</strong></label>
                         <input type="text"
                         class="form-control @error('quantity') is-invalid @enderror" name="quantity" value="{{ old('quantity') }}" id="quantity" placeholder="Quantity">
@@ -49,46 +36,16 @@
 
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="package_type"><strong>Package Type</strong></label>
+                        <label for="uom"><strong>UoM</strong></label>
                         <input type="text"
-                        class="form-control @error('package_type') is-invalid @enderror" name="package_type" value="{{ old('package_type') }}" id="package_type" placeholder="Package Type">
-                        @error('package_type')
+                        class="form-control @error('uom') is-invalid @enderror" name="uom" value="{{ old('uom') }}" id="uom" placeholder="Unit of Measure">
+                        @error('uom')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
                 </div>
-
-                <div class="col-sm-4">
-                    <div class="input-group">
-                        <label for="price"><strong>Price</strong></label>
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroupPrepend">Tsh</span>
-                        </div>
-                        <input type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ old('price') }}" id="price" placeholder="Price">
-                        @error('price')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="manufacturer"><strong>Manufacturer</strong></label>
-                        <input type="text"
-                        class="form-control @error('manufacturer') is-invalid @enderror" name="manufacturer" value="{{ old('manufacturer') }}" id="manufacturer" placeholder="Manufacturer">
-                        @error('manufacturer')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
-
-                @if ($category->id == 1 || $category->id == 2)
 
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -104,33 +61,17 @@
                 </div>
 
                 <div class="col-sm-4">
-                    <div class="input-group">
+                    <div class="form-group">
                         <label for="service_price"><strong>Service Price</strong></label>
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroupPrepend">Tsh</span>
-                        </div>
-                        <input type="text" class="form-control @error('service_price') is-invalid @enderror" name="service_price" value="{{ old('service_price') }}" id="service_price" placeholder="Service Price">
+                        <input type="text"
+                        class="form-control @error('service_price') is-invalid @enderror" name="service_price" value="{{ old('service_price') }}" id="service_price" placeholder="Per Unit">
                         @error('service_price')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
-                </div>
-                @endif
-
-                <div class="col-sm-12">
-                    <div class="form-group">
-                        <label for="expire_date"><strong>Expire Date</strong></label>
-                      <input type="date"
-                        class="form-control @error('expire_date') is-invalid @enderror" name="expire_date" value="{{ old('expire_date') }}" id="expire_date" placeholder="Expire Date">
-                        @error('expire_date')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
+                 </div>
 
                 <div class="col-sm-12 mt-2">
                     <div class="form-group d-flex justify-content-end">

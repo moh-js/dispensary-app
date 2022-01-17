@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
 <div class="card">
     <div class="card-body">
         <div class="user-profile user-card mb-4">
@@ -27,7 +26,7 @@
 							<div class="row mb-5">
 								<div class="col-md-4">
 									<div class="clearfix"></div>
-									<a href="javascript:void(0)" class="mb-1 text-muted d-flex align-items-end text-h-primary"><i class="feather icon-calendar mr-2 f-18"></i>{{ $user->dob->diff(now())->y }} Years Old</a>
+									<a href="javascript:void(0)" class="mb-1 text-muted d-flex align-items-end text-h-primary"><i class="feather icon-calendar mr-2 f-18"></i>{{ $user->age }} Years Old</a>
 									<div class="clearfix"></div>
 									<a href="#!" class="mb-1 text-muted d-flex align-items-end text-h-primary"><i class="feather icon-phone mr-2 f-18"></i>{{ $user->phone? '+255'.$user->phone:'' }}</a>
 								</div>
@@ -46,23 +45,28 @@
 									</div>
 								</div>
                                 <div class="col-md-4">
-                                    <a href="#" class="btn btn-primary btn-sm d-md-block mb-md-2"><i class="feather"></i> Encounter</a>
+                                    <a href="javascript:void(0)" onclick="$('#encounter-form').submit()" class="btn btn-primary btn-sm d-md-block mb-md-2"><i class="feather"></i> Encounter</a>
+
+                                    <form id="encounter-form" action="{{ route('encounter.create') }}" hidden method="post">
+                                        <input type="text" hidden name="patient_id" value="{{ $user->id }}">
+                                        @csrf
+                                    </form>
                                     <a href="{{ route('bill.patient.page', $user->patient_id) }}" class="btn btn-danger btn-sm d-md-block">Service Bill</a>
                                 </div>
 							</div>
 							<ul class="nav nav-tabs profile-tabs nav-fill" id="myTab" role="tablist">
 								<li class="nav-item">
-									<a class="nav-link text-reset has-ripple" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false"><i class="feather icon-home mr-2"></i>Home<span class="ripple ripple-animate" style="height: 165.031px; width: 165.031px; animation-duration: 0.7s; animation-timing-function: linear; background: rgb(55, 58, 60); opacity: 0.4; top: -58.508px; left: 11.8358px;"></span></a>
+									<a class="nav-link text-reset has-ripple" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false"><i class="feather icon-home mr-2"></i>Encounters<span class="ripple ripple-animate" style="height: 165.031px; width: 165.031px; animation-duration: 0.7s; animation-timing-function: linear; background: rgb(55, 58, 60); opacity: 0.4; top: -58.508px; left: 11.8358px;"></span></a>
 								</li>
 								<li class="nav-item">
 									<a class="nav-link text-reset has-ripple" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="feather icon-user mr-2"></i>Profile<span class="ripple ripple-animate" style="height: 167.641px; width: 167.641px; animation-duration: 0.7s; animation-timing-function: linear; background: rgb(55, 58, 60); opacity: 0.4; top: -61.8205px; left: 19.492px;"></span></a>
 								</li>
-								<li class="nav-item">
+								{{-- <li class="nav-item">
 									<a class="nav-link text-reset has-ripple" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"><i class="feather icon-phone mr-2"></i>My Contacts<span class="ripple ripple-animate" style="height: 205.594px; width: 205.594px; animation-duration: 0.7s; animation-timing-function: linear; background: rgb(55, 58, 60); opacity: 0.4; top: -80.797px; left: -36.1251px;"></span></a>
 								</li>
 								<li class="nav-item">
 									<a class="nav-link text-reset has-ripple active" id="gallery-tab" data-toggle="tab" href="#gallery" role="tab" aria-controls="gallery" aria-selected="true"><i class="feather icon-image mr-2"></i>Gallery<span class="ripple ripple-animate" style="height: 171.047px; width: 171.047px; animation-duration: 0.7s; animation-timing-function: linear; background: rgb(55, 58, 60); opacity: 0.4; top: -65.5235px; left: -29.4454px;"></span></a>
-								</li>
+								</li> --}}
 							</ul>
 						</div>
 					</div>
@@ -76,10 +80,11 @@
     <div class="col-md-12 ">
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <div class="card">
+                <div class="card latest-update-card">
                     <div class="card-header">
-                        <h5 class="font-weight-normal"><a href="#!" class="text-h-primary text-reset"><b class="font-weight-bolder">Josephin Doe</b></a> posted on your timeline</h5>
-                        <p class="mb-0 text-muted">50 minutes ago</p>
+                        <h4></h4>
+                        {{-- <h5 class="font-weight-normal"><a href="#!" class="text-h-primary text-reset"><b class="font-weight-bolder">Josephin Doe</b></a> posted on your timeline</h5> --}}
+                        {{-- <p class="mb-0 text-muted">50 minutes ago</p> --}}
                         <div class="card-header-right">
                             <div class="btn-group card-option">
                                 <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -95,189 +100,26 @@
                         </div>
                     </div>
                     <a href="#!"><img src="assets/images/profile/bg-1.jpg" alt="" class="img-fluid"></a>
+
                     <div class="card-body">
-                        <a href="#!" class="text-h-primary">
-                            <h6>The new Lorem Ipsum is simply</h6>
-                        </a>
-                        <p class="text-muted mb-0">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                            printer took a galley of type and scrambled it to make a type specimen book.</p>
-                    </div>
-                    <div class="card-body border-top border-bottom">
-                        <ul class="list-inline m-0">
-                            <li class="list-inline-item"><a href="#!" class="text-danger text-h-danger"><i class="feather icon-heart-on mr-2"></i>Like</a></li>
-                            <li class="list-inline-item"><a href="#!" class="text-muted text-h-primary"><i class="feather icon-message-square mr-2"></i>Comment</a></li>
-                            <li class="list-inline-item"><a href="#!" class="text-muted text-h-primary"><i class="feather icon-share-2 mr-2"></i>Share</a></li>
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="row justify-content-between mb-4">
-                            <div class="col-auto"><a href="#!" class="text-muted text-h-primary">Comment (50)</a></div>
-                            <div class="col-auto"><a href="#!" class="text-muted text-h-primary">See All</a></div>
-                        </div>
-                        <div class="media mb-0">
-                            <img src="assets/images/user/avatar-2.jpg" alt="user image" class="img-radius wid-30 align-top m-r-15">
-                            <div class="media-body">
-                                <a href="#!">
-                                    <h6 class="mb-0 text-h-primary">Alex Thompson</h6>
-                                </a>
-                                <p class="m-b-0">Looking Very nice type and scrambled
-                                    <a href="#!" class="text-muted text-h-danger ml-1"><small>Like</small></a>
-                                    <a href="#!" class="text-muted text-h-primary ml-1"><small>Comment</small></a>
-                                </p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="media mb-0">
-                            <img src="assets/images/user/avatar-3.jpg" alt="user image" class="img-radius wid-30 align-top m-r-15">
-                            <div class="media-body">
-                                <a href="#!">
-                                    <h6 class="mb-0 text-h-primary">Alex Thompson</h6>
-                                </a>
-                                <p class="m-b-0">Nice Pic printing and typesetting industry
-                                    <a href="#!" class="text-muted text-h-danger ml-1"><small>Like</small></a>
-                                    <a href="#!" class="text-muted text-h-primary ml-1"><small>Comment</small></a>
-                                </p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="media mb-0">
-                            <img src="assets/images/user/avatar-1.jpg" alt="user image" class="img-radius wid-40 align-top m-r-15">
-                            <div class="media-body">
-                                <div class="form-group">
-                                    <label class="floating-label" for="comment1">Write comment hear !. . .</label>
-                                    <input type="text" class="form-control" id="comment1">
-                                    <div class="form-icon">
-                                        <button class="btn btn-primary btn-icon">
-                                            <i class="feather icon-message-circle"></i>
-                                        </button>
+                        <div class="latest-update-box">
+                            @foreach ($user->encounters as $encounter)
+                                <div class="row p-t-30 p-b-30">
+                                    <div class="col-auto text-right update-meta">
+                                        <p class="text-muted m-b-0 d-inline-flex">{{ $encounter->updated_at->diffForHumans() }}</p>
+                                        <i class="feather icon-twitter bg-twitter update-icon"></i>
+                                    </div>
+                                    <div class="col">
+                                        <a href="#!">
+                                            <h6>{{ $encounter->name??$encounter->updated_at->format('dmYHi') }}</h6>
+                                        </a>
+                                        <p class="text-muted m-b-0">You’re getting more and more followers, keep it up!</p>
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="font-weight-normal"><a href="#!" class="text-h-primary text-reset"><b class="font-weight-bolder">Josephin Doe</b></a> posted on your timeline</h5>
-                        <p class="mb-0 text-muted">50 minutes ago</p>
-                        <div class="card-header-right">
-                            <div class="btn-group card-option">
-                                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="feather icon-more-horizontal"></i>
-                                </button>
-                                <ul class="list-unstyled card-option dropdown-menu dropdown-menu-right">
-                                    <li class="dropdown-item full-card"><a href="#!"><span><i class="feather icon-maximize"></i> maximize</span><span style="display:none"><i class="feather icon-minimize"></i>
-                                                Restore</span></a></li>
-                                    <li class="dropdown-item minimize-card"><a href="#!"><span><i class="feather icon-minus"></i> collapse</span><span style="display:none"><i class="feather icon-plus"></i> expand</span></a>
-                                    </li>
-                                    <li class="dropdown-item reload-card"><a href="#!"><i class="feather icon-refresh-cw"></i> reload</a></li>
-                                    <li class="dropdown-item close-card"><a href="#!"><i class="feather icon-trash"></i> remove</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#!"><img src="assets/images/profile/bg-2.jpg" alt="" class="img-fluid"></a>
-                    <div class="card-body">
-                        <a href="#!" class="text-h-primary">
-                            <h6>The new Lorem Ipsum is simply</h6>
-                        </a>
-                        <p class="text-muted mb-0">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                            printer took a galley of type and scrambled it to make a type specimen book.</p>
-                    </div>
-                    <div class="card-body border-top border-bottom">
-                        <ul class="list-inline m-0">
-                            <li class="list-inline-item"><a href="#!" class="text-muted text-h-danger"><i class="feather icon-heart mr-2"></i>Like</a></li>
-                            <li class="list-inline-item"><a href="#!" class="text-muted text-h-primary"><i class="feather icon-message-square mr-2"></i>Comment</a></li>
-                            <li class="list-inline-item"><a href="#!" class="text-muted text-h-primary"><i class="feather icon-share-2 mr-2"></i>Share</a></li>
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="row justify-content-between mb-4">
-                            <div class="col-auto"><a href="#!" class="text-muted text-h-primary">Comment (50)</a></div>
-                            <div class="col-auto"><a href="#!" class="text-muted text-h-primary">See All</a></div>
-                        </div>
-                        <div class="media mb-0">
-                            <img src="assets/images/user/avatar-3.jpg" alt="user image" class="img-radius wid-30 align-top m-r-15">
-                            <div class="media-body">
-                                <a href="#!">
-                                    <h6 class="mb-0 text-h-primary">Alex Thompson</h6>
-                                </a>
-                                <p class="m-b-0">Looking Very nice type and scrambled
-                                    <a href="#!" class="text-muted text-h-danger ml-1"><small>Like</small></a>
-                                    <a href="#!" class="text-muted text-h-primary ml-1"><small>Comment</small></a>
-                                </p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="media mb-0">
-                            <img src="assets/images/user/avatar-1.jpg" alt="user image" class="img-radius wid-40 align-top m-r-15">
-                            <div class="media-body">
-                                <div class="form-group">
-                                    <label class="floating-label" for="comment2">Write comment hear !. . .</label>
-                                    <input type="text" class="form-control" id="comment2">
-                                    <div class="form-icon">
-                                        <button class="btn btn-primary btn-icon">
-                                            <i class="feather icon-message-circle"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="font-weight-normal"><a href="#!" class="text-h-primary text-reset"><b class="font-weight-bolder">Josephin Doe</b></a> posted on your timeline</h5>
-                        <p class="mb-0 text-muted">50 minutes ago</p>
-                        <div class="card-header-right">
-                            <div class="btn-group card-option">
-                                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="feather icon-more-horizontal"></i>
-                                </button>
-                                <ul class="list-unstyled card-option dropdown-menu dropdown-menu-right">
-                                    <li class="dropdown-item full-card"><a href="#!"><span><i class="feather icon-maximize"></i> maximize</span><span style="display:none"><i class="feather icon-minimize"></i>
-                                                Restore</span></a></li>
-                                    <li class="dropdown-item minimize-card"><a href="#!"><span><i class="feather icon-minus"></i> collapse</span><span style="display:none"><i class="feather icon-plus"></i> expand</span></a>
-                                    </li>
-                                    <li class="dropdown-item reload-card"><a href="#!"><i class="feather icon-refresh-cw"></i> reload</a></li>
-                                    <li class="dropdown-item close-card"><a href="#!"><i class="feather icon-trash"></i> remove</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#!"><img src="assets/images/profile/bg-3.jpg" alt="" class="img-fluid"></a>
-                    <div class="card-body">
-                        <a href="#!" class="text-h-primary">
-                            <h6>The new Lorem Ipsum is simply</h6>
-                        </a>
-                        <p class="text-muted mb-0">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                            printer took a galley of type and scrambled it to make a type specimen book.</p>
-                    </div>
-                    <div class="card-body border-top border-bottom">
-                        <ul class="list-inline m-0">
-                            <li class="list-inline-item"><a href="#!" class="text-muted text-h-danger"><i class="feather icon-heart mr-2"></i>Like</a></li>
-                            <li class="list-inline-item"><a href="#!" class="text-muted text-h-primary"><i class="feather icon-message-square mr-2"></i>Comment</a></li>
-                            <li class="list-inline-item"><a href="#!" class="text-muted text-h-primary"><i class="feather icon-share-2 mr-2"></i>Share</a></li>
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="row justify-content-between mb-4">
-                            <div class="col-auto"><a href="#!" class="text-muted text-h-primary">Comment (0)</a></div>
-                            <div class="col-auto"><a href="#!" class="text-muted text-h-primary">See All</a></div>
-                        </div>
-                        <div class="media mb-0">
-                            <img src="assets/images/user/avatar-1.jpg" alt="user image" class="img-radius wid-40 align-top m-r-15">
-                            <div class="media-body">
-                                <div class="form-group">
-                                    <label class="floating-label" for="comment3">Write comment hear !. . .</label>
-                                    <input type="text" class="form-control" id="comment3">
-                                    <div class="form-icon">
-                                        <button class="btn btn-primary btn-icon">
-                                            <i class="feather icon-message-circle"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="text-center">
+                            <a href="#!" class="b-b-primary text-primary">View all Projects</a>
                         </div>
                     </div>
                 </div>
@@ -295,33 +137,34 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label font-weight-bolder">Full Name</label>
                                 <div class="col-sm-9">
-                                    Lary Doe
+                                    {{ $user->name }}
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label font-weight-bolder">Gender</label>
                                 <div class="col-sm-9">
-                                    Male
+                                    {{ title_case($user->gender) }}
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label font-weight-bolder">Birth Date</label>
                                 <div class="col-sm-9">
-                                    16-12-1994
+                                    {{ $user->date }}
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label font-weight-bolder">Martail Status</label>
+                                <label class="col-sm-3 col-form-label font-weight-bolder">Age</label>
                                 <div class="col-sm-9">
-                                    Unmarried
+                                    {{ $user->age }}
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label font-weight-bolder">Location</label>
                                 <div class="col-sm-9">
-                                    <p class="mb-0 text-muted">4289 Calvin Street</p>
+                                    <p class="mb-0 text-muted">{{ $user->address }}</p>
+                                    {{-- <p class="mb-0 text-muted">4289 Calvin Street</p>
                                     <p class="mb-0 text-muted">Baltimore, near MD Tower Maryland,</p>
-                                    <p class="mb-0 text-muted">Maryland (21201)</p>
+                                    <p class="mb-0 text-muted">Maryland (21201)</p> --}}
                                 </div>
                             </div>
                         </form>
@@ -390,25 +233,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label font-weight-bolder">Mobile Number</label>
                                 <div class="col-sm-9">
-                                    +1 9999-999-999
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label font-weight-bolder">Email Address</label>
-                                <div class="col-sm-9">
-                                    Demo@domain.com
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label font-weight-bolder">Twitter</label>
-                                <div class="col-sm-9">
-                                    @phonixcoded
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label font-weight-bolder">Skype</label>
-                                <div class="col-sm-9">
-                                    @phonixcoded demo
+                                    {{ $user->phone }}
                                 </div>
                             </div>
                         </form>
@@ -428,18 +253,6 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label font-weight-bolder">Twitter</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" placeholder="Full Name" value="@phonixcoded">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label font-weight-bolder">Skype</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" placeholder="Full Name" value="@phonixcoded demo">
-                                </div>
-                            </div>
-                            <div class="form-group row">
                                 <label class="col-sm-3 col-form-label"></label>
                                 <div class="col-sm-9">
                                     <button type="submit" class="btn btn-primary">Save</button>
@@ -448,7 +261,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="card">
+            {{--     <div class="card">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <h5 class="mb-0">other Information</h5>
                         <button type="button" class="btn btn-primary btn-sm rounded m-0 float-right" data-toggle="collapse" data-target=".pro-wrk-edit" aria-expanded="false" aria-controls="pro-wrk-edit-1 pro-wrk-edit-2">
@@ -520,9 +333,11 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                </div> --}}
             </div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+
+           {{--  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card user-card user-card-1">
@@ -765,8 +580,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="tab-pane fade" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
+            </div> --}}
+
+
+            {{-- <div class="tab-pane fade" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
                 <div class="row text-center">
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <a href="assets/images/light-box/l1.jpg" data-lightbox="roadtrip"><img src="assets/images/light-box/sl1.jpg" class="img-fluid m-b-10 img-thumbnail bg-white" alt=""></a>
@@ -787,7 +604,7 @@
                         <a href="assets/images/light-box/l6.jpg" data-lightbox="roadtrip"><img src="assets/images/light-box/sl6.jpg" class="img-fluid m-b-10 img-thumbnail bg-white" alt=""></a>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 

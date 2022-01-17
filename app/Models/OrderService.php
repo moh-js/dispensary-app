@@ -33,4 +33,5 @@ class OrderService extends Model implements ContractsAuditable
         $query->where('service_category_id', 1);
     }
 
+
 }

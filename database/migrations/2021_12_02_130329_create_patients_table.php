@@ -22,6 +22,10 @@ class CreatePatientsTable extends Migration
             $table->string('phone')->nullable();
             $table->date('dob')->nullable();
             $table->string('address')->nullable();
+            $table->string('file_number')->nullable();
+            $table->boolean('is_special_group')->default(0);
+            $table->string('special_group_evidence')->nullable();
+            $table->string('special_group_category')->nullable();
             $table->enum('gender', [
                 'male', 'female'
             ]);

@@ -97,10 +97,11 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::post('/encounter', [EncounterController::class, 'createEncounter'])->name('encounter.create');
 });
 
-// Route::get('/test', function ()
-// {
-
-
+Route::get('/test', function ()
+{
+    $arr = preg_split('/(?<=[0-9])(?=[a-z]+)/i','pc/121');
+    return $arr;
+});
 //     $mpdf=new mPDF();
 
 //     $mpdf->WriteHTML(View::make('invoice', [], [])->render());

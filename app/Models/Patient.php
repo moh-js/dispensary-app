@@ -25,6 +25,16 @@ class Patient extends Model implements ContractsAuditable
         return $this->first_name . ' ' . $this->last_name;
     }
 
+    public function getDateAttribute()
+    {
+        return $this->dob->format('d-m-Y');
+    }
+
+    public function getAgeAttribute()
+    {
+        return $this->dob->diff(now())->y;
+    }
+
     function getRouteKeyName()
     {
         return 'patient_id';
@@ -33,5 +43,15 @@ class Patient extends Model implements ContractsAuditable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function encounters()
+    {
+        return $this->hasMany(Encounter::class);
+    }
+
+    public function getLastPendingOrder()
+    {
+        return $this->orders()->where([['patient_id', $this->id], ['status', 'pending']])->get()->last();
     }
 }

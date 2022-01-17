@@ -3,10 +3,10 @@
         @csrf
 
         <div class="row">
-            <div class="form-group col-sm-4">
-                <label for="service_id">Investigation Name</label>
+            <div class="form-group col-sm-8">
+                <label for="service_id">Medicine Name</label>
                 <select wire:model="service_id" id="service_id" class="form-control @error('service_id') is-invalid @enderror">
-                    <option value="{{ null }}" selected>Choose Investigation Name</option>
+                    <option value="{{ null }}" selected>Choose Medicine Name</option>
                     @foreach ($services as $service)
                         <option value="{{ $service->id }}">{{ $service->name }}</option>
                     @endforeach
@@ -18,10 +18,10 @@
                 @enderror
             </div>
 
-            <div class="form-group col-sm-8">
-                <label for="result">Result</label>
-                <textarea wire:model="result" id="result" rows="1" class="form-control @error('result') is-invalid @enderror"></textarea>
-                @error('result')
+            <div class="form-group col-sm-4">
+                <label for="quantity">Quantity</label>
+                <input type="number" wire:model="quantity" id="quantity" class="form-control @error('quantity') is-invalid @enderror">
+                @error('quantity')
                     <div class="text-danger">
                         <small>{{ $message }}</small>
                     </div>
@@ -30,7 +30,7 @@
 
             <div class="form-group col-sm-12">
                 <button wire:click="clearForm" type="button" class="btn btn-danger mr-3">Cancel</button>
-                @if ($investigation)
+                @if ($prescription)
                 <button type="submit" class="btn btn-primary">Update</button>
                 @else
                 <button type="submit" class="btn btn-primary">Save</button>

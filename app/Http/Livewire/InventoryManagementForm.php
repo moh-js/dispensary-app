@@ -12,7 +12,9 @@ class InventoryManagementForm extends Component
     public $item_id;
     public $units;
     public $item;
+    public $action = 'Requested';
     public $from;
+    public $col = 'col-sm-4';
     public $query = null;
     public $type = 'Choose action';
     public $itemsListSection = false;
@@ -40,9 +42,13 @@ class InventoryManagementForm extends Component
         if ($this->type == 'sent') {
             $this->units = Unit::whereNotIn('id', [6])->get();
             $this->from = 'Store';
+            $this->action = title_case($this->type);
+            $this->col = 'col-sm-4';
         } else {
+            $this->col = 'col-sm-2';
             $this->units = Unit::whereIn('id', [6])->get();
             $this->from = null;
+            $this->action = title_case($this->type).'d';
         }
     }
 

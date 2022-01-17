@@ -18,8 +18,6 @@ class InventoryCategorySeeder extends Seeder
             [
                 'name' => 'Medicine',
             ], [
-                'name' => 'Injection',
-            ], [
                 'name' => 'Medical Supply',
             ]
         ];

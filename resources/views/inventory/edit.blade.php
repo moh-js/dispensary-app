@@ -10,25 +10,24 @@
             @method('PUT')
 
             <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                      <label for="category"><strong>Inventory Category</strong></label>
+                      <select class="form-control" name="category" id="category">
+                        <option value="{{ null }}" selected>Choose Category</option>
+                        @foreach (App\Models\InventoryCategory::all() as $category)
+                            <option value="{{ $category->id }}" {{ $category->id == $item->inventory_category_id? 'selected':'' }}>{{ $category->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                </div>
+
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="name"><strong>Name</strong></label>
                       <input type="text"
                         class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name')??$item->name }}" id="name" placeholder="Name">
                         @error('name')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="short_name"><strong>Short Name</strong></label>
-                        <input type="text"
-                        class="form-control @error('short_name') is-invalid @enderror" name="short_name" value="{{ old('short_name')??$item->short_name }}" id="short_name" placeholder="Short Name">
-                        @error('short_name')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -51,46 +50,16 @@
 
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="package_type"><strong>Package Type</strong></label>
+                        <label for="uom"><strong>UoM</strong></label>
                         <input type="text"
-                        class="form-control @error('package_type') is-invalid @enderror" name="package_type" value="{{ old('package_type')??$item->package_type }}" id="package_type" placeholder="Package Type">
-                        @error('package_type')
+                        class="form-control @error('uom') is-invalid @enderror" name="uom" value="{{ old('uom')??$item->uom }}" id="uom" placeholder="Unit of Measure">
+                        @error('uom')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
                 </div>
-
-                <div class="col-sm-4">
-                    <label for="price"><strong>Price</strong></label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroupPrepend">Tsh</span>
-                        </div>
-                        <input type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ old('price')??$item->price }}" id="price" placeholder="Price">
-                        @error('price')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="manufacturer"><strong>Manufacturer</strong></label>
-                        <input type="text"
-                        class="form-control @error('manufacturer') is-invalid @enderror" name="manufacturer" value="{{ old('manufacturer')??$item->price }}" id="manufacturer" placeholder="Manufacturer">
-                        @error('manufacturer')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
-
-                @if ($item->inventoryCategory->id == 1 || $item->inventoryCategory->id == 2)
 
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -106,27 +75,11 @@
                 </div>
 
                 <div class="col-sm-4">
-                    <label for="service_price"><strong>Service Price</strong></label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroupPrepend">Tsh</span>
-                        </div>
-                        <input type="text" class="form-control @error('service_price') is-invalid @enderror" name="service_price" value="{{ old('service_price')??$item->service->price }}" id="service_price" placeholder="Service Price">
-                        @error('service_price')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
-                @endif
-
-                <div class="col-sm-12">
                     <div class="form-group">
-                        <label for="expire_date"><strong>Expire Date</strong></label>
-                      <input type="date"
-                        class="form-control @error('expire_date') is-invalid @enderror" name="expire_date" value="{{ old('expire_date')??(($item->expire_date)?$item->expire_date->format('Y-m-d'):'') }}" id="expire_date" placeholder="Expire Date">
-                        @error('expire_date')
+                        <label for="service_price"><strong>Service Price</strong></label>
+                        <input type="text"
+                        class="form-control @error('service_price') is-invalid @enderror" name="service_price" value="{{ old('service_price')??$item->service->price }}" id="service_price" placeholder="Per Unit">
+                        @error('service_price')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>

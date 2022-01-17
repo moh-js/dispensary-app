@@ -23,7 +23,7 @@ class CreateOrdersTable extends Migration
             $table->string('invoice_id')->nullable();
             $table->string('receipt_id')->nullable();
             $table->string('receipt_file')->nullable();
-            $table->foreignIdFor(User::class, 'cashier_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'cashier_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->string('status')->default('pending');
             $table->timestamps();
         });

@@ -71,7 +71,7 @@
                 <div class="form-group">
                   <label for="name"><strong>Name</strong></label>
                   <input type="text"
-                    class="form-control" disabled value="{{ $item->name }}" id="name" placeholder="Name">
+                    class="form-control" disabled value="{{ $item->name. ' - '. $item->quantity.$item->uom }}" id="name" placeholder="Name">
                 </div>
             </div>
 
@@ -88,7 +88,7 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="category"><strong>Receive or Send</strong></label>
-                    <select id="type" wire:model="type" class="form-control @error('type') is-invalid @enderror">
+                    <select id="type" wire:model="type" name="type" class="form-control @error('type') is-invalid @enderror">
                         <option selected value="{{ null }}">Choose action</option>
                         <option {{ old('type') == 'receive'? 'selected':'' }} value="receive">Receiving</option>
                         <option {{ old('type') == 'sent'? 'selected':'' }} value="sent">Sending</option>
@@ -101,9 +101,7 @@
                 </div>
             </div>
 
-            <input type="text" hidden name="type" value="{{ $type }}">
-
-            <div class="col-sm-4">
+            <div class="{{ $col }}">
                 <div class="form-group">
                     <label for="category"><strong>From</strong></label>
                     <input type="text"
@@ -115,6 +113,21 @@
                     @enderror
                 </div>
             </div>
+
+            @if ($col == 'col-sm-2')
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="category"><strong>Unique ID</strong></label>
+                        <input type="text"
+                        class="form-control @error('from') is-invalid @enderror" name="unique_id" value="{{ old('unique_id') }}" id="unique_id" placeholder="Batch # or Receipt #">
+                        @error('unique_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+            @endif
 
             <div class="col-sm-4">
                 <div class="form-group">
@@ -137,7 +150,7 @@
                 <div class="form-group">
                     <label for="category"><strong>Quantity</strong></label>
                     <input type="text"
-                    class="form-control @error('quantity') is-invalid @enderror" name="quantity" value="{{ old('quantity') }}" id="quantity" placeholder="Number of {{ $item->package_type }}">
+                    class="form-control @error('quantity') is-invalid @enderror" name="quantity" value="{{ old('quantity') }}" id="quantity" placeholder="Number of {{ $item->uom }}">
                     @error('quantity')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -148,7 +161,7 @@
 
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label for="category"><strong>Issued by</strong></label>
+                    <label for="category"><strong>{{ $action }} by</strong></label>
                     <input type="text"
                     class="form-control" disabled value="{{ request()->user()->name }}" id="issued_by" >
                     @error('issued_by')
@@ -161,7 +174,7 @@
 
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label for="issued_date"><strong>Issued Date</strong></label>
+                    <label for="issued_date"><strong>{{ $action }} Date</strong></label>
                   <input type="datetime-local" max="{{ now()->format('Y-m-d\TH:i') }}"
                     class="form-control @error('issued_date') is-invalid @enderror" name="issued_date" value="{{old('issued_date')??now()->format('Y-m-d\TH:i')}}" id="issued_date">
                     @error('issued_date')

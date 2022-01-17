@@ -1,3 +1,19 @@
+@push('css')
+    <style>
+        #overlay {
+            position: fixed;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(109, 109, 109, 0.5);
+            z-index: 2;
+        }
+    </style>
+@endpush
 <div>
     <form action="{{ route('bill.patient.add', [$patient->patient_id, ($order->invoice_id??null)]) }}" id="add" method="post">
         @csrf
@@ -17,13 +33,23 @@
 
             <div class="col-sm-8">
                 <div class="form-group">
-                  <label for="name"><strong>Service</strong></label>
-                  <select name="service" wire:model="service_id" {{ $disabledServiceInput? 'disabled':'' }} id="service" class="form-control">
-                      <option value="{{ null }}" selected>Choose...</option>
-                      @foreach ($services as $service)
-                        <option value="{{ $service->id }}">{{ strtoupper($service->proper_name) }}</option>
-                      @endforeach
-                  </select>
+                    <div wire:loading wire:target="category_id">
+                        <div id="overlay" class="d-flex justify-content-center align-items-center">
+                            {{-- <h4 class="d-block">Loading Services</h4> --}}
+                            <div class="spinner-border text-primary" style="width: 4rem; height: 4rem;" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div >
+                    </div>
+                    <label for="name">
+                            <strong>Service</strong>
+                    </label>
+                    <select name="service" wire:model="service_id" {{ $disabledServiceInput? 'disabled':'' }} id="service" class="form-control">
+                        <option value="{{ null }}" selected>Choose...</option>
+                        @foreach ($services as $service)
+                            <option value="{{ $service->id }}">{{ strtoupper($service->proper_name) }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 

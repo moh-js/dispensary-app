@@ -14,7 +14,7 @@ class UpdateEncounterIrOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->foreignId('encounter_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('encounter_id')->after('invoice_id')->nullable()->constrained()->cascadeOnDelete();
         });
     }
 

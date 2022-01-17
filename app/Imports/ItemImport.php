@@ -24,28 +24,33 @@ class ItemImport implements OnEachRow, WithHeadingRow, WithChunkReading
         $category = InventoryCategory::where('name', $row['category'])->first();
 
         // Save Item
+        $arr = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$row['uom']);
+        
+        if (count($arr) == 1) {
+            $uom = $arr[0];
+            $quantity = null;
+        } else {
+            $uom = $arr[1];
+            $quantity = $arr[0];
+        }
+
         $item = Item::updateOrCreate([
             'name' => $row['name'],
             'inventory_category_id' => $category->id,
         ], [
-            'short_name' => $row['short_name'],
-            'manufacturer' => $row['manufacturer'],
-            'package_type' => $row['package_type'],
-            'price' => $row['price'],
-            'quantity' => $row['quantity'],
+            'uom' => $uom,
+            'quantity' => $quantity,
         ]);
 
         // Create its service bill
-        if ($category->id == 1 || $category->id == 2) {
-            $service_category_id = 1;
+        $service_category_id = 1;
 
-            $item->service()->updateOrCreate([
-                'name' => "{$row['name']} - {$row['package_type']}",
-                'service_category_id' => $service_category_id
-            ], [
-                'price' => $row['price'],
-            ]);
-        }
+        $item->service()->updateOrCreate([
+            'name' => "{$row['name']} - {$row['uom']}",
+            'service_category_id' => $service_category_id
+        ], [
+            'price' => $row['price'],
+        ]);
 
         $this->manageItems($row, $item);
 

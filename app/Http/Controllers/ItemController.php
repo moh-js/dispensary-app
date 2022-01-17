@@ -18,10 +18,7 @@ class ItemController extends Controller
     {
         $this->authorize('item-view');
 
-        $items = Item::withTrashed()->where('inventory_category_id', $category->id)->paginate(20);
-
         return view('inventory.index', [
-            'items' => $items,
             'category' => $category
         ]);
 
@@ -55,10 +52,10 @@ class ItemController extends Controller
             'name' => ['required', 'string', 'max:255', 'unique:items,name'],
             'short_name' => ['nullable', 'string', 'max:255'],
             "quantity" => ['required', 'integer'],
-            "package_type" => ['nullable', 'string'],
+            "uom" => ['nullable', 'string'],
             "manufacture" => ['nullable', 'string'],
-            "service_name" => ['sometimes', 'string', "unique:services,name"],
-            "service_price" => ['sometimes', 'integer'],
+            "service_name" => ['nullable', 'string', "unique:services,name"],
+            "service_price" => ['required_with:service_name', 'string'],
             "price" => ['nullable', 'integer'],
             "expire_date" => ['nullable', 'date']
         ]);
@@ -67,16 +64,13 @@ class ItemController extends Controller
 
         $item = Item::firstOrCreate($data);
 
-        if ($category->id == 1 || $category->id == 2) {
-            $service_category_id = 1;
+        $service_category_id = 1;
 
-            $item->service()->firstOrCreate([
-                'name' => $request->service_name??$request->name,
-                'price' => $request->service_price,
-                'service_category_id' => $service_category_id
-            ]);
-        }
-
+        $item->service()->firstOrCreate([
+            'name' => $request->service_name??$request->name,
+            'price' => $request->service_price,
+            'service_category_id' => $service_category_id
+        ]);
 
         flash("$category->name added to inventory successfully");
         return redirect()->route('items.index', $category->slug);
@@ -123,7 +117,7 @@ class ItemController extends Controller
             'name' => ['required', 'string', 'max:255', "unique:items,name,$item->id,id"],
             'short_name' => ['nullable', 'string', 'max:255'],
             "quantity" => ['required', 'integer'],
-            "package_type" => ['nullable', 'string'],
+            "uom" => ['nullable', 'string'],
             "manufacture" => ['nullable', 'string'],
             "service_name" => ['sometimes', 'string', "unique:services,name,{$item->service->id},id"],
             "service_price" => ['sometimes', 'integer'],
@@ -131,19 +125,17 @@ class ItemController extends Controller
             "expire_date" => ['nullable', 'date']
         ]);
 
-        $data = collect($request->except(['_token', 'service_name', 'service_price']))->filter()->toArray();
+        $data = collect(['inventory_category_id' => $request->category])->merge($request->except(['_token', 'service_name', 'service_price', 'category']))->filter()->toArray();
 
         $item->update($data);
 
-        if ($item->inventory_category_id == 1 || $item->inventory_category_id == 2) {
-            $service_category_id = 1;
+        $service_category_id = 1;
 
-            $item->service->update([
-                'name' => $request->service_name??$request->name,
-                'price' => $request->service_price,
-                'service_category_id' => $service_category_id
-            ]);
-        }
+        $item->service->update([
+            'name' => $request->service_name??$request->name,
+            'price' => $request->service_price,
+            'service_category_id' => $service_category_id
+        ]);
 
         flash("$item->name updated successfully");
         return redirect()->route('items.index', $item->inventoryCategory->slug);
@@ -196,6 +188,7 @@ class ItemController extends Controller
             'item_id' => ['required', 'integer'],
             'type' => ['required', 'string'],
             'from' => ['required_if:type,receive', 'string'],
+            'unique_id' => ['required_if:type,receive', 'string'],
             'to' => ['required', 'string'],
             'quantity' => ['required', 'string'],
             'issued_date' => ['required', 'date']
@@ -209,9 +202,6 @@ class ItemController extends Controller
 
         $storeUnit = Unit::find(6); // 6 = store
         $itemFromStore = $storeUnit->getItemById($request->item_id);
-
-        // return $itemUnit;
-
 
 
         if ($type == 'receive') {
@@ -231,7 +221,7 @@ class ItemController extends Controller
                 ]);
 
                 } else {
-                flash('Requested Amount is greater than the available amount in the inventory')->error();
+                flash('Requested Amount is greater than the available amount in the store')->error();
                 return back()->withInput();
             }
 
@@ -244,6 +234,7 @@ class ItemController extends Controller
             'quantity' => $request->quantity,
             'issued_by' => $request->user()->id,
             'created_at' => $request->issued_date,
+            'batch_receipt_no' => $request->unique_id,
             'remain_from' => $type == 'receive'? null : $itemFromStore->remain,
             'remain_to' => $itemUnit->remain
         ]);

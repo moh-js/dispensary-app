@@ -12,7 +12,8 @@ class EncounterController extends Controller
         $this->authorize('encounter-view');
 
         return view('encounter.index', [
-            'encounter' => $encounter
+            'encounter' => $encounter,
+            'patient' => $encounter->patient_id
         ]);
     }
 
@@ -20,12 +21,17 @@ class EncounterController extends Controller
     {
         $this->authorize('encounter-create');
 
-        $encounter = Encounter::firstOrCreate([
-            'name' => null,
-            'patient_id' => request('patient_id'),
-        ]);
+        $encounter = Encounter::where([['patient_id', request('patient_id')], ['status', 0]])->first();
+
+        if (!$encounter) {
+            $encounter = Encounter::create([
+                'name' => null,
+                'patient_id' => request('patient_id'),
+            ]);
+        }
 
         return redirect()->route('encounter', $encounter->id);
 
     }
+
 }

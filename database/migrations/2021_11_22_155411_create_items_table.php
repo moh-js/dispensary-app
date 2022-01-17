@@ -16,15 +16,11 @@ class CreateItemsTable extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('short_name')->nullable();
             $table->foreignId('inventory_category_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('slug');
             $table->integer('quantity')->nullable();
-            $table->float('price');
+            $table->string('uom')->nullable()->comment('unit of measure');
             $table->softDeletes();
-            $table->string('package_type')->nullable();
-            $table->date('expire_date')->nullable();
-            $table->string('manufacturer')->nullable();
             $table->timestamps();
         });
     }

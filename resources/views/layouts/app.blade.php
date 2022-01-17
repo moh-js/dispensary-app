@@ -32,8 +32,6 @@
 
     <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 
-    @livewireStyles
-
     <style>
         body {
             font-family: 'Quicksand', sans-serif;
@@ -43,6 +41,8 @@
           border-top: 1px solid rgb(218, 218, 218);
         }
     </style>
+
+    @livewireStyles
 
     @stack('css')
 
@@ -355,6 +355,9 @@
     <script src="{{ asset('assets/js/ripple.js') }}"></script>
     <script src="{{ asset('assets/js/pcoded.min.js') }}"></script>
 
+    {{-- <script src="{{ asset('assets/js/pages/dashboard-main.js') }}"></script> --}}
+
+
     <script>
         $('#flash-overlay-modal').modal();
     </script>
@@ -408,7 +411,7 @@
             });
         });
     </script>
-    
+
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
 
     @stack('js')
@@ -426,6 +429,14 @@
         <script src="assets/js/ripple.js"></script>
         <script src="assets/js/pcoded.min.js"></script>
     @endguest
+
+    <script type="text/javascript">
+        (function(){
+            $('form').on('submit', function(){
+                $("button[type='submit']").attr('disabled','true');
+            })
+        })();
+    </script>
 
 </body>
 

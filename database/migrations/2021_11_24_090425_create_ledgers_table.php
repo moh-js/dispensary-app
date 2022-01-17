@@ -24,6 +24,7 @@ class CreateLedgersTable extends Migration
             $table->integer('remain_from')->nullable();
             $table->integer('remain_to')->nullable();
             $table->string('quantity')->nullable();
+            $table->string('batch_receipt_no')->nullable();
             $table->foreignIdFor(User::class, 'issued_by')->nullable()->constrained('users')->cascadeOnDelete();
             $table->softDeletes();
             $table->string('slug')->nullable();

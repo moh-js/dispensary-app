@@ -11,7 +11,7 @@ trait ReceiptGenerator
      * @param Order $order
      * @return string $receipt_id
      */
-    public function generate($order, $type = null)
+    public static function generate($order, $type = null)
     {
         // format MYYDDMM{000000ID}
 

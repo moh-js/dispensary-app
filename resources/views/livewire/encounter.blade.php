@@ -4,11 +4,17 @@
             <div class="card-body">
                 <center>
                     {{-- <img class="img-radius img-fluid wid-100" src="{{ asset('image/patient-male.png') }}" alt="User image"> --}}
-                    <h5> {{ $patient->name }} </h5>
-                    <h5> {{ $patient->dob->diff(now())->y }} Years Old</h5>
-                    <p><strong>{{ title_case($patient->gender) }}</strong></p>
-                    {{-- <span class="badge badge-pill badge-primary">Active</span> --}}
+                    <h5> {{ $encounter->patient->name }} </h5>
+                    <h5> {{ $encounter->patient->dob->diff(now())->y }} Years Old</h5>
+                    <p><strong>{{ title_case($encounter->patient->gender) }}</strong></p>
+
+                    @if ($encounter->status)
                     <span class="badge badge-pill badge-danger">Inactive</span>
+                    @else
+                    <span class="badge badge-pill badge-primary">Active</span>
+                    @endif
+
+
                 </center>
             </div>
             <div class="list-group">
@@ -23,6 +29,10 @@
                 <button type="button" wire:click="changeFlag('signs')" class="list-group-item list-group-item-action {{ $signs_flag?'active':'' }}">
                     <i class="feather icon-activity"></i>
                     Vital Signs
+                </button>
+                <button type="button" wire:click="changeFlag('prescription')" class="list-group-item list-group-item-action {{ $prescription_flag?'active':'' }}">
+                    <i class="feather icon-plus-square"></i>
+                    Prescription
                 </button>
                 <button type="button" wire:click="changeFlag('allergies')" class="list-group-item list-group-item-action {{ $allergies_flag?'active':'' }}">
                     <i class="feather icon-trending-down"></i>
@@ -43,71 +53,61 @@
     <div class="col-lg-9">
         <div class="card">
             <div class="card-body">
+                @if (session()->has('message'))
+                    <div class="alert alert-{{ session('message')['type'] }} alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        {{ session('message')['text'] }}
+                    </div>
+                @endif
 
                 {{-- General --}}
                 <div x-data="{general_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($general_flag)">
                     <div class="row mb-5">
-                        <span style="font-size: 20px;" class="col-6 col-md-2" title="Temperature">
+                        <span style="font-size: 15px;" class="col-6 col-md-2" title="Temperature">
                             <i class="feather icon-thermometer text-danger"></i>
-                            34 <sup>o</sup>C
+                            {{ $encounter->vital->temperature??"-" }} <sup>o</sup>C
                         </span>
 
-                        <span style="font-size: 20px;" class="col-6 col-md-2" title="Height">
+                        <span style="font-size: 15px;" class="col-6 col-md-2" title="Height">
                             <i class="feather icon-arrow-up text-primary"></i>
-                            134 Cm
+                            {{ $encounter->vital->height??"-" }} Cm
                         </span>
 
-                        <span style="font-size: 20px;" class="col-6 col-md-2" title="Weight">
+                        <span style="font-size: 15px;" class="col-6 col-md-2" title="Weight">
                             <i class="feather icon-underline text-primary"></i>
-                            54 Kg
+                            {{ $encounter->vital->weight??"-" }} Kg
                         </span>
 
-                        <span style="font-size: 20px;" class="col-6 col-md-2" title="BMI">
+                        <span style="font-size: 15px;" class="col-6 col-md-2" title="BMI">
                             <i class="feather icon-link-2 text-primary"></i>
-                            20 Kg/m<sup>2</sup>
+                            {{ $encounter->vital->bmi??"-" }} Kg/m<sup>2</sup>
                         </span>
 
-                        <span style="font-size: 20px;" class="col-6 col-md-2" title="Diastolic BP">
+                        <span style="font-size: 15px;" class="col-6 col-md-2" title="Diastolic BP">
                             <i class="feather icon-corner-right-down text-success"></i>
-                            72 mmHg
+                            {{ $encounter->vital->diastolic??"-" }} mmHg
                         </span>
 
-                        <span style="font-size: 20px;" class="col-6 col-md-2" title="Systolic BP">
+                        <span style="font-size: 15px;" class="col-6 col-md-2" title="Systolic BP">
                             <i class="feather icon-corner-left-up text-success"></i>
-                            112 mmHg
+                            {{ $encounter->vital->systolic??"-" }} mmHg
                         </span>
                     </div>
 
                     <hr>
 
-                    @livewire('encounter-general-form', ['encounter' => $patient], key($patient->id))
+                    @livewire('encounter-general-form', ['encounter' => $encounter], key($encounter->id))
                 </div>
                 {{-- End General --}}
 
                 {{-- Lab --}}
                 <div x-data="{lab_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($lab_flag)">
-                    <form action="#" method="post" x-data="{form_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($form_flag)">
-                        @csrf
+                    @livewire('encounter-lab-form', ['investigation' => $investigation, 'encounter' => $encounter])
 
-                        <div class="row">
-                            <div class="form-group col-sm-4">
-                              <label for="name">Investigation Name</label>
-                              <input type="text" name="name" id="name" class="form-control" placeholder="Name" aria-describedby="name">
-                            </div>
-
-                            <div class="form-group col-sm-8">
-                                <label for="result">Result</label>
-                                <textarea name="result" id="result" rows="1" class="form-control"></textarea>
-                            </div>
-
-                            <div class="form-group col-sm-12">
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </div>
-                    </form>
-
-                    <button x-show="@js(!$form_flag)" wire:click="showForm" type="button" class="float-right btn btn-primary mb-1">Add</button>
-                    <div class="table-responsive">
+                    <div class="table-responsive" id="lab-list">
                         <table class="table table-sm">
                             <thead>
                                 <tr>
@@ -118,7 +118,18 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($encounter->investigations as $key => $investigation)
+                                    <tr>
+                                        <td>{{ ++$key }}</td>
+                                        <td>{{ $investigation->service->name }}</td>
+                                        <td>{{ $investigation->result }}</td>
+                                        <td class="text-center">
+                                            <a href="javascript:void(0)" wire:click="$emit('editInvestigation', {{ $investigation->id }})" title="Edit" class="text-primary mr-3"><i class="feather icon-edit" style="font-size: 16px"></i></a>
 
+                                            <a href="javascript:void(0)" onclick="removeInvestigation({{ $investigation }})" title="Remove" class="text-danger"><i class="feather icon-trash" style="font-size: 16px"></i></a>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -127,48 +138,136 @@
 
                 {{-- Vital --}}
                 <div x-data="{signs_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($signs_flag)">
-                    <form action="" method="post">
-                        @csrf
-
-                        <div class="row">
-                            <div class="form-group col-sm-4">
-                              <label for="weight">Weight (Kg)</label>
-                              <input type="text" name="weight" id="weight" class="form-control" placeholder="Weight" aria-describedby="weight">
-                            </div>
-
-                            <div class="form-group col-sm-4">
-                              <label for="height">Height (Cm)</label>
-                              <input type="text" name="height" id="height" class="form-control" placeholder="Height" aria-describedby="height">
-                            </div>
-
-                            <div class="form-group col-sm-4">
-                              <label for="bmi">BMI</label>
-                              <input type="text" name="bmi" id="bmi" disabled class="form-control" placeholder="BMI" aria-describedby="bmi">
-                            </div>
-
-                            <div class="form-group col-sm-4">
-                              <label for="temperature">Temperature ( <sup>o</sup>C )</label>
-                              <input type="text" name="temperature" id="temperature" class="form-control" aria-describedby="temperature">
-                            </div>
-
-                            <div class="form-group col-sm-4">
-                              <label for="systolic">Systolic BP (mmHg)</label>
-                              <input type="text" name="systolic" id="systolic" class="form-control" aria-describedby="systolic">
-                            </div>
-
-                            <div class="form-group col-sm-4">
-                              <label for="diastolic">Diastolic BP (mmHg)</label>
-                              <input type="text" name="diastolic" id="diastolic" class="form-control" aria-describedby="diastolic">
-                            </div>
-
-                            <div class="form-group col-sm-12">
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </div>
-                    </form>
+                    @livewire('encounter-vitals-form', ['encounter' => $encounter])
                 </div>
                 {{-- End Vital --}}
+
+
+                {{-- Prescription --}}
+                <div x-data="{prescription_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($prescription_flag)">
+                    @livewire('encounter-prescription-form', ['investigation' => $investigation, 'encounter' => $encounter])
+
+                    <div class="table-responsive" id="lab-list">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($encounter->prescriptions as $key => $prescription)
+                                    <tr>
+                                        <td>{{ ++$key }}</td>
+                                        <td>{{ $prescription->service->name }}</td>
+                                        <td>{{ $prescription->quantity }}</td>
+                                        <td class="text-center">
+                                            <a href="javascript:void(0)" wire:click="$emit('editPrescription', {{ $prescription->id }})" title="Edit" class="text-primary mr-3"><i class="feather icon-edit" style="font-size: 16px"></i></a>
+
+                                            <a href="javascript:void(0)" onclick="removePrescription({{ $prescription }})" title="Remove" class="text-danger"><i class="feather icon-trash" style="font-size: 16px"></i></a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                {{-- End Prescription --}}
+
+                {{-- Service Bill --}}
+                <div x-data="{bill_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($bill_flag)">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Service</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($encounter->pendingOrder()->items??[] as $key => $item)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $item->service->name }}</td>
+                                    <td>{{ $item->quantity }}</td>
+                                    <td>{{ $item->total_price }}</td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0)" onclick="removeBillService({{ $item }})" class="text-danger"><i class="feather icon-trash"></i></a>
+
+                                        <form action="{{ route('bill.service.delete', $item->id) }}" id="{{ $item->id }}" method="post">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                            @if (!count($encounter->pendingOrder()->items??[]))
+                                <tr>
+                                    <td colspan="5" class="text-center"><span class="text-dark">No service bill found</span></td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+
+                    @if ($encounter->pendingOrder())
+                        <hr>
+                        <h4>Complete Order</h4>
+                        <form action="{{ route('bill.complete', $encounter->pendingOrder()->invoice_id??null) }}" method="post">
+                            @csrf
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                    {{-- <label for="name"><strong>Payment Mode</strong></label> --}}
+                                    <select name="payment_mode" id="payment_mode" class="form-control">
+                                        <option value="{{ null }}">Choose...</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="nhif">NHIF</option>
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" type="submit">
+                                            Complete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    @endif
+                </div>
+                {{-- End Service Bill --}}
             </div>
         </div>
     </div>
+
+    @push('js')
+    <script>
+        function removeInvestigation (investigation) {
+            if (confirm('Remove '+ investigation.service.name)) {
+                Livewire.emit('removeInvestigation', investigation.id);
+            }
+        }
+
+        function removePrescription (prescription) {
+            if (confirm('Remove '+ prescription.service.name)) {
+                Livewire.emit('removePrescription', prescription.id);
+            }
+        }
+
+        function removeBillService(item) {
+            if (confirm('Are you sure, Remove bill service ?')) {
+                $('#'+item.id).submit()
+            }
+        }
+    </script>
+    @endpush
 </div>

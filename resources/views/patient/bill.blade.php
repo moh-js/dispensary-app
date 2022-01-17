@@ -36,40 +36,42 @@
             <button type="button" class="btn btn-success btn-sm float-right mb-2" data-toggle="modal" data-target="#exampleModalCenter"><i class="feather icon-plus-circle"></i></button>
         </div>
 
-        <table class="table table-sm">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Service</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th class="text-center">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($order->items??[] as $key => $item)
-                <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ $item->service->name }}</td>
-                    <td>{{ $item->quantity }}</td>
-                    <td>{{ $item->total_price }}</td>
-                    <td class="text-center">
-                        <a href="javascript:void(0)" onclick="removeBillService({{ $item }})" class="text-danger"><i class="feather icon-trash"></i></a>
-
-                        <form action="{{ route('bill.service.delete', $item->id) }}" id="{{ $item->id }}" method="post">
-                            @csrf
-                            @method('DELETE')
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-                @if (!count($order->items??[]))
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
                     <tr>
-                        <td colspan="5" class="text-center"><span class="text-dark">No service bill found</span></td>
+                        <th>#</th>
+                        <th>Service</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th class="text-center">Action</th>
                     </tr>
-                @endif
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($order->items??[] as $key => $item)
+                    <tr>
+                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $item->service->name }}</td>
+                        <td>{{ $item->quantity }}</td>
+                        <td>{{ $item->total_price }}</td>
+                        <td class="text-center">
+                            <a href="javascript:void(0)" onclick="removeBillService({{ $item }})" class="text-danger"><i class="feather icon-trash"></i></a>
+
+                            <form action="{{ route('bill.service.delete', $item->id) }}" id="{{ $item->id }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                    @if (!count($order->items??[]))
+                        <tr>
+                            <td colspan="5" class="text-center"><span class="text-dark">No service bill found</span></td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
 
         <div class="mb-2">
             <div id="completeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="completeModalTitle" aria-hidden="true">

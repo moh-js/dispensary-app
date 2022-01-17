@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    @livewire('encounter', ['patient' => $patient], key($patient->id))
+    @livewire('encounter', ['encounter' => $encounter], key($encounter->id))
 @endsection
 
 @push('css')

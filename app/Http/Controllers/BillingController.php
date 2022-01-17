@@ -23,7 +23,11 @@ class BillingController extends Controller
     {
         $this->authorize('bill-show');
 
-        $order = Order::where('invoice_id', $invoice_id)->first();
+        if ($invoice_id) {
+            $order = Order::where('invoice_id', $invoice_id)->first();
+        } else {
+            $order = $patient->getLastPendingOrder();
+        }
 
         return view('patient.bill', [
             'patient' => $patient,
@@ -56,7 +60,9 @@ class BillingController extends Controller
         // Retrieve order instance or create when not found
         if ($invoice_id) {
             $order = Order::where('invoice_id', $invoice_id)->first();
-        } else {
+        }
+        elseif($order = $patient->getLastPendingOrder()) {}
+        else {
             $order = $patient->orders()->firstOrCreate([
                 'patient_id' => $patient->id,
                 'order_date' => now(),
@@ -96,10 +102,30 @@ class BillingController extends Controller
     {
         $this->authorize('bill-remove-single');
 
+
         if ($billService->order->status == 'pending') {
-            $billService->delete();
-            flash('Bill Service deleted successfully');
-        } else {
+            if ($billService->service_category_id == 1) {
+                $relationship = 'prescriptions';
+            } elseif($billService->service_category_id == 2) {
+                $relationship = 'investigations';
+            } else {
+                $relationship = null;
+            }
+
+            if ($relationship) { // remove associated service
+                $service = $billService->order->encounter->$relationship()->where('service_id', $billService->service_id)->first();
+
+                if ($service) {
+                    $service->delete();
+                    flash('Bill Service deleted successfully');
+                    return back();
+                }
+            } else {
+                $billService->delete();
+                flash('Bill Service deleted successfully');
+            }
+        }
+        else {
             flash()->error('Cannot delete this bill service');
         }
 
@@ -129,7 +155,8 @@ class BillingController extends Controller
             'receipt_id' => $this->generate($order),
             'cashier_id' => auth()->id(),
             'status' => 'completed',
-            'payment_type' => request()->payment_mode
+            'payment_type' => request()->payment_mode,
+            'created_at' => now()
         ]);
 
         foreach ($order->items as $orderService) {
