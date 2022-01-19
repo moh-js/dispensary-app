@@ -18,7 +18,6 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->float('total_price')->nullable();
-            $table->string('payment_type')->nullable();
             $table->dateTime('order_date');
             $table->string('invoice_id')->nullable();
             $table->string('receipt_id')->nullable();

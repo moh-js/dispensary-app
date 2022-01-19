@@ -5,14 +5,17 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Prescription;
 use App\Models\Investigation;
+use App\Models\Procedure;
 
 class Encounter extends Component
 {
     public $encounter;
     public $investigation;
+    public $procedure;
     public $message = null;
     public $lab_flag = 0;
     public $general_flag = 0;
+    public $procedure_flag = 0;
     public $signs_flag = 0;
     public $allergies_flag = 0;
     public $medical_flag = 0;
@@ -24,7 +27,8 @@ class Encounter extends Component
         return [
             'notification' => 'notify',
             'removeInvestigation',
-            'removePrescription'
+            'removePrescription',
+            'removeProcedure'
         ];
     }
 
@@ -46,6 +50,7 @@ class Encounter extends Component
         $this->allergies_flag = 0;
         $this->medical_flag = 0;
         $this->bill_flag = 0;
+        $this->procedure_flag = 0;
         $this->form_flag = 0;
         $this->prescription_flag = 0;
 
@@ -55,6 +60,10 @@ class Encounter extends Component
 
     public function notify($message)
     {
+        if ($message['type'] == 'success') {
+            flash()->success($message['text']);
+            return redirect()->route('encounter', $this->encounter->id);
+        }
         session()->flash('message', $message);
     }
 
@@ -77,6 +86,19 @@ class Encounter extends Component
         $name = $prescription->service->name;
 
         $prescription->delete();
+
+        $this->encounter = $this->encounter->fresh();
+
+        $message = ['text' => "$name removed successfully", 'type' => 'success'];
+        session()->flash('message', $message);
+    }
+
+    public function removeProcedure($procedure_id)
+    {
+        $procedure = Procedure::find($procedure_id);
+        $name = $procedure->service->name;
+
+        $procedure->delete();
 
         $this->encounter = $this->encounter->fresh();
 

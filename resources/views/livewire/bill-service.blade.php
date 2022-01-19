@@ -35,7 +35,6 @@
                 <div class="form-group">
                     <div wire:loading wire:target="category_id">
                         <div id="overlay" class="d-flex justify-content-center align-items-center">
-                            {{-- <h4 class="d-block">Loading Services</h4> --}}
                             <div class="spinner-border text-primary" style="width: 4rem; height: 4rem;" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
@@ -84,8 +83,20 @@
             </div>
 
 
+            <div class="col-sm-4">
+                <div class="form-group">
+                <label for="payment_type"><strong>Payment Mode</strong></label>
+                <select name="payment_type" id="payment_type" class="form-control">
+                    <option value="{{ null }}">Choose...</option>
+                    <option value="cash">Cash</option>
+                    <option value="nhif">NHIF</option>
+                    <option value="exempted">Exempted</option>
+                </select>
+                </div>
+            </div>
 
-            <div class="col-sm-12">
+
+            <div class="col-sm-8">
                 <div class="form-group">
                   <label for="name"><strong>Cashier</strong></label>
                   <input type="text" class="form-control" disabled value="{{ request()->user()->name }}" id="name" placeholder="Name">

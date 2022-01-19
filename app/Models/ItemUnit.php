@@ -17,4 +17,14 @@ class ItemUnit extends Model implements ContractsAuditable
     protected $guarded = [];
 
     public $timestamps = false;
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

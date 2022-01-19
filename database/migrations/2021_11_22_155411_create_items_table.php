@@ -18,6 +18,7 @@ class CreateItemsTable extends Migration
             $table->string('name')->unique();
             $table->foreignId('inventory_category_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('slug');
+            $table->boolean('countable')->default(0);
             $table->integer('quantity')->nullable();
             $table->string('uom')->nullable()->comment('unit of measure');
             $table->softDeletes();

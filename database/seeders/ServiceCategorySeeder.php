@@ -22,7 +22,7 @@ class ServiceCategorySeeder extends Seeder
             ], [
                 'name' => 'Procedure',
             ], [
-                'name' => 'Registration/Conslutation',
+                'name' => 'Registration or Consultation',
             ]
         ];
 

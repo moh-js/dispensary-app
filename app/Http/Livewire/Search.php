@@ -26,7 +26,10 @@ class Search extends Component
     {
         $this->patients = Patient::when(strlen($this->query) >= 3, function ($query)
         {
-            $query->where('patient_id', 'like', "%{$this->query}%");
+            $query->where('patient_id', 'like', "%{$this->query}%")
+            ->orWhere('first_name', 'like', "%{$this->query}%")
+            ->orWhere('middle_name', 'like', "%{$this->query}%")
+            ->orWhere('last_name', 'like', "%{$this->query}%");
         })
         ->when(strlen($this->query) < 3, function ($query)
         {

@@ -74,6 +74,11 @@ class BillingController extends Controller
             ]);
         }
 
+        if ($order->status == 'completed') {
+            flash()->error('Order already completed you cannot add bill service');
+            return back();
+        }
+
         $service = Service::find($request->service);
         if ($request->category == 1) {
             $unitItem = $service->item->getUnitById($request->unit);
@@ -90,6 +95,7 @@ class BillingController extends Controller
             'unit_id' => $request->unit,
             'service_category_id' => $request->category,
             'sub_total' => $service->price,
+            'payment_type' => request('payment_type'),
             'total_price' => $service->price * $request->quantity,
             'quantity' => $request->quantity
         ]);
@@ -139,12 +145,23 @@ class BillingController extends Controller
 
         $order = Order::where('invoice_id', $invoice_id)->first();
 
+        // 1 = Medicine
         foreach ($order->items as $orderService) {
-            if ($orderService->service_category_id == 1) {
+            if (!$orderService->payment_type) { // check if payment type is present
+                flash()->error('Add payment type to '.$orderService->service->name);
+                return back();
+            }
+
+            if ($orderService->service->item->countable??false) { // check if item is countable
                 $unitItem = $orderService->service->item->getUnitById($orderService->unit_id);
 
                 if ($unitItem->remain < $orderService->quantity) {
                     flash()->error('The quantity requested is greater than the available amount in the inventory - '.$orderService->service->name);
+                    return back();
+                }
+            } else {
+                if (($orderService->service->item->inventoryCategory->id??false) == 1) {
+                    flash()->error($orderService->service->item->name.' should be a countable item');
                     return back();
                 }
             }
@@ -155,12 +172,17 @@ class BillingController extends Controller
             'receipt_id' => $this->generate($order),
             'cashier_id' => auth()->id(),
             'status' => 'completed',
-            'payment_type' => request()->payment_mode,
             'created_at' => now()
         ]);
 
         foreach ($order->items as $orderService) {
-            if ($orderService->service_category_id == 1) {
+            // forget session created when entering payment type manualy if is found
+            $sessionName = $orderService->order->patient->patient_id.'session'.$orderService->id;
+            if (session()->has($sessionName)) {
+                session()->forget($sessionName);
+            }
+
+            if ($orderService->service->item->countable??false) {
                 $unitItem = $orderService->service->item->getUnitById($orderService->unit_id);
 
                 if ($unitItem->remain >= $orderService->quantity) {

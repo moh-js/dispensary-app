@@ -100,10 +100,6 @@
                     <td></td>
                     <td class="text-left">&nbsp;&nbsp;0{{ $order->patient->phone }}</td>
                 </tr>
-                <tr>
-                    <th class="text-left">Mode of Payment</th>
-                    <td class="text-left"><strong>: </strong>{{ strtoupper($order->payment_type) }}</td>
-                </tr>
             </tbody>
         </table>
     </div>
@@ -116,7 +112,8 @@
                 <tr>
                     <th class="text-left">Item</th>
                     <th class="text-left">Qty</th>
-                    <th class="text-right">Price</th>
+                    <th class="text-right">Payment</th>
+                    {{-- <th class="text-right">Price</th> --}}
                     <th class="text-right">Amount</th>
                 </tr>
             </thead>
@@ -125,7 +122,8 @@
                     <tr>
                         <td class="text-left">{{ $item->service->name }}</td>
                         <td class="text-left">{{ $item->quantity }}</td>
-                        <td class="text-right">{{ number_format($item->sub_total) }}</td>
+                        <td class="text-left">{{ $item->payment_type }}</td>
+                        {{-- <td class="text-right">{{ number_format($item->sub_total) }}</td> --}}
                         <td class="text-right">{{ number_format($item->total_price) }}</td>
                     </tr>
                 @endforeach

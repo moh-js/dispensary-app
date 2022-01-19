@@ -8,7 +8,7 @@
         <form action="{{ route('items.store', $category->slug) }}" method="post">
             @csrf
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label for="name"><strong>Name</strong></label>
                         <input type="text"
@@ -21,7 +21,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label for="quantity"><strong>Quantity</strong></label>
                         <input type="text"
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label for="uom"><strong>UoM</strong></label>
                         <input type="text"
@@ -47,7 +47,22 @@
                     </div>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="countable"><strong>Countable</strong></label>
+                        <select name="countable" id="countable" class="form-control @error('countable') is-invalid @enderror">
+                            <option value="{{ 0 }}" {{ old('countable') == 0? 'selected':'' }}>No</option>
+                            <option value="{{ 1 }}" {{ old('countable') == 1? 'selected':'' }}>Yes</option>
+                        </select>
+                        @error('countable')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label for="service_name"><strong>Service Name</strong></label>
                         <input type="text"
@@ -61,6 +76,23 @@
                 </div>
 
                 <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="service_category_id"><strong>Service Category</strong></label>
+                        <select name="service_category_id" id="service_category_id" class="form-control @error('service_category_id') is-invalid @enderror">
+                            <option value="{{ null }}" selected>Select Category...</option>
+                            @foreach (App\Models\ServiceCategory::all() as $category)
+                                <option {{ $category->id == old('service_category_id')? 'selected':'' }} value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('service_category_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label for="service_price"><strong>Service Price</strong></label>
                         <input type="text"

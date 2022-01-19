@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Encounter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class EncounterController extends Controller
 {
@@ -17,18 +18,36 @@ class EncounterController extends Controller
         ]);
     }
 
-    public function createEncounter()
+    public function createEncounter(Request $request)
     {
         $this->authorize('encounter-create');
 
-        $encounter = Encounter::where([['patient_id', request('patient_id')], ['status', 0]])->first();
+        $validator = Validator::make($request->all(), [
+            'chief' => ['nullable', 'integer'],
+            'purpose' => ['required', 'integer'],
+            'payment_type' => ['required', 'string']
+        ]);
 
-        if (!$encounter) {
-            $encounter = Encounter::create([
-                'name' => null,
-                'patient_id' => request('patient_id'),
+        if($validator->fails()) {
+            foreach ($validator->errors()->toArray() as $error) {
+                flash()->error($error[0]);
+            }
+            return back()->withInput();
+        }
+
+        $encounter = Encounter::where([['patient_id', request('patient_id')], ['status', 0]])->first();
+        if ($encounter) {
+            $encounter->update([
+                'status' => 1
             ]);
         }
+
+        $encounter = Encounter::create([
+            'name' => null,
+            'cheif' => $request->chief,
+            'purpose' => $request->purpose,
+            'patient_id' => request('patient_id'),
+        ]);
 
         return redirect()->route('encounter', $encounter->id);
 

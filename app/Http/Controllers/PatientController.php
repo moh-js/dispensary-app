@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Patient;
-use App\Traits\PatientIdGenerator;
+use App\Models\Service;
+use App\Models\Encounter;
 use Illuminate\Http\Request;
+use App\Traits\PatientIdGenerator;
 
 class PatientController extends Controller
 {
@@ -73,8 +76,15 @@ class PatientController extends Controller
     {
         $this->authorize('patient-view');
 
+        $users = User::role('doctor')->get();
+        $services = Service::where('service_category_id', 4)->get();
+        $encounter = Encounter::where([['patient_id', $patient->id], ['status', 0]])->first();
+
         return view('patient.show', [
-            'user' => $patient
+            'encounter' => $encounter,
+            'services' => $services,
+            'user' => $patient,
+            'users' => $users,
         ]);
     }
 

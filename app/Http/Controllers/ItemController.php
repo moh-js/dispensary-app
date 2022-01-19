@@ -51,7 +51,7 @@ class ItemController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:items,name'],
             'short_name' => ['nullable', 'string', 'max:255'],
-            "quantity" => ['required', 'integer'],
+            "quantity" => ['nullable', 'integer'],
             "uom" => ['nullable', 'string'],
             "manufacture" => ['nullable', 'string'],
             "service_name" => ['nullable', 'string', "unique:services,name"],
@@ -60,11 +60,11 @@ class ItemController extends Controller
             "expire_date" => ['nullable', 'date']
         ]);
 
-        $data = collect(['inventory_category_id' => $category->id])->merge($request->except(['_token', 'service_name', 'service_price']))->filter()->toArray();
+        $data = collect(['inventory_category_id' => $category->id])->merge($request->except(['_token', 'service_name', 'service_price', 'service_category_id']))->filter()->toArray();
 
         $item = Item::firstOrCreate($data);
 
-        $service_category_id = 1;
+        $service_category_id = request('service_category_id');
 
         $item->service()->firstOrCreate([
             'name' => $request->service_name??$request->name,
@@ -116,7 +116,7 @@ class ItemController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255', "unique:items,name,$item->id,id"],
             'short_name' => ['nullable', 'string', 'max:255'],
-            "quantity" => ['required', 'integer'],
+            "quantity" => ['nullable', 'integer'],
             "uom" => ['nullable', 'string'],
             "manufacture" => ['nullable', 'string'],
             "service_name" => ['sometimes', 'string', "unique:services,name,{$item->service->id},id"],
@@ -125,11 +125,11 @@ class ItemController extends Controller
             "expire_date" => ['nullable', 'date']
         ]);
 
-        $data = collect(['inventory_category_id' => $request->category])->merge($request->except(['_token', 'service_name', 'service_price', 'category']))->filter()->toArray();
+        $data = collect(['inventory_category_id' => $request->category])->merge($request->except(['_token', 'service_name', 'service_price', 'category', 'service_category_id']))->filter()->toArray();
 
         $item->update($data);
 
-        $service_category_id = 1;
+        $service_category_id = request('service_category_id');
 
         $item->service->update([
             'name' => $request->service_name??$request->name,
@@ -216,9 +216,11 @@ class ItemController extends Controller
                     'remain' => $itemFromStore->remain - $request->quantity
                 ]);
 
-                $itemUnit->update([
-                    'remain' => $itemUnit->remain + $request->quantity
-                ]);
+                if ($item->countable) {
+                    $itemUnit->update([
+                        'remain' => $itemUnit->remain + $request->quantity
+                    ]);
+                }
 
                 } else {
                 flash('Requested Amount is greater than the available amount in the store')->error();

@@ -5,11 +5,14 @@ namespace App\Models;
 use App\Traits\ReceiptGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as ContractsAuditable;
 
-class Investigation extends Model
+class Investigation extends Model implements ContractsAuditable
 {
     use HasFactory;
     use ReceiptGenerator;
+    use Auditable;
 
 
     protected $guarded  = [];

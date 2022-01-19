@@ -31,12 +31,12 @@ class Service extends Model implements ContractsAuditable
 
     public function getProperNameAttribute()
     {
-        if ($this->service_category_id == 1) {
-            $manufacturer = ($this->item->manufacturer)? (" - {$this->item->manufacturer}"): '';
-            return $this->item->name. ' - '. $this->item->package_type. $manufacturer ." [ {$this->price} Tsh]";
-        } else {
-            return $this->name;
-        }
+        return $this->item->name. ' - '. " [ {$this->price} Tsh]";
+    }
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = strtoupper($value);
     }
 
     public function orderServices()

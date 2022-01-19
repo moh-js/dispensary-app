@@ -2,18 +2,17 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Investigation;
 use App\Models\Service;
 use Livewire\Component;
+use App\Models\Procedure;
 
-class EncounterLabForm extends Component
+class EncounterProcedureForm extends Component
 {
-
     public $form_flag = 0;
     public $services = [];
     public $service_id;
     public $result;
-    public $investigation;
+    public $procedure;
     public $encounter;
 
     protected $rules = [
@@ -24,13 +23,13 @@ class EncounterLabForm extends Component
     protected function getListeners()
     {
         return [
-            'editInvestigation'
+            'editProcedure'
         ];
     }
 
     public function mount()
     {
-        $this->services = Service::where('service_category_id', 2)->get();
+        $this->services = Service::where('service_category_id', 3)->get();
         $this->clearForm();
     }
 
@@ -45,13 +44,13 @@ class EncounterLabForm extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function editInvestigation($investigation_id)
+    public function editProcedure($procedure_id)
     {
         $this->showForm();
 
-        $this->investigation = Investigation::find($investigation_id);
-        $this->service_id = $this->investigation->service_id;
-        $this->result  = $this->investigation->result;
+        $this->procedure = Procedure::find($procedure_id);
+        $this->service_id = $this->procedure->service_id;
+        $this->result  = $this->procedure->result;
     }
 
     public function saveData()
@@ -59,11 +58,11 @@ class EncounterLabForm extends Component
         $validatedData = $this->validate();
         $validatedData = collect($validatedData)->merge(['encounter_id' => $this->encounter->id])->toArray();
 
-        if ($this->investigation) {
-            $this->investigation->update($validatedData);
+        if ($this->procedure) {
+            $this->procedure->update($validatedData);
         }
 
-        Investigation::create($validatedData);
+        Procedure::create($validatedData);
 
         $this->clearForm();
 
@@ -77,11 +76,11 @@ class EncounterLabForm extends Component
         $this->form_flag = 0;
         $this->service_id = null;
         $this->result = null;
-        $this->investigation = null;
+        $this->procedure = null;
     }
 
     public function render()
     {
-        return view('livewire.encounter-lab-form');
+        return view('livewire.encounter-procedure-form');
     }
 }

@@ -25,7 +25,7 @@ class ItemImport implements OnEachRow, WithHeadingRow, WithChunkReading
 
         // Save Item
         $arr = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$row['uom']);
-        
+
         if (count($arr) == 1) {
             $uom = $arr[0];
             $quantity = null;
@@ -39,6 +39,7 @@ class ItemImport implements OnEachRow, WithHeadingRow, WithChunkReading
             'inventory_category_id' => $category->id,
         ], [
             'uom' => $uom,
+            'countable' => $row['countable']??0,
             'quantity' => $quantity,
         ]);
 
@@ -71,9 +72,9 @@ class ItemImport implements OnEachRow, WithHeadingRow, WithChunkReading
             $this->updateItems($item, 6, $row['store_qty']);
         }
 
-        // if ($row['dispensing_qty']) {
-        //     $this->updateItems($item, 1, $row['dispensing_qty']);
-        // }
+        if ($row['dispensing_qty']??false) {
+            $this->updateItems($item, 1, $row['dispensing_qty']);
+        }
 
         // if ($row['lab_qty']) {
         //     $this->updateItems($item, 2, $row['lab_qty']);

@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Service;
+use App\Models\ServiceCategory;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -18,9 +19,10 @@ class ServiceImport implements ToModel, WithBatchInserts, WithHeadingRow, WithCh
     */
     public function model(array $row)
     {
+        $category = $row['category'];
         return new Service([
             'name' => $row['name'],
-            'service_category_id' => $row['category'],
+            'service_category_id' => ServiceCategory::where('name', 'like', "%$category%")->first()->id,
             'price' => $row['price'],
         ]);
     }

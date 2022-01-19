@@ -26,6 +26,10 @@
                     <i class="feather icon-filter"></i>
                     Lab Investigation
                 </button>
+                <button type="button" wire:click="changeFlag('procedure')" class="list-group-item list-group-item-action {{ $procedure_flag?'active':'' }}">
+                    <i class="fa fa-procedures"></i>
+                    Procedure
+                </button>
                 <button type="button" wire:click="changeFlag('signs')" class="list-group-item list-group-item-action {{ $signs_flag?'active':'' }}">
                     <i class="feather icon-activity"></i>
                     Vital Signs
@@ -34,10 +38,10 @@
                     <i class="feather icon-plus-square"></i>
                     Prescription
                 </button>
-                <button type="button" wire:click="changeFlag('allergies')" class="list-group-item list-group-item-action {{ $allergies_flag?'active':'' }}">
+                {{-- <button type="button" wire:click="changeFlag('allergies')" class="list-group-item list-group-item-action {{ $allergies_flag?'active':'' }}">
                     <i class="feather icon-trending-down"></i>
                     Allergies
-                </button>
+                </button> --}}
                 <button type="button" wire:click="changeFlag('medical')" class="list-group-item list-group-item-action {{ $medical_flag?'active':'' }}">
                     <i class="feather icon-clipboard"></i>
                     Medical History
@@ -136,6 +140,42 @@
                 </div>
                 {{-- End Lab --}}
 
+
+                {{-- Procedure --}}
+
+                <div x-data="{procedure_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($procedure_flag)">
+                    @livewire('encounter-procedure-form', ['procedure' => $procedure, 'encounter' => $encounter])
+
+                    <div class="table-responsive" id="lab-list">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Result</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($encounter->procedures as $key => $procedure)
+                                    <tr>
+                                        <td>{{ ++$key }}</td>
+                                        <td>{{ $procedure->service->name }}</td>
+                                        <td>{{ $procedure->result }}</td>
+                                        <td class="text-center">
+                                            <a href="javascript:void(0)" wire:click="$emit('editProcedure', {{ $procedure->id }})" title="Edit" class="text-primary mr-3"><i class="feather icon-edit" style="font-size: 16px"></i></a>
+
+                                            <a href="javascript:void(0)" onclick="removeProcedure({{ $procedure }})" title="Remove" class="text-danger"><i class="feather icon-trash" style="font-size: 16px"></i></a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {{-- End Procedure --}}
+
                 {{-- Vital --}}
                 <div x-data="{signs_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($signs_flag)">
                     @livewire('encounter-vitals-form', ['encounter' => $encounter])
@@ -185,12 +225,15 @@
                                 <th>#</th>
                                 <th>Service</th>
                                 <th>Quantity</th>
+                                <th>Payment Type</th>
                                 <th>Price</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($encounter->pendingOrder()->items??[] as $key => $item)
+                                @livewire('bill-table-row', ['item' => $item, 'key' => ++$key], key($item->id))
+{{--
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $item->service->name }}</td>
@@ -205,7 +248,7 @@
                                         </form>
                                     </td>
                                 </tr>
-                            @endforeach
+ --}}                            @endforeach
 
                             @if (!count($encounter->pendingOrder()->items??[]))
                                 <tr>
@@ -216,24 +259,13 @@
                     </table>
 
                     @if ($encounter->pendingOrder())
-                        <hr>
-                        <h4>Complete Order</h4>
+                        {{-- <hr> --}}
+                        {{-- <h4>Complete Order</h4> --}}
                         <form action="{{ route('bill.complete', $encounter->pendingOrder()->invoice_id??null) }}" method="post">
                             @csrf
                             <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                    {{-- <label for="name"><strong>Payment Mode</strong></label> --}}
-                                    <select name="payment_mode" id="payment_mode" class="form-control">
-                                        <option value="{{ null }}">Choose...</option>
-                                        <option value="cash">Cash</option>
-                                        <option value="nhif">NHIF</option>
-                                    </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-2">
-                                    <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="form-group float-right">
                                         <button class="btn btn-primary" type="submit">
                                             Complete
                                         </button>
@@ -260,6 +292,12 @@
         function removePrescription (prescription) {
             if (confirm('Remove '+ prescription.service.name)) {
                 Livewire.emit('removePrescription', prescription.id);
+            }
+        }
+
+        function removeProcedure (procedure) {
+            if (confirm('Remove '+ procedure.service.name)) {
+                Livewire.emit('removeProcedure', procedure.id);
             }
         }
 

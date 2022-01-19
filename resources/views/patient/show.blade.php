@@ -45,12 +45,79 @@
 									</div>
 								</div>
                                 <div class="col-md-4">
-                                    <a href="javascript:void(0)" onclick="$('#encounter-form').submit()" class="btn btn-primary btn-sm d-md-block mb-md-2"><i class="feather"></i> Encounter</a>
+                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#encounterModal" class="btn btn-primary btn-sm d-md-block mb-md-2"><i class="feather"></i> Encounter</a>
 
-                                    <form id="encounter-form" action="{{ route('encounter.create') }}" hidden method="post">
-                                        <input type="text" hidden name="patient_id" value="{{ $user->id }}">
-                                        @csrf
-                                    </form>
+
+                                    <div id="encounterModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="encounterModal" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="encounterModal">Encounter</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @if ($encounter)
+                                                        <div class="alert alert-danger fade show" role="alert">
+                                                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                                            Previous active encounter found !
+                                                        </div>
+                                                    @endif
+                                                    <form id="encounter-form" action="{{ route('encounter.create') }}" method="POST">
+                                                        @csrf
+
+                                                        <input type="text" hidden name="patient_id" value="{{ $user->id }}">
+
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label for="name"><strong>Chief</strong></label>
+                                                                    <select name="cheif" id="cheif" class="form-control">
+                                                                        <option value="{{ null }}">Choose Chief...</option>
+                                                                        @foreach ($users as $u)
+                                                                            <option value="{{ $u->id }}">{{ $u->name }}</option>
+                                                                        @endforeach
+                                                                  </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label for="purpose"><strong>Purpose</strong></label>
+                                                                    <select name="purpose" id="purpose" class="form-control">
+                                                                        <option value="{{ null }}">Choose Purpose...</option>
+                                                                        @foreach ($services as $s)
+                                                                            <option value="{{ $s->id }}">{{ $s->name }}</option>
+                                                                        @endforeach
+                                                                  </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                <label for="payment_type"><strong>Payment Mode</strong></label>
+                                                                <select name="payment_type" id="payment_type" class="form-control">
+                                                                    <option value="{{ null }}">Choose...</option>
+                                                                    <option value="cash">Cash</option>
+                                                                    <option value="nhif">NHIF</option>
+                                                                    <option value="exempted">Exempted</option>
+                                                                </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <button class="btn btn-primary" type="submit">
+                                                                        Encounter
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <a href="{{ route('bill.patient.page', $user->patient_id) }}" class="btn btn-danger btn-sm d-md-block">Service Bill</a>
                                 </div>
 							</div>
@@ -107,13 +174,19 @@
                                 <div class="row p-t-30 p-b-30">
                                     <div class="col-auto text-right update-meta">
                                         <p class="text-muted m-b-0 d-inline-flex">{{ $encounter->updated_at->diffForHumans() }}</p>
-                                        <i class="feather icon-twitter bg-twitter update-icon"></i>
+                                        <i class="fa fa-stethoscope bg-primary update-icon"></i>
                                     </div>
                                     <div class="col">
-                                        <a href="#!">
+                                        <a href="{{ route('encounter', $encounter->id) }}">
                                             <h6>{{ $encounter->name??$encounter->updated_at->format('dmYHi') }}</h6>
                                         </a>
-                                        <p class="text-muted m-b-0">You’re getting more and more followers, keep it up!</p>
+                                        <p class="text-muted m-b-0">{{ $encounter->service->name }}</p>
+
+                                        @if ($encounter->status)
+                                        <span class="badge badge-pill badge-danger">Inactive</span>
+                                        @else
+                                        <span class="badge badge-pill badge-primary">Active</span>
+                                        @endif
                                     </div>
                                 </div>
                             @endforeach

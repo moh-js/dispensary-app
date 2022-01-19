@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\ReceiptGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as ContractsAuditable;
 
-class Encounter extends Model
+class Encounter extends Model implements ContractsAuditable
 {
     use HasFactory;
+    use ReceiptGenerator;
+    use Auditable;
 
     protected $guarded = [];
 
@@ -43,5 +48,59 @@ class Encounter extends Model
         return $this->hasMany(Prescription::class);
     }
 
+    public function procedures()
+    {
+        return $this->hasMany(Procedure::class);
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'purpose');
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::created(function ($encounter) {
+            $order = $encounter->patient->getLastPendingOrder();
+
+            if (!$order) {
+                $order = $encounter->patient->orders()->firstOrCreate([
+                    'patient_id' => $encounter->patient_id,
+                    'order_date' => now(),
+                    'encounter_id' => $encounter->id
+                ]);
+
+                $order->update([
+                    'invoice_id' => self::generate($order, 'invoice'),
+                ]);
+            }
+
+            // Add bill service to order
+            $order->items()->firstOrCreate([
+                'service_id' => $encounter->service->id,
+                'service_category_id' => 4,
+                'payment_type' => request('payment_type'),
+                'sub_total' => $encounter->service->price,
+                'total_price' => $encounter->service->price * 1,
+                'quantity' => 1
+            ]);
+        });
+
+        static::deleted(function ($encounter)
+        {
+            $order = $encounter->patient->getLastPendingOrder();
+
+
+            if ($order) {
+                $order->items()->where('service_id', $encounter->service_id)->first()->delete();
+            }
+        });
+
+    }
 
 }

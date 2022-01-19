@@ -20,6 +20,7 @@ class CreateOrderServiceTable extends Migration
             $table->integer('quantity');
             $table->foreignId('unit_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('service_category_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->string('payment_type')->nullable();
             $table->float('sub_total');
             $table->float('total_price');
         });

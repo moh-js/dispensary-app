@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Service;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,6 +20,8 @@ class CreateEncountersTable extends Migration
             $table->string('name')->nullable();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->comment('Doctor ID')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'cheif')->comment('doctor ID')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->foreignIdFor(Service::class, 'purpose')->comment('service ID')->nullable()->constrained('services')->cascadeOnDelete();
             $table->text('chief_complains')->nullable();
             $table->text('amplification')->nullable();
             $table->text('review_of_systems')->nullable();

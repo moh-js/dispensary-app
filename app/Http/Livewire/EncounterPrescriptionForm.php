@@ -68,7 +68,7 @@ class EncounterPrescriptionForm extends Component
                 $this->prescription->update($validatedData);
             }
 
-            Prescription::firstOrCreate($validatedData);
+            Prescription::create($validatedData);
 
             $this->clearForm();
 
