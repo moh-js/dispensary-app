@@ -28,12 +28,17 @@ class RoleSeeder extends Seeder
                 'name' => 'doctor', 'permissions' => [
                     ['patient', 'action' => ['view', 'add', 'update', 'delete', 'activate', 'deactivate']],
                     ['item', 'action' => ['view', 'add', 'update', 'delete', 'management', 'issue']],
-                    ['encounter', 'action' => ['view', 'create', 'update']],
+                    ['encounter', 'action' => ['view', 'create', 'update', 'general-info-add', 'general-info-view']],
+                    ['prescription', 'action' => ['view', 'create', 'update', 'delete']],
+                    ['investigation', 'action' => ['view', 'create', 'update', 'delete']],
+                    ['procedure', 'action' => ['view', 'create', 'update', 'delete']],
+                    ['vital', 'action' => ['view', 'add']],
                     ['report', 'action' => ['dispensing-view', 'inventory-ledger-view']],
                 ]
             ], [
                 'name' => 'cashier', 'permissions' => [
-                    ['bill', 'action' => ['completed', 'complete', 'add', 'show', 'remove-single', 'remove-all', ]],
+                    ['report', 'action' => ['cash']],
+                    ['bill', 'action' => ['view', 'completed', 'complete', 'add', 'remove-single', 'remove-all', ]],
                 ]
             ], [
                 'permissions' => [

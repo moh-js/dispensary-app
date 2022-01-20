@@ -21,7 +21,7 @@ class BillingController extends Controller
 
     public function patientBillPage(Patient $patient, $invoice_id = null)
     {
-        $this->authorize('bill-show');
+        $this->authorize('bill-view');
 
         if ($invoice_id) {
             $order = Order::where('invoice_id', $invoice_id)->first();

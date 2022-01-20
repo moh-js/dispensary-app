@@ -5,9 +5,12 @@ namespace App\Http\Livewire;
 use App\Models\Service;
 use Livewire\Component;
 use App\Models\Procedure;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class EncounterProcedureForm extends Component
 {
+    use AuthorizesRequests;
+    
     public $form_flag = 0;
     public $services = [];
     public $service_id;
@@ -46,6 +49,8 @@ class EncounterProcedureForm extends Component
 
     public function editProcedure($procedure_id)
     {
+        $this->authorize('procedure-update');
+
         $this->showForm();
 
         $this->procedure = Procedure::find($procedure_id);
@@ -55,10 +60,13 @@ class EncounterProcedureForm extends Component
 
     public function saveData()
     {
+        $this->authorize('procedure-create');
+
         $validatedData = $this->validate();
         $validatedData = collect($validatedData)->merge(['encounter_id' => $this->encounter->id])->toArray();
 
         if ($this->procedure) {
+            $this->authorize('procedure-update');
             $this->procedure->update($validatedData);
         }
 
@@ -81,6 +89,8 @@ class EncounterProcedureForm extends Component
 
     public function render()
     {
+        $this->authorize('procedure-create');
+
         return view('livewire.encounter-procedure-form');
     }
 }

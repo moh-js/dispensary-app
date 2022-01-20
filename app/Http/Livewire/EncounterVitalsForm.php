@@ -3,10 +3,12 @@
 namespace App\Http\Livewire;
 
 use App\Models\Vital;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class EncounterVitalsForm extends Component
 {
+    use AuthorizesRequests;
 
     public $weight;
     public $encounter;
@@ -44,6 +46,8 @@ class EncounterVitalsForm extends Component
 
     public function saveData()
     {
+        $this->authorize('vital-add');
+
         $validatedData = $this->validate();
         $validatedData = collect($validatedData)->merge(['bmi' => $this->bmi])->toArray();
 
@@ -69,6 +73,8 @@ class EncounterVitalsForm extends Component
 
     public function render()
     {
+        $this->authorize('vital-view');
+
         return view('livewire.encounter-vitals-form');
     }
 }

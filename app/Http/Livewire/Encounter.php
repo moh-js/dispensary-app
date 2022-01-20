@@ -6,9 +6,12 @@ use Livewire\Component;
 use App\Models\Prescription;
 use App\Models\Investigation;
 use App\Models\Procedure;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Encounter extends Component
 {
+    use AuthorizesRequests;
+
     public $encounter;
     public $investigation;
     public $procedure;
@@ -42,6 +45,19 @@ class Encounter extends Component
     {
         session([$this->encounter->patient->patient_id => $flag]);
 
+
+        if ($flag == 'lab') {
+            $permission = 'investigation-view';
+        } elseif ($flag == 'general') {
+            $permission = 'encounter-general-info-view';
+        } elseif ($flag == 'signs') {
+            $permission = 'vital-view';
+        } else {
+            $permission = $flag.'-view';
+        }
+
+        $this->authorize($permission);
+
         $flag = $flag.'_flag';
 
         $this->lab_flag = 0;
@@ -69,6 +85,8 @@ class Encounter extends Component
 
     public function removeInvestigation($investigation_id)
     {
+        $this->authorize('investigation-delete');
+
         $investigation = Investigation::find($investigation_id);
         $name = $investigation->service->name;
 
@@ -82,6 +100,8 @@ class Encounter extends Component
 
     public function removePrescription($prescription_id)
     {
+        $this->authorize('prescription-delete');
+
         $prescription = Prescription::find($prescription_id);
         $name = $prescription->service->name;
 
@@ -95,6 +115,8 @@ class Encounter extends Component
 
     public function removeProcedure($procedure_id)
     {
+        $this->authorize('procedure-delete');
+
         $procedure = Procedure::find($procedure_id);
         $name = $procedure->service->name;
 
@@ -108,6 +130,8 @@ class Encounter extends Component
 
     public function render()
     {
+        $this->authorize('encounter-view');
+
         return view('livewire.encounter');
     }
 }

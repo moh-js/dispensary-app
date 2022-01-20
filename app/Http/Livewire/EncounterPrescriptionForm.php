@@ -5,9 +5,12 @@ namespace App\Http\Livewire;
 use App\Models\Service;
 use Livewire\Component;
 use App\Models\Prescription;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class EncounterPrescriptionForm extends Component
 {
+    use AuthorizesRequests;
+    
     public $encounter;
     public $service_id;
     public $services = [];
@@ -45,6 +48,8 @@ class EncounterPrescriptionForm extends Component
 
     public function editPrescription($investigation_id)
     {
+        $this->authorize('prescription-update');
+
         $this->showForm();
 
         $this->prescription = Prescription::find($investigation_id);
@@ -54,6 +59,8 @@ class EncounterPrescriptionForm extends Component
 
     public function saveData()
     {
+        $this->authorize('prescription-create');
+
         $validatedData = $this->validate();
         $validatedData = collect($validatedData)->merge(['encounter_id' => $this->encounter->id])->toArray();
 
@@ -65,6 +72,7 @@ class EncounterPrescriptionForm extends Component
             $this->emitUp('notification', $message);
         } else {
             if ($this->prescription) {
+                $this->authorize('prescription-update');
                 $this->prescription->update($validatedData);
             }
 
@@ -89,6 +97,8 @@ class EncounterPrescriptionForm extends Component
 
     public function render()
     {
+        $this->authorize('prescription-create');
+
         return view('livewire.encounter-prescription-form');
     }
 }

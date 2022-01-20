@@ -2,10 +2,13 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class EncounterGeneralForm extends Component
 {
+    use AuthorizesRequests;
+
     public $diagnosis;
     public $treatment;
     public $comments;
@@ -31,6 +34,8 @@ class EncounterGeneralForm extends Component
 
     public function saveData()
     {
+        $this->authorize('encounter-general-info-add');
+
         $validatedData = $this->validate();
 
         $this->encounter->update($validatedData);
@@ -43,6 +48,8 @@ class EncounterGeneralForm extends Component
 
     public function render()
     {
+        $this->authorize('encounter-general-info-create');
+
         return view('livewire.encounter-general-form');
     }
 }

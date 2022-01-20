@@ -4,10 +4,12 @@ namespace App\Http\Livewire;
 
 use App\Models\Investigation;
 use App\Models\Service;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class EncounterLabForm extends Component
 {
+    use AuthorizesRequests;
 
     public $form_flag = 0;
     public $services = [];
@@ -47,6 +49,8 @@ class EncounterLabForm extends Component
 
     public function editInvestigation($investigation_id)
     {
+        $this->authorize('investigation-update');
+
         $this->showForm();
 
         $this->investigation = Investigation::find($investigation_id);
@@ -60,8 +64,12 @@ class EncounterLabForm extends Component
         $validatedData = collect($validatedData)->merge(['encounter_id' => $this->encounter->id])->toArray();
 
         if ($this->investigation) {
+            $this->authorize('investigation-update');
+
             $this->investigation->update($validatedData);
         }
+
+        $this->authorize('investigation-create');
 
         Investigation::create($validatedData);
 
@@ -82,6 +90,8 @@ class EncounterLabForm extends Component
 
     public function render()
     {
+        $this->authorize('investigation-create');
+
         return view('livewire.encounter-lab-form');
     }
 }
