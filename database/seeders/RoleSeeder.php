@@ -28,7 +28,7 @@ class RoleSeeder extends Seeder
                 'name' => 'doctor', 'permissions' => [
                     ['patient', 'action' => ['view', 'add', 'update', 'delete', 'activate', 'deactivate']],
                     ['item', 'action' => ['view', 'add', 'update', 'delete', 'management', 'issue']],
-                    ['encounter', 'action' => ['view', 'create', 'update', 'general-info-add', 'general-info-view']],
+                    ['encounter', 'action' => ['view', 'create', 'update', 'general-info-add', 'general-info-view', 'status-toggle']],
                     ['prescription', 'action' => ['view', 'create', 'update', 'delete']],
                     ['investigation', 'action' => ['view', 'create', 'update', 'delete']],
                     ['procedure', 'action' => ['view', 'create', 'update', 'delete']],

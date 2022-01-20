@@ -53,4 +53,18 @@ class EncounterController extends Controller
 
     }
 
+    public function ToggleEncounterStatus(Request $request, Encounter $encounter)
+    {
+        $this->authorize('encounter-status-toggle');
+
+        $encounter->status = !$encounter->status;
+        $encounter->update();
+
+        $action = $encounter->status == 1? 'closed':'opened';
+
+        flash("Encouter $action successfully");
+        return back();
+
+    }
+
 }

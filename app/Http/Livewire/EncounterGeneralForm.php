@@ -9,20 +9,44 @@ class EncounterGeneralForm extends Component
 {
     use AuthorizesRequests;
 
-    public $diagnosis;
+    public $chief_complains;
+    public $amplification;
+    public $review_of_systems;
+    public $past_medical;
+    public $social_family_history;
+    public $physical_examination;
+    public $systemic_examination;
+    public $provisional_diagnosis;
+    public $investigation;
     public $treatment;
     public $comments;
     public $encounter;
 
     protected $rules = [
-        'diagnosis' => ['nullable', 'string'],
-        'treatment' => ['nullable', 'string'],
-        'comments' => ['nullable', 'string'],
+        'chief_complains' => ['nullable', 'string', 'max:3000'],
+        'amplification' => ['nullable', 'string', 'max:3000'],
+        'review_of_systems' => ['nullable', 'string', 'max:3000'],
+        'past_medical' => ['nullable', 'string', 'max:3000'],
+        'social_family_history' => ['nullable', 'string', 'max:3000'],
+        'physical_examination' => ['nullable', 'string', 'max:3000'],
+        'systemic_examination' => ['nullable', 'string', 'max:3000'],
+        'provisional_diagnosis' => ['nullable', 'string', 'max:3000'],
+        'investigation' => ['nullable', 'string', 'max:3000'],
+        'treatment' => ['nullable', 'string', 'max:3000'],
+        'comments' => ['nullable', 'string', 'max:3000'],
     ];
 
     public function mount()
     {
-        $this->diagnosis = $this->encounter->diagnosis;
+        $this->chief_complains = $this->encounter->chief_complains;
+        $this->amplification = $this->encounter->amplification;
+        $this->review_of_systems = $this->encounter->review_of_systems;
+        $this->past_medical = $this->encounter->past_medical;
+        $this->social_family_history = $this->encounter->social_family_history;
+        $this->physical_examination = $this->encounter->physical_examination;
+        $this->systemic_examination = $this->encounter->systemic_examination;
+        $this->provisional_diagnosis = $this->encounter->provisional_diagnosis;
+        $this->investigation = $this->encounter->investigation;
         $this->treatment = $this->encounter->treatment;
         $this->comments = $this->encounter->comments;
     }
