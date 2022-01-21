@@ -6,6 +6,7 @@ use Spatie\Sluggable\HasSlug;
 use OwenIt\Auditing\Auditable;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Contracts\Auditable as ContractsAuditable;
@@ -56,5 +57,12 @@ class Service extends Model implements ContractsAuditable
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('costable', function (Builder $builder) {
+            $builder->where('price', '!=', null);
+        });
     }
 }

@@ -6,7 +6,7 @@
     <div class="card-header">
         <h5>User List</h5>
         <div class="float-right">
-                <a href="{{ route('users.add') }}" class="btn btn-primary btn-sm ml-3">Add User</a>
+                <a href="{{ route('users.add') }}" class="btn btn-primary">Add User</a>
         </div>
     </div>
     <div class="card-body table-bordered-style">
@@ -32,7 +32,9 @@
                                 <td>
                                     <span class="badge badge-info">{{ $user->role }}</span>
                                 </td>
-                                <td>{{ $user->phone }}</td>
+                                <td>
+                                    {{ $user->phone?'+255'.$user->phone:'' }}
+                                </td>
                                 <td>
                                     @if ($user->deleted_at)
                                         <span class="badge badge-danger">Inactive</span>

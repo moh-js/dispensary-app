@@ -7,13 +7,17 @@
             $sessionName = $item->order->patient->patient_id.'session'.$item->id;
         @endphp
         @if (!$item->payment_type || session()->has($sessionName))
-        <select wire:model="payment" id="payment_type{{ $item->id }}" class="bs-form-control form-control-sm">
+        <select wire:model="payment" id="payment_type{{ $item->id }}" class="d-inline bs-form-control form-control-sm">
             <option value="{{ null }}">Choose...</option>
             <option value="cash">Cash</option>
             <option value="nhif">NHIF</option>
             <option value="exempted">Exempted</option>
         </select>
-
+        <div class="d-inline">
+            <div wire:loading wire:target="payment" class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
         @else
         {{ title_case($item->payment_type) }}
         @endif

@@ -48,7 +48,7 @@ class RoleController extends Controller
             'name' => ['required', 'string', 'max:20', 'unique:roles,name'],
         ]);
 
-        Role::create($request->merge(['guard' => 'web'])->except(['_token']));
+        Role::create($request->merge(['guard_name' => 'web'])->except(['_token']));
 
         flash('Role created successfully');
         return redirect()->route('roles.index');

@@ -5,7 +5,7 @@
 <div class="card">
     <div class="card-header"><h5>User List</h5>
         <div class="float-right">
-                <a href="{{ route('roles.add') }}" class="btn btn-primary btn-sm ml-3">Add Role</a>
+                <a href="{{ route('roles.add') }}" class="btn btn-primary">Add Role</a>
         </div>
     </div>
     <div class="card-body table-bordered-style">

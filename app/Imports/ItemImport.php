@@ -46,11 +46,13 @@ class ItemImport implements OnEachRow, WithHeadingRow, WithChunkReading
         // Create its service bill
         $service_category_id = 1;
 
+        $name = $row['name']. ' - ' .$row['uom'];
+        $price = $row['price'];
         $item->service()->updateOrCreate([
-            'name' => "{$row['name']} - {$row['uom']}",
-            'service_category_id' => $service_category_id
+            'name' => $name,
+            'service_category_id' => $service_category_id,
         ], [
-            'price' => $row['price'],
+            'price' => $price,
         ]);
 
         $this->manageItems($row, $item);

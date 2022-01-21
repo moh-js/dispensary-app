@@ -60,6 +60,17 @@ class EncounterGeneralForm extends Component
     {
         $this->authorize('encounter-general-info-add');
 
+        if ($this->encounter->cheif) {
+            if ($this->encounter->cheif != auth()->id()) {
+                flash('You cannot edit this encounter because you were not its chief provider');
+                return redirect()->route('encounter', $this->encounter->id);
+            }
+        } else {
+            $this->encounter->update([
+                'cheif' => auth()->id()
+            ]);
+        }
+
         $validatedData = $this->validate();
 
         $this->encounter->update($validatedData);
