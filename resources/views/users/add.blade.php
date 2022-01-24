@@ -10,10 +10,10 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <select aria-placeholder="Choose Role" name="role" id="role" class="form-control @error('role') is-invalid @enderror">
+                        <select aria-placeholder="Choose Role" multiple name="role[]" id="role" class="form-control @error('role') is-invalid @enderror">
                             <option selected value="{{ null }}">Choose Role</option>
                             @foreach ($roles as $role)
-                                <option value="{{ $role->name }}" {{ old('role') == $role->name? 'selected':''}}>{{ $role->name }}</option>
+                                <option value="{{ $role->name }}" {{ collect(old('role'))->contains($role->name)? 'selected':''}}>{{ $role->name }}</option>
                             @endforeach
                         </select>
                         @error('role')

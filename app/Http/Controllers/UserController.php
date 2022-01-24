@@ -54,7 +54,7 @@ class UserController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', "unique:users,email"],
             'phone' => ['nullable', 'digits:9', 'integer'],
-            'role' => ['required', 'string']
+            'role' => ['required', 'array']
         ]);
 
         $data = collect([
@@ -114,7 +114,7 @@ class UserController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', "unique:users,email,$user->id,id"],
             'phone' => ['nullable', 'digits:9', 'integer'],
-            'role' => ['required', 'string']
+            'role' => ['required', 'array']
         ]);
 
         $data = collect([

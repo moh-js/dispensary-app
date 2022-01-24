@@ -8,14 +8,14 @@
         <form action="{{ route('users.update', $user->username) }}" method="post">
             @csrf
             @method('PUT')
-            
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <select aria-placeholder="Choose Role" name="role" id="role" class="form-control @error('role') is-invalid @enderror">
+                        <select aria-placeholder="Choose Role" multiple name="role[]" id="role" class="form-control @error('role') is-invalid @enderror">
                             <option selected value="{{ null }}">Choose Role</option>
                             @foreach ($roles as $role)
-                                <option value="{{ $role->name }}" {{ old('role')? (old('role') == $role->name? 'selected':''):($user->role == $role->name? 'selected':'') }}>{{ $role->name }}</option>
+                                <option value="{{ $role->name }}" {{ old('role')? (collect(old('role'))->contains($role->name)? 'selected':''):(collect($user->getRoleNames())->contains($role->name)? 'selected':'') }}>{{ $role->name }}</option>
                             @endforeach
                         </select>
                         @error('role')

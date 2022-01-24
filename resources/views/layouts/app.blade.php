@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <title>DMS {{ Request::segment(1)? '| '. Request::segment(1) : '' }}</title>
+    <title>{{ getAppShortName() }} {{ Request::segment(2)? '| '. Request::segment(2) : 'dashboard' }}</title>
     <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 11]>

@@ -26,7 +26,7 @@
                     <tbody>
                         @foreach ($users as $key => $user)
                             <tr>
-                                <td scope="row">1</td>
+                                <td scope="row">{{ ++$key }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
