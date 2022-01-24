@@ -30,7 +30,9 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
-                                    <span class="badge badge-info">{{ $user->role }}</span>
+                                    @foreach ($user->roles as $role)
+                                        <span class="badge badge-info">{{ $role->name }}</span>
+                                    @endforeach
                                 </td>
                                 <td>
                                     {{ $user->phone?'+255'.$user->phone:'' }}
