@@ -239,7 +239,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($encounter->pendingOrder()->items??[] as $key => $item)
+                            @foreach ($encounter->patient->getLastPendingOrder()->items??[] as $key => $item)
                                 @livewire('bill-table-row', ['item' => $item, 'key' => ++$key], key($item->id))
 {{--
                                 <tr>
@@ -258,7 +258,7 @@
                                 </tr>
  --}}                            @endforeach
 
-                            @if (!count($encounter->pendingOrder()->items??[]))
+                            @if (!count($encounter->patient->getLastPendingOrder()->items??[]))
                                 <tr>
                                     <td colspan="5" class="text-center"><span class="text-dark">No service bill found</span></td>
                                 </tr>
@@ -266,10 +266,10 @@
                         </tbody>
                     </table>
 
-                    @if ($encounter->pendingOrder())
+                    @if ($encounter->patient->getLastPendingOrder())
                         {{-- <hr> --}}
                         {{-- <h4>Complete Order</h4> --}}
-                        <form action="{{ route('bill.complete', $encounter->pendingOrder()->invoice_id??null) }}" method="post">
+                        <form action="{{ route('bill.complete', $encounter->patient->getLastPendingOrder()->invoice_id??null) }}" method="post">
                             @csrf
                             <div class="row">
                                 <div class="col-sm-12">

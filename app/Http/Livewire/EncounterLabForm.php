@@ -67,11 +67,12 @@ class EncounterLabForm extends Component
             $this->authorize('investigation-update');
 
             $this->investigation->update($validatedData);
+        } else {
+            $this->authorize('investigation-create');
+
+            Investigation::create($validatedData);
         }
 
-        $this->authorize('investigation-create');
-
-        Investigation::create($validatedData);
 
         $this->clearForm();
 

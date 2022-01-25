@@ -170,8 +170,8 @@
 
                     <div class="card-body">
                         <div class="latest-update-box">
-                            @foreach ($user->encounters as $encounter)
-                                <div class="row p-t-30 p-b-30">
+                            @foreach ($user->encounters->sortByDesc('id') as $encounter)
+                                <div class="row justify-content-center p-t-30 p-b-30">
                                     <div class="col-auto text-right update-meta">
                                         <p class="text-muted m-b-0 d-inline-flex">{{ $encounter->updated_at->diffForHumans() }}</p>
                                         <i class="fa fa-stethoscope bg-primary update-icon"></i>
@@ -192,7 +192,7 @@
                             @endforeach
                         </div>
                         <div class="text-center">
-                            <a href="#!" class="b-b-primary text-primary">View all Projects</a>
+                            {{-- <a href="#!" class="b-b-primary text-primary">View all Encounters</a> --}}
                         </div>
                     </div>
                 </div>
