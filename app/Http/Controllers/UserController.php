@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -178,5 +179,24 @@ class UserController extends Controller
     public function myProfile()
     {
         return view('profile.index');
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'old_password' => ['required', 'string', function ($attribute, $value, $fail) {
+                if (!Hash::check($value, request()->user()->password)) {
+                    $fail('The '.str_replace('_', ' ', $attribute).' incorrect .');
+                }
+            }]
+        ]);
+
+        request()->user()->update([
+            'password' => bcrypt($request->password)
+        ]);
+
+        flash('Password updated successfully');
+        return back();
     }
 }

@@ -163,7 +163,7 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    <li>
+                    {{-- <li>
                         <div class="dropdown">
                             <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon feather icon-bell"></i></a>
                             <div class="dropdown-menu dropdown-menu-right notification">
@@ -223,7 +223,7 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </li> --}}
                     <li>
                         <div class="dropdown drp-user">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -239,8 +239,8 @@
                                 </div>
                                 <ul class="pro-body">
                                     <li><a href="{{ route('my.profile') }}" class="dropdown-item"><i class="feather icon-user"></i> Profile</a></li>
-                                    <li><a href="email_inbox.html" class="dropdown-item"><i class="feather icon-mail"></i> My Messages</a></li>
-                                    <li><a href="auth-signin.html" class="dropdown-item"><i class="feather icon-lock"></i> Lock Screen</a></li>
+                                    {{-- <li><a href="email_inbox.html" class="dropdown-item"><i class="feather icon-mail"></i> My Messages</a></li>
+                                    <li><a href="auth-signin.html" class="dropdown-item"><i class="feather icon-lock"></i> Lock Screen</a></li> --}}
                                 </ul>
                             </div>
                             <form action="{{ route('logout') }}" id="logout" method="post">@csrf</form>

@@ -33,6 +33,7 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     {
         Route::get('/', [UserController::class, 'index'])->name('users.index');
         Route::get('/add', [UserController::class, 'create'])->name('users.add');
+        Route::post('/change-password', [UserController::class, 'changePassword'])->name('change.password');
         Route::post('/add', [UserController::class, 'store'])->name('users.store');
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::put('/{user}/edit', [UserController::class, 'update'])->name('users.update');

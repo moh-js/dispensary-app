@@ -1,40 +1,48 @@
 @extends('layouts.app')
 
 @section('content')
-    <div>
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
 
     @if (session('status'))
         <div>
-            {{ session('status') }}
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                {{ session('status') }}
+            </div>
         </div>
     @endif
 
-    @if ($errors->any())
-        <div>
-            <div>{{ __('Whoops! Something went wrong.') }}</div>
+    <div class="auth-wrapper">
+        <!-- [ reset-password ] start -->
+        <div class="auth-content">
+            <div class="card">
+                <div class="row align-items-center text-center">
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <img src="{{ asset('image/must_logo.png') }}" alt="" width="200" class="img-fluid mb-4">
+                            <h4 class="mb-3 f-w-400">Reset your password</h4>
+                            <form method="POST" action="{{ route('password.email') }}">
+                                @csrf
+                                <div class="form-group mb-4">
+                                    <label class="floating-label" for="Username">{{ __('Email') }}</label>
+                                    <input type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus />
 
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-primary mb-2">
+                                        {{ __('Reset Password') }}
+                                    </button>
+                                </div>
+                                <p class="mb-0 text-muted">Remember your password account? <a href="{{ url('/login') }}" class="f-w-400">Login</a></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    @endif
+        <!-- [ reset-password ] end -->
+    </div>
 
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <div>
-            <label>{{ __('Email') }}</label>
-            <input type="email" name="email" value="{{ old('email') }}" required autofocus />
-        </div>
-
-        <div>
-            <button type="submit">
-                {{ __('Email Password Reset Link') }}
-            </button>
-        </div>
-    </form>
 @endsection
