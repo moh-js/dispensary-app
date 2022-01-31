@@ -32,7 +32,7 @@ class Service extends Model implements ContractsAuditable
 
     public function getProperNameAttribute()
     {
-        return $this->item->name. ' - '. " [ {$this->price} Tsh]";
+        return $this->item->name??$this->name. ' - '. " [ {$this->price} Tsh]";
     }
 
     public function setNameAttribute($value)
