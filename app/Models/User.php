@@ -61,11 +61,7 @@ class User extends Authenticatable implements ContractsAuditable
     {
         $query
         ->withTrashed()
-        ->where([['id', '!=', auth()->id()]])
-        ->whereDoesntHave('roles', function (Builder $q)
-        {
-            $q->where([['name', 'super-admin']]);
-        });
+        ->where([['id', '!=', auth()->id()], ['id', '!=', 1]]);
     }
 
     public function getRouteKeyName()
