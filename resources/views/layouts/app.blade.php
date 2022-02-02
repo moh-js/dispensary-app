@@ -97,9 +97,11 @@
             ], [
                 'title' => 'Reports', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import']), 'icon' => 'feather icon-clipboard', 'childrens' => collect([
                     [
-                        'title' => 'Inventory Ledgers', 'url' => route('inventory-ledger.index'), 'permission' => request()->user()->hasAnyPermission('configuration-general')
+                        'title' => 'Inventory Ledgers', 'url' => route('inventory-ledger.index'), 'permission' => request()->user()->hasAnyPermission('report-inventory-ledger-view')
                     ], [
-                    'title' => 'Dispensing', 'url' => route('dispensing.index'), 'permission' => request()->user()->hasAnyPermission('configuration-data-import')
+                    'title' => 'Dispensing', 'url' => route('dispensing.index'), 'permission' => request()->user()->hasAnyPermission('report-dispensing-view')
+                    ], [
+                    'title' => 'Cash Book', 'url' => route('cash.index'), 'permission' => request()->user()->hasAnyPermission('report-cash-view')
                     ]
                 ]),
             ]

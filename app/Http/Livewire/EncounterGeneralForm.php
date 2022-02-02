@@ -83,7 +83,7 @@ class EncounterGeneralForm extends Component
 
     public function render()
     {
-        $this->authorize('encounter-general-info-create');
+        $this->authorize('encounter-general-info-view');
 
         return view('livewire.encounter-general-form');
     }

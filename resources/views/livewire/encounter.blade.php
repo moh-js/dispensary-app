@@ -241,22 +241,7 @@
                         <tbody>
                             @foreach ($encounter->patient->getLastPendingOrder()->items??[] as $key => $item)
                                 @livewire('bill-table-row', ['item' => $item, 'key' => ++$key], key($item->id))
-{{--
-                                <tr>
-                                    <td>{{ $key + 1 }}</td>
-                                    <td>{{ $item->service->name }}</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td>{{ $item->total_price }}</td>
-                                    <td class="text-center">
-                                        <a href="javascript:void(0)" onclick="removeBillService({{ $item }})" class="text-danger"><i class="feather icon-trash"></i></a>
-
-                                        <form action="{{ route('bill.service.delete', $item->id) }}" id="{{ $item->id }}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-                                    </td>
-                                </tr>
- --}}                            @endforeach
+                            @endforeach
 
                             @if (!count($encounter->patient->getLastPendingOrder()->items??[]))
                                 <tr>

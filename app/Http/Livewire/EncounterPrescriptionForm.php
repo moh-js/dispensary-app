@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class EncounterPrescriptionForm extends Component
 {
     use AuthorizesRequests;
-    
+
     public $encounter;
     public $service_id;
     public $services = [];
@@ -59,7 +59,6 @@ class EncounterPrescriptionForm extends Component
 
     public function saveData()
     {
-        $this->authorize('prescription-create');
 
         $validatedData = $this->validate();
         $validatedData = collect($validatedData)->merge(['encounter_id' => $this->encounter->id])->toArray();
@@ -74,9 +73,10 @@ class EncounterPrescriptionForm extends Component
             if ($this->prescription) {
                 $this->authorize('prescription-update');
                 $this->prescription->update($validatedData);
+            } else {
+                $this->authorize('prescription-create');
+                Prescription::create($validatedData);
             }
-
-            Prescription::create($validatedData);
 
             $this->clearForm();
 

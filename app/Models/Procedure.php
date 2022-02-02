@@ -13,7 +13,7 @@ class Procedure extends Model implements ContractsAuditable
     use HasFactory;
     use ReceiptGenerator;
     use Auditable;
-    
+
     protected $guarded = [];
 
     public function encounter()

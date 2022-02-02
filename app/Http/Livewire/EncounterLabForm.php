@@ -66,13 +66,15 @@ class EncounterLabForm extends Component
         if ($this->investigation) {
             $this->authorize('investigation-update');
 
+            $this->updateService($this->investigation);
+
             $this->investigation->update($validatedData);
+
         } else {
             $this->authorize('investigation-create');
 
             Investigation::create($validatedData);
         }
-
 
         $this->clearForm();
 
@@ -87,6 +89,24 @@ class EncounterLabForm extends Component
         $this->service_id = null;
         $this->result = null;
         $this->investigation = null;
+    }
+
+    public function updateService($investigation)
+    {
+        $order = $investigation->encounter->patient->getLastPendingOrder();
+
+        $orderItem = $order->items()->where('service_id', $investigation->service_id)->first();
+
+        $service = Service::find($this->service_id);
+
+        if ($orderItem) {
+            $orderItem->update([
+                'service_id' => $this->service_id,
+                'sub_total' => $service->price,
+                'total_price' => $service->price * 1,
+                'quantity' => 1
+            ]);
+        }
     }
 
     public function render()

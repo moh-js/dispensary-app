@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\Unit;
 use App\Models\Order;
 use App\Models\Ledger;
+use App\Models\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -96,6 +97,22 @@ class ReportController extends Controller
             'name' => $name,
             'when' => $when,
             'unit' => $unit,
+        ]);
+    }
+
+    public function cashBookPage(Request $request)
+    {
+        $this->authorize('report-cash-view');
+
+        $items = OrderService::whereHas('order', function (Builder $query)
+        {
+            $query->where('status', 'completed');
+        })->paginate(20);
+
+        return view('reports.cash', [
+            'name' => $request->name,
+            'when' => $request->when,
+            'items' => $items
         ]);
     }
 

@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class EncounterProcedureForm extends Component
 {
     use AuthorizesRequests;
-    
+
     public $form_flag = 0;
     public $services = [];
     public $service_id;
@@ -60,17 +60,17 @@ class EncounterProcedureForm extends Component
 
     public function saveData()
     {
-        $this->authorize('procedure-create');
-
         $validatedData = $this->validate();
         $validatedData = collect($validatedData)->merge(['encounter_id' => $this->encounter->id])->toArray();
 
         if ($this->procedure) {
             $this->authorize('procedure-update');
+            $this->updateService($this->procedure);
             $this->procedure->update($validatedData);
+        } else {
+            $this->authorize('procedure-create');
+            Procedure::create($validatedData);
         }
-
-        Procedure::create($validatedData);
 
         $this->clearForm();
 
@@ -85,6 +85,24 @@ class EncounterProcedureForm extends Component
         $this->service_id = null;
         $this->result = null;
         $this->procedure = null;
+    }
+
+    public function updateService($procedure)
+    {
+        $order = $procedure->encounter->patient->getLastPendingOrder();
+
+        $orderItem = $order->items()->where('service_id', $procedure->service_id)->first();
+
+        $service = Service::find($this->service_id);
+
+        if ($orderItem) {
+            $orderItem->update([
+                'service_id' => $this->service_id,
+                'sub_total' => $service->price,
+                'total_price' => $service->price * 1,
+                'quantity' => 1
+            ]);
+        }
     }
 
     public function render()
