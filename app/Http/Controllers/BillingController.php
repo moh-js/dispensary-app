@@ -80,7 +80,7 @@ class BillingController extends Controller
         }
 
         $service = Service::find($request->service);
-        if ($request->category == 1) {
+        if ($service->item->countable??false) {
             $unitItem = $service->item->getUnitById($request->unit);
 
             if ($unitItem->remain < $request->quantity) {
