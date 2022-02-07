@@ -44,6 +44,11 @@ class Service extends Model implements ContractsAuditable
     {
         return $this->hasMany(OrderService::class, 'service_id');
     }
+
+    public function getItemByCategory($category_id = 1)
+    {
+        return $this->item()->where('inventory_category_id', $category_id)->first();
+    }
     /**
      * Get the route key for the model.
      *
@@ -64,5 +69,10 @@ class Service extends Model implements ContractsAuditable
         static::addGlobalScope('costable', function (Builder $builder) {
             $builder->where('price', '!=', null);
         });
+    }
+
+    public function getMPriceAttribute()
+    {
+        return number_format($this->price,2);
     }
 }

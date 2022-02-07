@@ -8,14 +8,15 @@ use Illuminate\Support\Facades\Route;
 use Mike42\Escpos\ImagickEscposImage;
 use App\Http\Controllers\POSController;
 use App\Http\Controllers\ItemController;
-use App\Http\Controllers\UserController;
-
-use App\Http\Controllers\BillingController;
-use App\Http\Controllers\ConfigurationController;
-use App\Http\Controllers\EncounterController;
-use App\Http\Controllers\PatientController;
-use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
+
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\EncounterController;
+use App\Http\Controllers\ConfigurationController;
 use  Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
@@ -99,6 +100,15 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::get('/{encounter}/encounter', [EncounterController::class, 'index'])->name('encounter');
     Route::post('/encounter', [EncounterController::class, 'createEncounter'])->name('encounter.create');
     Route::post('/encounter/status-toggle/{encounter}', [EncounterController::class, 'ToggleEncounterStatus'])->name('encounter.close.open');
+
+
+    // Service
+    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+    Route::get('/service/add', [ServiceController::class, 'create'])->name('services.add');
+    Route::post('/service/add', [ServiceController::class, 'store'])->name('services.store');
+    Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
+    Route::post('/service/{service}/edit', [ServiceController::class, 'update'])->name('services.update');
+    Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
 });
 
 Route::get('/test', function ()

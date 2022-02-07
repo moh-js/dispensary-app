@@ -68,7 +68,7 @@
         }
 
         $navigations = collect([
-             [
+            [
                 'title' => 'Dashboard', 'url' => route('dashboard'), 'permission' => request()->user()->hasAnyPermission('dashboard'), 'icon' => 'feather icon-home', 'childrens' => collect(),
             ], [
                 'title' => 'Users Mgt', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission('user-view', 'user-add', 'user-update', 'user-delete', 'user-activate', 'user-deactivate'), 'icon' => 'feather icon-users', 'childrens' => collect([
@@ -83,8 +83,8 @@
                 ]),
             ], [
                 'title' => 'Inventory', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission('item-view'), 'icon' => 'feather icon-layers', 'childrens' => collect($inventoryNav),
-            // ], [
-            //     'title' => 'POS', 'url' => route('pos.index'), 'permission' => request()->user()->hasAnyPermission('item-view'), 'icon' => 'feather icon-shopping-cart', 'childrens' => collect(),
+            ], [
+                'title' => 'Services', 'url' => route('services.index'), 'permission' => request()->user()->hasAnyPermission('service-view'), 'icon' => 'feather icon-shopping-cart', 'childrens' => collect(),
             ], [
                 'title' => 'Configuration', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import']), 'icon' => 'feather icon-settings', 'childrens' => collect([
                     [

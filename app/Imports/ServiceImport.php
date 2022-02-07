@@ -22,6 +22,7 @@ class ServiceImport implements ToModel, WithBatchInserts, WithHeadingRow, WithCh
         $category = $row['category'];
         return new Service([
             'name' => $row['name'],
+            'slug' => str_slug($row['name']),
             'service_category_id' => ServiceCategory::where('name', 'like', "%$category%")->first()->id,
             'price' => $row['price'],
         ]);
