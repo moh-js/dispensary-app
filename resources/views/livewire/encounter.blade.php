@@ -75,201 +75,212 @@
                     </div>
                 @endif
 
-                {{-- General --}}
-                <div x-data="{general_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($general_flag)">
-                    <div class="row mb-5">
-                        <span style="font-size: 15px;" class="col-6 col-md-2" title="Temperature">
-                            <i class="feather icon-thermometer text-danger"></i>
-                            {{ $encounter->vital->temperature??"-" }} <sup>o</sup>C
-                        </span>
-
-                        <span style="font-size: 15px;" class="col-6 col-md-2" title="Height">
-                            <i class="feather icon-arrow-up text-primary"></i>
-                            {{ $encounter->vital->height??"-" }} Cm
-                        </span>
-
-                        <span style="font-size: 15px;" class="col-6 col-md-2" title="Weight">
-                            <i class="feather icon-underline text-primary"></i>
-                            {{ $encounter->vital->weight??"-" }} Kg
-                        </span>
-
-                        <span style="font-size: 15px;" class="col-6 col-md-2" title="BMI">
-                            <i class="feather icon-link-2 text-primary"></i>
-                            {{ $encounter->vital->bmi??"-" }} Kg/m<sup>2</sup>
-                        </span>
-
-                        <span style="font-size: 15px;" class="col-6 col-md-2" title="Diastolic BP">
-                            <i class="feather icon-corner-right-down text-success"></i>
-                            {{ $encounter->vital->diastolic??"-" }} mmHg
-                        </span>
-
-                        <span style="font-size: 15px;" class="col-6 col-md-2" title="Systolic BP">
-                            <i class="feather icon-corner-left-up text-success"></i>
-                            {{ $encounter->vital->systolic??"-" }} mmHg
-                        </span>
+                <center class="text-center">
+                    <div wire:loading wire:target="changeFlag">
+                        <div class="spinner-border text-primary" {{-- style="width: 4rem; height: 4rem;" --}} role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </div>
+                </center>
 
-                    <hr>
+                <div wire:loading.remove wire:target="changeFlag">
+                    {{-- General --}}
+                    <div x-data="{general_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($general_flag)">
+                        <div class="row mb-5">
+                            <span style="font-size: 15px;" class="col-6 col-md-2" title="Temperature">
+                                <i class="feather icon-thermometer text-danger"></i>
+                                {{ $encounter->vital->temperature??"-" }} <sup>o</sup>C
+                            </span>
 
-                    @livewire('encounter-general-form', ['encounter' => $encounter])
-                </div>
-                {{-- End General --}}
+                            <span style="font-size: 15px;" class="col-6 col-md-2" title="Height">
+                                <i class="feather icon-arrow-up text-primary"></i>
+                                {{ $encounter->vital->height??"-" }} Cm
+                            </span>
 
-                {{-- Lab --}}
-                <div x-data="{lab_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($lab_flag)">
-                    @livewire('encounter-lab-form', ['investigation' => $investigation, 'encounter' => $encounter])
+                            <span style="font-size: 15px;" class="col-6 col-md-2" title="Weight">
+                                <i class="feather icon-underline text-primary"></i>
+                                {{ $encounter->vital->weight??"-" }} Kg
+                            </span>
 
-                    <div class="table-responsive" id="lab-list">
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Result</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($encounter->investigations as $key => $investigation)
+                            <span style="font-size: 15px;" class="col-6 col-md-2" title="BMI">
+                                <i class="feather icon-link-2 text-primary"></i>
+                                {{ $encounter->vital->bmi??"-" }} Kg/m<sup>2</sup>
+                            </span>
+
+                            <span style="font-size: 15px;" class="col-6 col-md-2" title="Diastolic BP">
+                                <i class="feather icon-corner-right-down text-success"></i>
+                                {{ $encounter->vital->diastolic??"-" }} mmHg
+                            </span>
+
+                            <span style="font-size: 15px;" class="col-6 col-md-2" title="Systolic BP">
+                                <i class="feather icon-corner-left-up text-success"></i>
+                                {{ $encounter->vital->systolic??"-" }} mmHg
+                            </span>
+                        </div>
+
+                        <hr>
+
+                        @livewire('encounter-general-form', ['encounter' => $encounter])
+                    </div>
+                    {{-- End General --}}
+
+                    {{-- Lab --}}
+                    <div x-data="{lab_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($lab_flag)">
+                        @livewire('encounter-lab-form', ['investigation' => $investigation, 'encounter' => $encounter])
+
+                        <div class="table-responsive" id="lab-list">
+                            <table class="table table-sm">
+                                <thead>
                                     <tr>
-                                        <td>{{ ++$key }}</td>
-                                        <td>{{ $investigation->service->name }}</td>
-                                        <td>{{ $investigation->result }}</td>
-                                        <td class="text-center">
-                                            <a href="javascript:void(0)" wire:click="$emit('editInvestigation', {{ $investigation->id }})" title="Edit" class="text-primary mr-3"><i class="feather icon-edit" style="font-size: 16px"></i></a>
-
-                                            <a href="javascript:void(0)" onclick="removeInvestigation({{ $investigation }})" title="Remove" class="text-danger"><i class="feather icon-trash" style="font-size: 16px"></i></a>
-                                        </td>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Result</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($encounter->investigations as $key => $investigation)
+                                        <tr>
+                                            <td>{{ ++$key }}</td>
+                                            <td>{{ $investigation->service->name }}</td>
+                                            <td>{{ $investigation->result }}</td>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0)" wire:click="$emit('editInvestigation', {{ $investigation->id }})" title="Edit" class="text-primary mr-3"><i class="feather icon-edit" style="font-size: 16px"></i></a>
+
+                                                <a href="javascript:void(0)" onclick="removeInvestigation({{ $investigation }})" title="Remove" class="text-danger"><i class="feather icon-trash" style="font-size: 16px"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                {{-- End Lab --}}
+                    {{-- End Lab --}}
 
 
-                {{-- Procedure --}}
+                    {{-- Procedure --}}
 
-                <div x-data="{procedure_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($procedure_flag)">
-                    @livewire('encounter-procedure-form', ['procedure' => $procedure, 'encounter' => $encounter])
+                    <div x-data="{procedure_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($procedure_flag)">
+                        @livewire('encounter-procedure-form', ['procedure' => $procedure, 'encounter' => $encounter])
 
-                    <div class="table-responsive" id="lab-list">
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Result</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($encounter->procedures as $key => $procedure)
+                        <div class="table-responsive" id="lab-list">
+                            <table class="table table-sm">
+                                <thead>
                                     <tr>
-                                        <td>{{ ++$key }}</td>
-                                        <td>{{ $procedure->service->name }}</td>
-                                        <td>{{ $procedure->result }}</td>
-                                        <td class="text-center">
-                                            <a href="javascript:void(0)" wire:click="$emit('editProcedure', {{ $procedure->id }})" title="Edit" class="text-primary mr-3"><i class="feather icon-edit" style="font-size: 16px"></i></a>
-
-                                            <a href="javascript:void(0)" onclick="removeProcedure({{ $procedure }})" title="Remove" class="text-danger"><i class="feather icon-trash" style="font-size: 16px"></i></a>
-                                        </td>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Result</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($encounter->procedures as $key => $procedure)
+                                        <tr>
+                                            <td>{{ ++$key }}</td>
+                                            <td>{{ $procedure->service->name }}</td>
+                                            <td>{{ $procedure->result }}</td>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0)" wire:click="$emit('editProcedure', {{ $procedure->id }})" title="Edit" class="text-primary mr-3"><i class="feather icon-edit" style="font-size: 16px"></i></a>
+
+                                                <a href="javascript:void(0)" onclick="removeProcedure({{ $procedure }})" title="Remove" class="text-danger"><i class="feather icon-trash" style="font-size: 16px"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-                {{-- End Procedure --}}
+                    {{-- End Procedure --}}
 
-                {{-- Vital --}}
-                <div x-data="{signs_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($signs_flag)">
-                    @livewire('encounter-vitals-form', ['encounter' => $encounter])
-                </div>
-                {{-- End Vital --}}
+                    {{-- Vital --}}
+                    <div x-data="{signs_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($signs_flag)">
+                        @livewire('encounter-vitals-form', ['encounter' => $encounter])
+                    </div>
+                    {{-- End Vital --}}
 
 
-                {{-- Prescription --}}
-                <div x-data="{prescription_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($prescription_flag)">
-                    @livewire('encounter-prescription-form', ['investigation' => $investigation, 'encounter' => $encounter])
+                    {{-- Prescription --}}
+                    <div x-data="{prescription_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($prescription_flag)">
+                        @livewire('encounter-prescription-form', ['investigation' => $investigation, 'encounter' => $encounter])
 
-                    <div class="table-responsive" id="lab-list">
+                        <div class="table-responsive" id="lab-list">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($encounter->prescriptions as $key => $prescription)
+                                        <tr>
+                                            <td>{{ ++$key }}</td>
+                                            <td>{{ $prescription->service->name }}</td>
+                                            <td>{{ $prescription->quantity }}</td>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0)" wire:click="$emit('editPrescription', {{ $prescription->id }})" title="Edit" class="text-primary mr-3"><i class="feather icon-edit" style="font-size: 16px"></i></a>
+
+                                                <a href="javascript:void(0)" onclick="removePrescription({{ $prescription }})" title="Remove" class="text-danger"><i class="feather icon-trash" style="font-size: 16px"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    {{-- End Prescription --}}
+
+                    {{-- Service Bill --}}
+                    <div x-data="{bill_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($bill_flag)">
                         <table class="table table-sm">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Name</th>
+                                    <th>Service</th>
                                     <th>Quantity</th>
+                                    <th>Payment Type</th>
+                                    <th>Price</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($encounter->prescriptions as $key => $prescription)
-                                    <tr>
-                                        <td>{{ ++$key }}</td>
-                                        <td>{{ $prescription->service->name }}</td>
-                                        <td>{{ $prescription->quantity }}</td>
-                                        <td class="text-center">
-                                            <a href="javascript:void(0)" wire:click="$emit('editPrescription', {{ $prescription->id }})" title="Edit" class="text-primary mr-3"><i class="feather icon-edit" style="font-size: 16px"></i></a>
-
-                                            <a href="javascript:void(0)" onclick="removePrescription({{ $prescription }})" title="Remove" class="text-danger"><i class="feather icon-trash" style="font-size: 16px"></i></a>
-                                        </td>
-                                    </tr>
+                                @foreach ($encounter->patient->getLastPendingOrder()->items??[] as $key => $item)
+                                    @livewire('bill-table-row', ['item' => $item, 'key' => ++$key], key($item->id))
                                 @endforeach
+
+                                @if (!count($encounter->patient->getLastPendingOrder()->items??[]))
+                                    <tr>
+                                        <td colspan="5" class="text-center"><span class="text-dark">No service bill found</span></td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
-                    </div>
 
-                </div>
-                {{-- End Prescription --}}
-
-                {{-- Service Bill --}}
-                <div x-data="{bill_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($bill_flag)">
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Service</th>
-                                <th>Quantity</th>
-                                <th>Payment Type</th>
-                                <th>Price</th>
-                                <th class="text-center">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($encounter->patient->getLastPendingOrder()->items??[] as $key => $item)
-                                @livewire('bill-table-row', ['item' => $item, 'key' => ++$key], key($item->id))
-                            @endforeach
-
-                            @if (!count($encounter->patient->getLastPendingOrder()->items??[]))
-                                <tr>
-                                    <td colspan="5" class="text-center"><span class="text-dark">No service bill found</span></td>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
-
-                    @if ($encounter->patient->getLastPendingOrder())
-                        {{-- <hr> --}}
-                        {{-- <h4>Complete Order</h4> --}}
-                        <form action="{{ route('bill.complete', $encounter->patient->getLastPendingOrder()->invoice_id??null) }}" method="post">
-                            @csrf
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="form-group float-right">
-                                        <button class="btn btn-primary" type="submit">
-                                            Complete
-                                        </button>
+                        @if ($encounter->patient->getLastPendingOrder())
+                            {{-- <hr> --}}
+                            {{-- <h4>Complete Order</h4> --}}
+                            <form action="{{ route('bill.complete', $encounter->patient->getLastPendingOrder()->invoice_id??null) }}" method="post">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group float-right">
+                                            <button class="btn btn-primary" type="submit">
+                                                Complete
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                        </form>
-                    @endif
+                            </form>
+                        @endif
+                    </div>
+                    {{-- End Service Bill --}}
                 </div>
-                {{-- End Service Bill --}}
+
             </div>
         </div>
     </div>
