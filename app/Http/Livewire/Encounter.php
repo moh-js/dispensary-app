@@ -37,40 +37,30 @@ class Encounter extends Component
 
     public function mount()
     {
-        $flag = session($this->encounter->patient->patient_id)?:1;
+        $flag = session($this->encounter->patient->patient_id);
         $this->changeFlag($flag);
     }
 
-    public function changeFlag($flag)
+    public function changeFlag($flag = null)
     {
         session([$this->encounter->patient->patient_id => $flag]);
 
+        if($flag) {
 
-        if ($flag == 'lab') {
-            $permission = 'investigation-view';
-        } elseif ($flag == 'general') {
-            $permission = 'encounter-general-info-view';
-        } elseif ($flag == 'signs') {
-            $permission = 'vital-view';
-        } else {
-            $permission = $flag.'-view';
+            $flag = $flag.'_flag';
+
+            $this->lab_flag = 0;
+            $this->general_flag = 0;
+            $this->signs_flag = 0;
+            $this->allergies_flag = 0;
+            $this->medical_flag = 0;
+            $this->bill_flag = 0;
+            $this->procedure_flag = 0;
+            $this->form_flag = 0;
+            $this->prescription_flag = 0;
+
+            $this->$flag = 1;
         }
-
-        $this->authorize($permission);
-
-        $flag = $flag.'_flag';
-
-        $this->lab_flag = 0;
-        $this->general_flag = 0;
-        $this->signs_flag = 0;
-        $this->allergies_flag = 0;
-        $this->medical_flag = 0;
-        $this->bill_flag = 0;
-        $this->procedure_flag = 0;
-        $this->form_flag = 0;
-        $this->prescription_flag = 0;
-
-        $this->$flag = 1;
 
     }
 
