@@ -66,21 +66,28 @@ class EncounterLabForm extends Component
         if ($this->investigation) {
             $this->authorize('investigation-update');
 
-            $this->updateService($this->investigation);
+            if ($this->updateService($this->investigation)) {
+                $this->investigation->update($validatedData);
 
-            $this->investigation->update($validatedData);
+                $this->clearForm();
+                $message = ['text' => 'Data saved successfully', 'type' => 'success'];
+                $this->emitUp('notification', $message);
+            } else {
+                $this->clearForm();
+                $message = ['text' => 'Can not edit this item has already been billed', 'type' => 'danger'];
+                $this->emitUp('notification', $message);
+            }
+
 
         } else {
             $this->authorize('investigation-create');
-
             Investigation::create($validatedData);
+
+            $this->clearForm();
+            $message = ['text' => 'Data saved successfully', 'type' => 'success'];
+            $this->emitUp('notification', $message);
         }
 
-        $this->clearForm();
-
-        $message = ['text' => 'Data saved successfully', 'type' => 'success'];
-
-        $this->emitUp('notification', $message);
     }
 
     public function clearForm()
@@ -95,19 +102,26 @@ class EncounterLabForm extends Component
     {
         $order = $investigation->encounter->patient->getLastPendingOrder();
 
-        $orderItem = $order->items()->where('service_id', $investigation->service_id)->first();
+        if ($order) {
+            $orderItem = $order->items()->where('service_id', $investigation->service_id)->get()->last();
 
-        $service = Service::find($this->service_id);
+            $service = Service::find($this->service_id);
 
-        if ($orderItem) {
-            $orderItem->update([
-                'service_id' => $this->service_id,
-                'sub_total' => $service->price,
-                'total_price' => $service->price * 1,
-                'quantity' => 1
-            ]);
+            if (($orderItem->order->status??false) == 'pending') {
+                $orderItem->update([
+                    'service_id' => $this->service_id,
+                    'sub_total' => $service->price,
+                    'total_price' => $service->price * 1,
+                    'quantity' => 1
+                ]);
+
+                return 1;
+            }
         }
+
+        return 0;
     }
+
 
     public function render()
     {

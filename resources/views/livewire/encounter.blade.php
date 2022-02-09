@@ -84,6 +84,7 @@
                 </center>
 
                 <div wire:loading.remove wire:target="changeFlag">
+                    @can('encounter-general-info-view')
                     {{-- General --}}
                     <div x-data="{general_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($general_flag)">
                         <div class="row mb-5">
@@ -123,7 +124,9 @@
                         @livewire('encounter-general-form', ['encounter' => $encounter])
                     </div>
                     {{-- End General --}}
+                    @endcan
 
+                    @can('investigation-view')
                     {{-- Lab --}}
                     <div x-data="{lab_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($lab_flag)">
                         @livewire('encounter-lab-form', ['investigation' => $investigation, 'encounter' => $encounter])
@@ -156,10 +159,11 @@
                         </div>
                     </div>
                     {{-- End Lab --}}
+                    @endcan
 
 
+                    @can('procedure-view')
                     {{-- Procedure --}}
-
                     <div x-data="{procedure_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($procedure_flag)">
                         @livewire('encounter-procedure-form', ['procedure' => $procedure, 'encounter' => $encounter])
 
@@ -190,16 +194,19 @@
                             </table>
                         </div>
                     </div>
-
                     {{-- End Procedure --}}
+                    @endcan
 
+                    @can('vital-view')
                     {{-- Vital --}}
                     <div x-data="{signs_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($signs_flag)">
                         @livewire('encounter-vitals-form', ['encounter' => $encounter])
                     </div>
                     {{-- End Vital --}}
+                    @endcan
 
 
+                    @can('prescription-view')
                     {{-- Prescription --}}
                     <div x-data="{prescription_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($prescription_flag)">
                         @livewire('encounter-prescription-form', ['investigation' => $investigation, 'encounter' => $encounter])
@@ -233,32 +240,37 @@
 
                     </div>
                     {{-- End Prescription --}}
+                    @endcan
 
+
+                    @can('bill-view')
                     {{-- Service Bill --}}
                     <div x-data="{bill_flag:0}" x-show.transition.opacity.in.duration.500ms="@json($bill_flag)">
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Service</th>
-                                    <th>Quantity</th>
-                                    <th>Payment Type</th>
-                                    <th>Price</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($encounter->patient->getLastPendingOrder()->items??[] as $key => $item)
-                                    @livewire('bill-table-row', ['item' => $item, 'key' => ++$key], key($item->id))
-                                @endforeach
-
-                                @if (!count($encounter->patient->getLastPendingOrder()->items??[]))
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
                                     <tr>
-                                        <td colspan="5" class="text-center"><span class="text-dark">No service bill found</span></td>
+                                        <th>#</th>
+                                        <th>Service</th>
+                                        <th>Quantity</th>
+                                        <th>Payment Type</th>
+                                        <th>Price</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
-                                @endif
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($encounter->patient->getLastPendingOrder()->items??[] as $key => $item)
+                                        @livewire('bill-table-row', ['item' => $item, 'key' => ++$key], key($item->id))
+                                    @endforeach
+
+                                    @if (!count($encounter->patient->getLastPendingOrder()->items??[]))
+                                        <tr>
+                                            <td colspan="5" class="text-center"><span class="text-dark">No service bill found</span></td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
 
                         @if ($encounter->patient->getLastPendingOrder())
                             {{-- <hr> --}}
@@ -279,6 +291,7 @@
                         @endif
                     </div>
                     {{-- End Service Bill --}}
+                    @endcan
                 </div>
 
             </div>

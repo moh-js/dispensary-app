@@ -46,13 +46,13 @@ class EncounterPrescriptionForm extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function editPrescription($investigation_id)
+    public function editPrescription($prescription_id)
     {
         $this->authorize('prescription-update');
 
         $this->showForm();
 
-        $this->prescription = Prescription::find($investigation_id);
+        $this->prescription = Prescription::find($prescription_id);
         $this->service_id = $this->prescription->service_id;
         $this->quantity  = $this->prescription->quantity;
     }
@@ -72,18 +72,51 @@ class EncounterPrescriptionForm extends Component
         } else {
             if ($this->prescription) {
                 $this->authorize('prescription-update');
-                $this->prescription->update($validatedData);
+
+                if ($this->updateService($this->prescription)) {
+                    $this->prescription->update($validatedData);
+
+                    $this->clearForm();
+                    $message = ['text' => 'Data saved successfully', 'type' => 'success'];
+                    $this->emitUp('notification', $message);
+                } else {
+                    $this->clearForm();
+                    $message = ['text' => 'Can not edit this item has already been billed', 'type' => 'danger'];
+                    $this->emitUp('notification', $message);
+                }
             } else {
                 $this->authorize('prescription-create');
                 Prescription::create($validatedData);
+
+                $this->clearForm();
+                $message = ['text' => 'Data saved successfully', 'type' => 'success'];
+                $this->emitUp('notification', $message);
             }
-
-            $this->clearForm();
-
-            $message = ['text' => 'Data saved successfully', 'type' => 'success'];
-
-            $this->emitUp('notification', $message);
         }
+    }
+
+    public function updateService($prescription)
+    {
+        $order = $prescription->encounter->patient->getLastPendingOrder();
+
+        if ($order) {
+            $orderItem = $order->items()->where('service_id', $prescription->service_id)->get()->last();
+
+            $service = Service::find($this->service_id);
+
+            if (($orderItem->order->status??false) == 'pending') {
+                $orderItem->update([
+                    'service_id' => $this->service_id,
+                    'sub_total' => $service->price,
+                    'total_price' => $service->price * $this->quantity,
+                    'quantity' => $this->quantity
+                ]);
+
+                return 1;
+            }
+        }
+
+        return 0;
     }
 
 

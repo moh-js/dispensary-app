@@ -65,18 +65,26 @@ class EncounterProcedureForm extends Component
 
         if ($this->procedure) {
             $this->authorize('procedure-update');
-            $this->updateService($this->procedure);
-            $this->procedure->update($validatedData);
+
+            if ($this->updateService($this->procedure)) {
+                $this->procedure->update($validatedData);
+
+                $this->clearForm();
+                $message = ['text' => 'Data saved successfully', 'type' => 'success'];
+                $this->emitUp('notification', $message);
+            } else {
+                $this->clearForm();
+                $message = ['text' => 'Can not edit this item has already been billed', 'type' => 'danger'];
+                $this->emitUp('notification', $message);
+            }
         } else {
             $this->authorize('procedure-create');
             Procedure::create($validatedData);
+
+            $this->clearForm();
+            $message = ['text' => 'Data saved successfully', 'type' => 'success'];
+            $this->emitUp('notification', $message);
         }
-
-        $this->clearForm();
-
-        $message = ['text' => 'Data saved successfully', 'type' => 'success'];
-
-        $this->emitUp('notification', $message);
     }
 
     public function clearForm()
