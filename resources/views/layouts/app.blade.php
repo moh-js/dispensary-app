@@ -95,7 +95,7 @@
                     ]
                 ]),
             ], [
-                'title' => 'Reports', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import']), 'icon' => 'feather icon-clipboard', 'childrens' => collect([
+                'title' => 'Reports', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import', 'report-cash-view']), 'icon' => 'feather icon-clipboard', 'childrens' => collect([
                     [
                         'title' => 'Inventory Ledgers', 'url' => route('inventory-ledger.index'), 'permission' => request()->user()->hasAnyPermission('report-inventory-ledger-view')
                     ], [

@@ -60,18 +60,18 @@ class Prescription extends Model implements ContractsAuditable
             ]);
         });
 
-        static::updated(function ($prescription)
-        {
-            $order = $prescription->encounter->patient->getLastPendingOrder();
+        // static::updated(function ($prescription)
+        // {
+        //     $order = $prescription->encounter->patient->getLastPendingOrder();
 
-            $orderItem = $order->items()->where('service_id', $prescription->service_id)->first();
+        //     $orderItem = $order->items()->where('service_id', $prescription->service_id)->first();
 
-            $orderItem->update([
-                'sub_total' => $prescription->service->price,
-                'total_price' => $prescription->service->price * $prescription->quantity,
-                'quantity' => $prescription->quantity
-            ]);
-        });
+        //     $orderItem->update([
+        //         'sub_total' => $prescription->service->price,
+        //         'total_price' => $prescription->service->price * $prescription->quantity,
+        //         'quantity' => $prescription->quantity
+        //     ]);
+        // });
 
         static::deleted(function ($prescription)
         {
