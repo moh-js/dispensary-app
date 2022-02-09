@@ -66,7 +66,7 @@ class EncounterProcedureForm extends Component
         if ($this->procedure) {
             $this->authorize('procedure-update');
 
-            if ($this->updateService($this->procedure)) {
+            if ($this->updateService()) {
                 $this->procedure->update($validatedData);
 
                 $this->clearForm();
@@ -95,22 +95,28 @@ class EncounterProcedureForm extends Component
         $this->procedure = null;
     }
 
-    public function updateService($procedure)
+    public function updateService()
     {
-        $order = $procedure->encounter->patient->getLastPendingOrder();
+        $order = $this->procedure->encounter->patient->getLastPendingOrder();
 
-        $orderItem = $order->items()->where('service_id', $procedure->service_id)->first();
+        if ($order) {
+            $orderItem = $order->items()->where('service_id', $this->procedure->service_id)->get()->last();
 
-        $service = Service::find($this->service_id);
+            $service = Service::find($this->service_id);
 
-        if ($orderItem) {
-            $orderItem->update([
-                'service_id' => $this->service_id,
-                'sub_total' => $service->price,
-                'total_price' => $service->price * 1,
-                'quantity' => 1
-            ]);
+            if (($orderItem->order->status??false) == 'pending') {
+                $orderItem->update([
+                    'service_id' => $this->service_id,
+                    'sub_total' => $service->price,
+                    'total_price' => $service->price * 1,
+                    'quantity' => 1
+                ]);
+
+                return 1;
+            }
         }
+
+        return 0;
     }
 
     public function render()
