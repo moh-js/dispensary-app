@@ -68,7 +68,7 @@ class Encounter extends Component
     {
         if ($message['type'] == 'success') {
             flash()->success($message['text']);
-            return redirect()->route('encounter', $this->encounter->id);
+            return redirect()->route('encounter', $this->encounter->name);
         }
         session()->flash('message', $message);
     }
@@ -80,12 +80,17 @@ class Encounter extends Component
         $investigation = Investigation::find($investigation_id);
         $name = $investigation->service->name;
 
-        $investigation->delete();
+        if (($investigation->orderService->order->status??false) != 'completed') {
+            $investigation->delete();
+            $this->encounter = $this->encounter->fresh();
+            $message = ['text' => "$name removed successfully", 'type' => 'success'];
+            session()->flash('message', $message);
 
-        $this->encounter = $this->encounter->fresh();
+        } else {
+            $message = ['text' => 'Cannot remove this item is already billed', 'type' => 'danger'];
+            session()->flash('message', $message);
+        }
 
-        $message = ['text' => "$name removed successfully", 'type' => 'success'];
-        session()->flash('message', $message);
     }
 
     public function removePrescription($prescription_id)
@@ -95,12 +100,18 @@ class Encounter extends Component
         $prescription = Prescription::find($prescription_id);
         $name = $prescription->service->name;
 
-        $prescription->delete();
+        if (($prescription->orderService->order->status??false) != 'completed') {
+            $prescription->delete();
 
-        $this->encounter = $this->encounter->fresh();
+            $this->encounter = $this->encounter->fresh();
 
-        $message = ['text' => "$name removed successfully", 'type' => 'success'];
-        session()->flash('message', $message);
+            $message = ['text' => "$name removed successfully", 'type' => 'success'];
+            session()->flash('message', $message);
+        } else {
+            $message = ['text' => 'Cannot remove this item is already billed', 'type' => 'danger'];
+            session()->flash('message', $message);
+        }
+
     }
 
     public function removeProcedure($procedure_id)
@@ -110,12 +121,18 @@ class Encounter extends Component
         $procedure = Procedure::find($procedure_id);
         $name = $procedure->service->name;
 
-        $procedure->delete();
+        if (($procedure->orderService->order->status??false) != 'completed') {
+            $procedure->delete();
+            $this->encounter = $this->encounter->fresh();
 
-        $this->encounter = $this->encounter->fresh();
+            $message = ['text' => "$name removed successfully", 'type' => 'success'];
+            session()->flash('message', $message);
+            
+        } else {
+            $message = ['text' => 'Cannot remove this item is already billed', 'type' => 'danger'];
+            session()->flash('message', $message);
+        }
 
-        $message = ['text' => "$name removed successfully", 'type' => 'success'];
-        session()->flash('message', $message);
     }
 
     public function render()

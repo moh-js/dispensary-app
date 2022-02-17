@@ -59,7 +59,7 @@
                                                     @if ($encounter)
                                                         <div class="alert alert-danger fade show" role="alert">
                                                             <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                                                            Previous active encounter found !
+                                                            Previous active encounter found ! <a href="{{ route('encounter', $encounter->name) }}">Open</a>
                                                         </div>
                                                     @endif
                                                     <form id="encounter-form" action="{{ route('encounter.create') }}" method="POST">
@@ -173,11 +173,11 @@
                             @foreach ($user->encounters->sortByDesc('id') as $encounter)
                                 <div class="row justify-content-center p-t-30 p-b-30">
                                     <div class="col-auto text-right update-meta">
-                                        <p class="text-muted m-b-0 d-inline-flex">{{ $encounter->updated_at->diffForHumans() }}</p>
+                                        <p class="text-muted m-b-0 d-inline-flex">{{ $encounter->created_at->diffForHumans() }}</p>
                                         <i class="fa fa-stethoscope bg-primary update-icon"></i>
                                     </div>
                                     <div class="col">
-                                        <a href="{{ route('encounter', $encounter->id) }}">
+                                        <a href="{{ route('encounter', $encounter->name) }}">
                                             <h6>{{ $encounter->name??$encounter->updated_at->format('dmYHi') }}</h6>
                                         </a>
                                         <p class="text-muted m-b-0">{{ $encounter->service->name }}</p>

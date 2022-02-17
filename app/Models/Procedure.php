@@ -26,6 +26,11 @@ class Procedure extends Model implements ContractsAuditable
         return $this->belongsTo(Service::class);
     }
 
+    public function orderService()
+    {
+        return $this->belongsTo(OrderService::class, 'order_service_id');
+    }
+
     /**
      * The "booted" method of the model.
      *
@@ -49,23 +54,24 @@ class Procedure extends Model implements ContractsAuditable
             }
 
             // Add bill service to order
-            $order->items()->firstOrCreate([
-                'service_id' => $procedure->service->id,
-                'unit_id' => 2,
-                'service_category_id' => 3,
-                'sub_total' => $procedure->service->price,
-                'total_price' => $procedure->service->price * 1,
-                'quantity' => 1
+            $procedure->update([
+                'order_service_id' => $order->items()->firstOrCreate([
+                                            'service_id' => $procedure->service->id,
+                                            'unit_id' => 2,
+                                            'service_category_id' => 3,
+                                            'sub_total' => $procedure->service->price,
+                                            'total_price' => $procedure->service->price * $procedure->quantity,
+                                            'quantity' => $procedure->quantity
+                                        ])->id
             ]);
         });
 
         static::deleted(function ($procedure)
         {
-            $order = $procedure->encounter->patient->getLastPendingOrder();
+            $item = $procedure->orderService;
 
-
-            if ($order) {
-                $order->items()->where('service_id', $procedure->service_id)->first()->delete();
+            if ($item) {
+                $item->delete();
             }
         });
     }

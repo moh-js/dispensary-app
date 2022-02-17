@@ -120,8 +120,8 @@ class BillingController extends Controller
 
             if ($relationship) { // remove associated service
 
-                $service = $billService->order->encounter->$relationship()->where('service_id', $billService->service_id)->first();
-
+                $service = $billService->$relationship;
+                
                 if ($service) {
                     $service->delete();
                     flash('Bill Service deleted successfully');

@@ -29,6 +29,11 @@ class Investigation extends Model implements ContractsAuditable
         return $this->belongsTo(Encounter::class);
     }
 
+    public function orderService()
+    {
+        return $this->belongsTo(OrderService::class, 'order_service_id');
+    }
+
     /**
      * The "booted" method of the model.
      *
@@ -52,23 +57,25 @@ class Investigation extends Model implements ContractsAuditable
             }
 
             // Add bill service to order
-            $order->items()->firstOrCreate([
-                'service_id' => $investigation->service->id,
-                'unit_id' => 2,
-                'service_category_id' => 2,
-                'sub_total' => $investigation->service->price,
-                'total_price' => $investigation->service->price * 1,
-                'quantity' => 1
+            $investigation->update([
+                'order_service_id' => $order->items()->firstOrCreate([
+                                            'service_id' => $investigation->service->id,
+                                            'unit_id' => 2,
+                                            'service_category_id' => 2,
+                                            'sub_total' => $investigation->service->price,
+                                            'total_price' => $investigation->service->price * 1,
+                                            'quantity' => 1
+                                        ])->id
             ]);
+
         });
 
         static::deleted(function ($investigation)
         {
-            $order = $investigation->encounter->patient->getLastPendingOrder();
+            $item = $investigation->orderService;
 
-
-            if ($order) {
-                $order->items()->where('service_id', $investigation->service_id)->first()->delete();
+            if ($item) {
+                $item->delete();
             }
         });
     }

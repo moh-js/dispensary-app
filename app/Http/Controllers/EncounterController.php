@@ -43,13 +43,13 @@ class EncounterController extends Controller
         }
 
         $encounter = Encounter::create([
-            'name' => null,
+            'name' => now()->format('dmYHi').rand(100,1000),
             'cheif' => $request->chief,
             'purpose' => $request->purpose,
             'patient_id' => request('patient_id'),
         ]);
 
-        return redirect()->route('encounter', $encounter->id);
+        return redirect()->route('encounter', $encounter->name);
 
     }
 

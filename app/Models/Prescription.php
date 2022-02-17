@@ -27,6 +27,11 @@ class Prescription extends Model implements ContractsAuditable
         return $this->belongsTo(Service::class);
     }
 
+    public function orderService()
+    {
+        return $this->belongsTo(OrderService::class, 'order_service_id');
+    }
+
     /**
      * The "booted" method of the model.
      *
@@ -50,35 +55,25 @@ class Prescription extends Model implements ContractsAuditable
             }
 
             // Add bill service to order
-            $order->items()->firstOrCreate([
-                'service_id' => $prescription->service->id,
-                'unit_id' => 1,
-                'service_category_id' => 1,
-                'sub_total' => $prescription->service->price,
-                'total_price' => $prescription->service->price * $prescription->quantity,
-                'quantity' => $prescription->quantity
+            $prescription->update([
+                'order_service_id' => $order->items()->firstOrCreate([
+                                        'service_id' => $prescription->service_id,
+                                        'unit_id' => $prescription->unit_id,
+                                        'service_category_id' => 1,
+                                        'sub_total' => $prescription->service->price,
+                                        'total_price' => $prescription->service->price * $prescription->quantity,
+                                        'quantity' => $prescription->quantity
+                                    ])->id
             ]);
+
         });
-
-        // static::updated(function ($prescription)
-        // {
-        //     $order = $prescription->encounter->patient->getLastPendingOrder();
-
-        //     $orderItem = $order->items()->where('service_id', $prescription->service_id)->first();
-
-        //     $orderItem->update([
-        //         'sub_total' => $prescription->service->price,
-        //         'total_price' => $prescription->service->price * $prescription->quantity,
-        //         'quantity' => $prescription->quantity
-        //     ]);
-        // });
 
         static::deleted(function ($prescription)
         {
-            $order = $prescription->encounter->patient->getLastPendingOrder();
+            $item = $prescription->orderService;
 
-            if ($order) {
-                $order->items()->where('service_id', $prescription->service_id)->first()->delete();
+            if ($item) {
+                $item->delete();
             }
         });
 

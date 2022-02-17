@@ -16,10 +16,12 @@ class EncounterProcedureForm extends Component
     public $service_id;
     public $result;
     public $procedure;
+    public $quantity;
     public $encounter;
 
     protected $rules = [
         'service_id' => ['required', 'integer'],
+        'quantity' => ['required', 'integer'],
         'result' => ['nullable', 'string', 'max:1000'],
     ];
 
@@ -34,6 +36,7 @@ class EncounterProcedureForm extends Component
     {
         $this->services = Service::where('service_category_id', 3)->get();
         $this->clearForm();
+        $this->quantity = 1;
     }
 
     public function showForm()
@@ -56,6 +59,7 @@ class EncounterProcedureForm extends Component
         $this->procedure = Procedure::find($procedure_id);
         $this->service_id = $this->procedure->service_id;
         $this->result  = $this->procedure->result;
+        $this->quantity  = $this->procedure->quantity;
     }
 
     public function saveData()
@@ -92,12 +96,13 @@ class EncounterProcedureForm extends Component
         $this->form_flag = 0;
         $this->service_id = null;
         $this->result = null;
+        $this->quantity = null;
         $this->procedure = null;
     }
 
     public function updateService()
     {
-        $order = $this->procedure->encounter->patient->getLastPendingOrder();
+        $order = $this->procedure->orderService->order;
 
         if ($order) {
             $orderItem = $order->items()->where('service_id', $this->procedure->service_id)->get()->last();
@@ -109,7 +114,7 @@ class EncounterProcedureForm extends Component
                     'service_id' => $this->service_id,
                     'sub_total' => $service->price,
                     'total_price' => $service->price * 1,
-                    'quantity' => 1
+                    'quantity' => $this->procedure->quantity
                 ]);
 
                 return 1;

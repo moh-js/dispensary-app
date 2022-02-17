@@ -100,7 +100,7 @@ class EncounterLabForm extends Component
 
     public function updateService($investigation)
     {
-        $order = $investigation->encounter->patient->getLastPendingOrder();
+        $order = $investigation->orderService->order;
 
         if ($order) {
             $orderItem = $order->items()->where('service_id', $investigation->service_id)->get()->last();

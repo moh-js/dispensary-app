@@ -18,9 +18,19 @@
                 @enderror
             </div>
 
-            <div class="form-group col-sm-8">
+            <div class="form-group col-sm-2">
+                <label for="quantity">Quantity</label>
+                <input type="integer" wire:model="quantity" id="quantity" class="form-control @error('quantity') is-invalid @enderror">
+                @error('quantity')
+                    <div class="text-danger">
+                        <small>{{ $message }}</small>
+                    </div>
+                @enderror
+            </div>
+
+            <div class="form-group col-sm-6">
                 <label for="result">Result</label>
-                <textarea wire:model="result" id="result" rows="1" class="form-control @error('result') is-invalid @enderror"></textarea>
+                <textarea wire:model="result" id="result" rows="3" class="form-control @error('result') is-invalid @enderror"></textarea>
                 @error('result')
                     <div class="text-danger">
                         <small>{{ $message }}</small>

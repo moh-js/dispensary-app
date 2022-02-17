@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Unit;
 use App\Models\Service;
 use Livewire\Component;
 use App\Models\Prescription;
@@ -13,13 +14,16 @@ class EncounterPrescriptionForm extends Component
 
     public $encounter;
     public $service_id;
+    public $unit_id;
     public $services = [];
+    public $units = [];
     public $quantity;
     public $form_flag = 0;
 
     protected $rules = [
         'service_id' => ['required', 'integer'],
         'quantity' => ['required', 'integer', 'max:1000'],
+        'unit_id' => ['required', 'integer'],
     ];
 
     protected function getListeners()
@@ -32,6 +36,7 @@ class EncounterPrescriptionForm extends Component
     public function mount()
     {
         $this->services = Service::where('service_category_id', 1)->get();
+        $this->units = Unit::where('name', '!=', 'store')->get();
         $this->clearForm();
     }
 
@@ -55,6 +60,7 @@ class EncounterPrescriptionForm extends Component
         $this->prescription = Prescription::find($prescription_id);
         $this->service_id = $this->prescription->service_id;
         $this->quantity  = $this->prescription->quantity;
+        $this->unit_id  = $this->prescription->unit_id;
     }
 
     public function saveData()
@@ -64,7 +70,7 @@ class EncounterPrescriptionForm extends Component
         $validatedData = collect($validatedData)->merge(['encounter_id' => $this->encounter->id])->toArray();
 
         $service = Service::find($this->service_id);
-        $unitItem = $service->item->getUnitById(1);
+        $unitItem = $service->item->getUnitById($this->unit_id);
 
         if ($unitItem->remain < $this->quantity) {
             $message = ['text' => "The quantity requested is greater than the available amount in the inventory - $service->name", 'type' => 'danger'];
@@ -73,19 +79,19 @@ class EncounterPrescriptionForm extends Component
             if ($this->prescription) {
                 $this->authorize('prescription-update');
 
-                if ($this->updateService($this->prescription)) {
+                if ($this->updateService($this->prescription)) { // update service
                     $this->prescription->update($validatedData);
 
                     $this->clearForm();
                     $message = ['text' => 'Data saved successfully', 'type' => 'success'];
                     $this->emitUp('notification', $message);
-                } else {
+                } else { // error
                     $this->clearForm();
                     $message = ['text' => 'Can not edit this item has already been billed', 'type' => 'danger'];
                     $this->emitUp('notification', $message);
                 }
             } else {
-                $this->authorize('prescription-create');
+                $this->authorize('prescription-create'); // add a prescricption
                 Prescription::create($validatedData);
 
                 $this->clearForm();
@@ -97,7 +103,7 @@ class EncounterPrescriptionForm extends Component
 
     public function updateService($prescription)
     {
-        $order = $prescription->encounter->patient->getLastPendingOrder();
+        $order = $prescription->orderService->order;
 
         if ($order) {
             $orderItem = $order->items()->where('service_id', $prescription->service_id)->get()->last();

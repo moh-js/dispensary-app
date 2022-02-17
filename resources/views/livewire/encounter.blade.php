@@ -17,43 +17,43 @@
             </div>
             <div class="list-group">
                 @can('encounter-general-info-view')
-                    <button type="button" wire:click="changeFlag('general')" class="list-group-item list-group-item-action {{ $general_flag?'active':'' }}">
+                    <button wire:loading.attr="disabled" wire:target="changeFlag" type="button" wire:click="changeFlag('general')" class="list-group-item list-group-item-action {{ $general_flag?'active':'' }}">
                         <i class="feather icon-grid"></i>
                         General
                     </button>
                 @endcan
                 @can('investigation-view')
-                    <button type="button" wire:click="changeFlag('lab')" class="list-group-item list-group-item-action {{ $lab_flag?'active':'' }}">
+                    <button wire:loading.attr="disabled" wire:target="changeFlag" type="button" wire:click="changeFlag('lab')" class="list-group-item list-group-item-action {{ $lab_flag?'active':'' }}">
                         <i class="feather icon-filter"></i>
                         Lab Investigation
                     </button>
                 @endcan
                 @can('procedure-view')
-                    <button type="button" wire:click="changeFlag('procedure')" class="list-group-item list-group-item-action {{ $procedure_flag?'active':'' }}">
+                    <button wire:loading.attr="disabled" wire:target="changeFlag" type="button" wire:click="changeFlag('procedure')" class="list-group-item list-group-item-action {{ $procedure_flag?'active':'' }}">
                         <i class="fa fa-procedures"></i>
                         Procedure
                     </button>
                 @endcan
                 @can('vital-view')
-                    <button type="button" wire:click="changeFlag('signs')" class="list-group-item list-group-item-action {{ $signs_flag?'active':'' }}">
+                    <button wire:loading.attr="disabled" wire:target="changeFlag" type="button" wire:click="changeFlag('signs')" class="list-group-item list-group-item-action {{ $signs_flag?'active':'' }}">
                         <i class="feather icon-activity"></i>
                         Vital Signs
                     </button>
                 @endcan
                 @can('prescription-view')
-                    <button type="button" wire:click="changeFlag('prescription')" class="list-group-item list-group-item-action {{ $prescription_flag?'active':'' }}">
+                    <button wire:loading.attr="disabled" wire:target="changeFlag" type="button" wire:click="changeFlag('prescription')" class="list-group-item list-group-item-action {{ $prescription_flag?'active':'' }}">
                         <i class="feather icon-plus-square"></i>
                         Prescription
                     </button>
                 @endcan
                 @can('medical-view')
-                    <button type="button" wire:click="changeFlag('medical')" class="list-group-item list-group-item-action {{ $medical_flag?'active':'' }}">
+                    <button wire:loading.attr="disabled" wire:target="changeFlag" type="button" wire:click="changeFlag('medical')" class="list-group-item list-group-item-action {{ $medical_flag?'active':'' }}">
                         <i class="feather icon-clipboard"></i>
                         Medical History
                     </button>
                 @endcan
                 @can('bill-view')
-                    <button type="button" wire:click="changeFlag('bill')" class="list-group-item list-group-item-action {{ $bill_flag?'active':'' }}">
+                    <button wire:loading.attr="disabled" wire:target="changeFlag" type="button" wire:click="changeFlag('bill')" class="list-group-item list-group-item-action {{ $bill_flag?'active':'' }}">
                         <i class="feather icon-credit-card"></i>
                         Service Bill
                     </button>

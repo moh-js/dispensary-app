@@ -139,7 +139,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-
         if ($user->trashed()) {
             $this->authorize('user-activate');
             $user->restore();

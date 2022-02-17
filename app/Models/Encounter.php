@@ -58,6 +58,11 @@ class Encounter extends Model implements ContractsAuditable
         return $this->belongsTo(Service::class, 'purpose');
     }
 
+    public function getRouteKeyName()
+    {
+        return 'name';
+    }
+
     /**
      * The "booted" method of the model.
      *
