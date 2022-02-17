@@ -80,9 +80,9 @@ class PatientController extends Controller
         $services = Service::where('service_category_id', 4)->get();
         $encounter = Encounter::where([['patient_id', $patient->id], ['status', 0]])->first();
 
-        // foreach (Encounter::all() as $e) {
-        //     $e->update([ 'name' => $e->created_at->format('dmYHi').rand(100,1000)]);
-        // }
+        foreach (Encounter::all() as $e) {
+            $e->update([ 'name' => $e->created_at->format('dmYHi').rand(100,1000)]);
+        }
 
         return view('patient.show', [
             'encounter' => $encounter,
