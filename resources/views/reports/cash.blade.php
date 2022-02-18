@@ -5,13 +5,13 @@
 <div class="card">
     <div class="card-header"><h5>Cash Report</h5></div>
     <div class="card-body table-bordered-style">
-        <form action="{{ route('inventory-ledger.search') }}" method="post">
+        <form action="{{ route('cash.search') }}" method="post">
             @csrf
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
                       <input type="text"
-                        class="form-control" name="name" value="{{ old('name')??$name }}" id="name" placeholder="Amoxicillin">
+                        class="form-control" name="name" value="{{ old('name')??$name }}" id="name" placeholder="Service Name">
                     </div>
                 </div>
                 {{-- <div class="col-sm-3">
@@ -51,11 +51,11 @@
         <hr>
 
         <div class="table-responsive">
-            <table class="table table-striped table-inverse table-sm">
+            <table class="table table-bordered table-inverse table-sm">
                 <thead class="thead-inverse">
                     <tr>
-                        <th>#</th>
-                        <th>Date</th>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Date</th>
                         <th class="">Service</th>
                         <th>Cash</th>
                         <th>NHIF</th>
@@ -66,26 +66,41 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach ($items as $key => $item)
+                        @foreach ($orders as $key => $order)
+                        @foreach ($order->items as $childKey => $item)
                             <tr>
-                                <td scope="row">{{ ++$key }}</td>
-                                {{-- @if ($item->order->created_at) --}}
-
-                                {{-- @endif --}}
-                                <td>{{ $item->order->created_at->format('d M y - H:i') }}</td>
+                                @if (!$childKey)
+                                    <td class="text-center" rowspan="{{ $order->items->count() }}" scope="row">{{ ++$key }}</td>
+                                    <td class="text-center" rowspan="{{ $order->items->count() }}">{{ $item->order->created_at->format('d M y - H:i') }}</td>
+                                @endif
                                 <td>{{ $item->service->name??'' }}</td>
-                                <td>{{ $item->payment_type == 'cash'?'Cash':'' }}</td>
-                                <td>{{ $item->payment_type == 'nhif'?'NHIF':'' }}</td>
-                                <td>{{ $item->payment_type == 'exempted'?'Exempted':'' }}</td>
+                                <td>
+                                    @if ($item->payment_type == 'cash')
+                                        @include('extras.tick-icon')
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item->payment_type == 'nhif')
+                                        @include('extras.tick-icon')
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item->payment_type == 'exempted')
+                                        @include('extras.tick-icon')
+                                    @endif
+                                </td>
                                 <td>{{ $item->total_price }}</td>
                                 <td>{{ $item->order->cashier->name??'' }}</td>
                             </tr>
                         @endforeach
+                        @endforeach
                     </tbody>
             </table>
         </div>
+
+
         <div class="float-right">
-            {{ $items->links('pagination::bootstrap-4') }}
+            {{ $orders->links('pagination::bootstrap-4') }}
         </div>
     </div>
 </div>

@@ -104,15 +104,44 @@ class ReportController extends Controller
     {
         $this->authorize('report-cash-view');
 
-        $items = OrderService::whereHas('order', function (Builder $query)
+        $unit =  $request['unit'];
+        $when =  $request['when'];
+        $name =  $request['name'];
+
+        $orders = Order::query()
+        ->where('status', 'completed')
+        ->when($name, function ($query) use ($name)
         {
-            $query->where('status', 'completed');
-        })->paginate(20);
+            $query->whereHas('items', function (Builder $query) use ($name)
+            {
+                $query->whereHas('service', function (Builder $query) use ($name)
+                {
+                    $query->where('name', 'like', "%$name%");
+                });
+            });
+        })
+        // ->when($unit, function ($query) use ($unit)
+        // {
+        //     $query->whereHas('items', function (Builder $query) use ($unit)
+        //     {
+        //         $query->whereHas('unit', function (Builder $query) use ($unit)
+        //         {
+        //             $query->where('slug', $unit);
+        //         });
+        //     });
+        // })
+        ->when($when, function ($query) use ($when)
+        {
+            $hours = $this->$when;
+            $query->whereBetween('updated_at', [now()->subHours($hours), now()]);
+        })
+        ->orderBy('updated_at', 'desc')
+        ->paginate(20);
 
         return view('reports.cash', [
             'name' => $request->name,
             'when' => $request->when,
-            'items' => $items
+            'orders' => $orders,
         ]);
     }
 
@@ -121,6 +150,17 @@ class ReportController extends Controller
         $this->authorize('report-inventory-ledger-view');
 
         return redirect()->route('inventory-ledger.index', [
+            'name' => $request->name,
+            'unit' => $request->unit,
+            'when' => $request->when,
+        ]);
+    }
+
+    public function cashBookSearch(Request $request)
+    {
+        $this->authorize('report-cash-view');
+
+        return redirect()->route('cash.index', [
             'name' => $request->name,
             'unit' => $request->unit,
             'when' => $request->when,
