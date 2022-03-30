@@ -42,7 +42,7 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Search</button>
-                        <a href="#" class="btn btn-success float-right">Export</a>
+                        <a href="{{ route('cash.advance') }}" class="btn btn-success float-right">Advance</a>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                                     <td class="text-center" rowspan="{{ $order->items->count() }}" scope="row">{{ ++$key }}</td>
                                     <td class="text-center" rowspan="{{ $order->items->count() }}">{{ $item->order->created_at->format('d M y - H:i') }}</td>
                                 @endif
-                                <td>{{ $item->service->name??'' }}</td>
+                                <td title="{{ $item->service->name??'' }}">{{ str_limit($item->service->name??'', 15) }}</td>
                                 <td>
                                     @if ($item->payment_type == 'cash')
                                         @include('extras.tick-icon')
@@ -89,19 +89,52 @@
                                         @include('extras.tick-icon')
                                     @endif
                                 </td>
-                                <td>{{ $item->total_price }}</td>
+                                <td class="text-right">{{ number_format($item->total_price) }} {{ getAppCurrency() }}</td>
                                 <td>{{ $item->order->cashier->name??'' }}</td>
                             </tr>
                         @endforeach
                         @endforeach
+                        <tr style="font-weight: 900;">
+                            <td colspan="3" class="text-right">Total</td>
+                            <td class="text-right">
+                                @php
+                                    $totalCashPrice = 0;
+                                @endphp
+                                @foreach ($orders as $order)
+                                    @php
+                                        $totalCashPrice += $order->items->where('payment_type', 'cash')->sum('total_price')
+                                    @endphp
+                                @endforeach
+                                {{ number_format($totalCashPrice) }} {{ getAppCurrency() }}
+                            </td>
+                            <td class="text-right">
+                                @php
+                                    $totalCashPrice = 0;
+                                @endphp
+                                @foreach ($orders as $order)
+                                    @php
+                                        $totalCashPrice += $order->items->where('payment_type', 'nhif')->sum('total_price')
+                                    @endphp
+                                @endforeach
+                                {{ number_format($totalCashPrice) }} {{ getAppCurrency() }}
+                            </td>
+                            <td></td>
+                            <td class="text-right">
+                                @php
+                                    $totalCashPrice = 0;
+                                @endphp
+                                @foreach ($orders as $order)
+                                    @php
+                                        $totalCashPrice += $order->items->sum('total_price')
+                                    @endphp
+                                @endforeach
+                                {{ number_format($totalCashPrice) }} {{ getAppCurrency() }}
+                            </td>
+                        </tr>
                     </tbody>
             </table>
         </div>
 
-
-        <div class="float-right">
-            {{ $orders->links('pagination::bootstrap-4') }}
-        </div>
     </div>
 </div>
 

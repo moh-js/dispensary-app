@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
-use App\Models\Unit;
 use App\Models\Order;
 use App\Models\Ledger;
-use App\Models\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -65,9 +63,9 @@ class ReportController extends Controller
     {
         $this->authorize('report-inventory-ledger-view');
 
-        $unit =  $request['unit'];
-        $when =  $request['when'];
-        $name =  $request['name'];
+        $unit = $request['unit'];
+        $when = $request['when']??'today';
+        $name = $request['name'];
 
         $ledgers = Ledger::query()
         ->when($name, function ($query) use ($name)
@@ -104,9 +102,8 @@ class ReportController extends Controller
     {
         $this->authorize('report-cash-view');
 
-        $unit =  $request['unit'];
-        $when =  $request['when'];
-        $name =  $request['name'];
+        $when = $request['when']??'today';
+        $name = $request['name'];
 
         $orders = Order::query()
         ->where('status', 'completed')
@@ -136,13 +133,18 @@ class ReportController extends Controller
             $query->whereBetween('updated_at', [now()->subHours($hours), now()]);
         })
         ->orderBy('updated_at', 'desc')
-        ->paginate(20);
+        ->get();
 
         return view('reports.cash', [
-            'name' => $request->name,
-            'when' => $request->when,
+            'name' => $name,
+            'when' => $when,
             'orders' => $orders,
         ]);
+    }
+
+    public function cashBookAdvance()
+    {
+        return view('reports.advance.cash');
     }
 
     public function inventoryLedgersSearch(Request $request)
