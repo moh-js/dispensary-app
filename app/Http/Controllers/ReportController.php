@@ -37,11 +37,11 @@ class ReportController extends Controller
         ->when($when, function ($query) use ($when)
         {
             if ($when == 'today') {
-                $startDate = now();
+                $startDate = now()->today();
             } else {
                 $startDate = now()->subDays($this->$when);
             }
-            
+
             $query->whereBetween('created_at', [$startDate, now()]);
         })
         ->with(['items'])
@@ -92,7 +92,7 @@ class ReportController extends Controller
         ->when($when, function ($query) use ($when)
         {
             if ($when == 'today') {
-                $startDate = now();
+                $startDate = now()->today();
             } else {
                 $startDate = now()->subDays($this->$when);
             }
@@ -132,7 +132,7 @@ class ReportController extends Controller
         ->when($when, function ($query) use ($when)
         {
             if ($when == 'today') {
-                $startDate = now();
+                $startDate = now()->today();
             } else {
                 $startDate = now()->subDays($this->$when);
             }
