@@ -32,8 +32,8 @@
                           <option value="today" {{ 'today' == $when? 'selected':'' }}>Today</option>
                           <option value="week" {{ 'week' == $when? 'selected':'' }}>Week</option>
                           <option value="month" {{ 'month' == $when? 'selected':'' }}>Month</option>
-                          <option value="six_month" {{ 'six_month' == $when? 'selected':'' }}>6 Months</option>
-                          <option value="year" {{ 'year' == $when? 'selected':'' }}>Year</option>
+                          {{-- <option value="six_month" {{ 'six_month' == $when? 'selected':'' }}>6 Months</option> --}}
+                          {{-- <option value="year" {{ 'year' == $when? 'selected':'' }}>Year</option> --}}
 
                       </select>
                     </div>

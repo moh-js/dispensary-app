@@ -21,12 +21,15 @@
     <!-- Favicon icon -->
     <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
 
+    @stack('css')
+
+
     <!-- prism css -->
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/prism-coy.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <!-- vendor css -->
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
     <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
 
@@ -44,7 +47,6 @@
 
     @livewireStyles
 
-    @stack('css')
 
 </head>
 
@@ -357,6 +359,8 @@
     <script src="{{ asset('assets/js/ripple.js') }}"></script>
     <script src="{{ asset('assets/js/pcoded.min.js') }}"></script>
 
+    @stack('js')
+
     {{-- <script src="{{ asset('assets/js/pages/dashboard-main.js') }}"></script> --}}
 
 
@@ -373,7 +377,6 @@
     <script src="{{ asset('assets/js/pages/form-select-custom.js') }}"></script>
 
     @livewireScripts
-
 
     <script src="{{ asset('assets/js/horizontal-menu.js') }}"></script>
     <script>
@@ -415,8 +418,6 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
-
-    @stack('js')
 
     @endauth
 

@@ -127,7 +127,7 @@
 
     </form>
 
-    <form action="{{ route('encounter.close.open', $encounter->id) }}" method="post">
+    <form action="{{ route('encounter.close.open', $encounter->name) }}" method="post">
         @csrf
 
         @if ($encounter->status)

@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\Ledger;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use  Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
 
 class ReportController extends Controller
@@ -14,9 +16,9 @@ class ReportController extends Controller
     /*
     * Hours
     */
-    protected $today = 24;
-    protected $week = 168;
-    protected $month = 730;
+    protected $today = 1;
+    protected $week = 6;
+    protected $month = 29;
     protected $six_month = 4380;
     protected $year = 8760;
 
@@ -34,8 +36,13 @@ class ReportController extends Controller
         ->where('status', 'completed')
         ->when($when, function ($query) use ($when)
         {
-            $hours = $this->$when;
-            $query->whereBetween('created_at', [now()->subHours($hours), now()]);
+            if ($when == 'today') {
+                $startDate = now();
+            } else {
+                $startDate = now()->subDays($this->$when);
+            }
+            
+            $query->whereBetween('created_at', [$startDate, now()]);
         })
         ->with(['items'])
         ->get();
@@ -84,8 +91,13 @@ class ReportController extends Controller
         })
         ->when($when, function ($query) use ($when)
         {
-            $hours = $this->$when;
-            $query->whereBetween('created_at', [now()->subHours($hours), now()]);
+            if ($when == 'today') {
+                $startDate = now();
+            } else {
+                $startDate = now()->subDays($this->$when);
+            }
+
+            $query->whereBetween('created_at', [$startDate, now()]);
         })
         ->orderBy('id', 'desc')
         ->paginate(20);
@@ -117,20 +129,15 @@ class ReportController extends Controller
                 });
             });
         })
-        // ->when($unit, function ($query) use ($unit)
-        // {
-        //     $query->whereHas('items', function (Builder $query) use ($unit)
-        //     {
-        //         $query->whereHas('unit', function (Builder $query) use ($unit)
-        //         {
-        //             $query->where('slug', $unit);
-        //         });
-        //     });
-        // })
         ->when($when, function ($query) use ($when)
         {
-            $hours = $this->$when;
-            $query->whereBetween('updated_at', [now()->subHours($hours), now()]);
+            if ($when == 'today') {
+                $startDate = now();
+            } else {
+                $startDate = now()->subDays($this->$when);
+            }
+
+            $query->whereBetween('updated_at', [$startDate, now()]);
         })
         ->orderBy('updated_at', 'desc')
         ->get();
@@ -142,9 +149,70 @@ class ReportController extends Controller
         ]);
     }
 
-    public function cashBookAdvance()
+    public function cashBookAdvancePage()
     {
         return view('reports.advance.cash');
+    }
+
+    public function cashBookAdvance(Request $request)
+    {
+
+        $name = $request->service_name;
+        $datetimes = explode(' - ', $request->datetimes);
+        $start_date = Carbon::parse($datetimes[0]);
+        $end_date = Carbon::parse($datetimes[1]);
+
+        if ($request->payment_type == 'all') {
+            $item_query_clause = [
+                ['payment_type', 'nhif'],
+                ['payment_type', 'exempted'],
+                ['payment_type', 'cash'],
+            ];
+        } else {
+            $item_query_clause = [['payment_type', $request->payment_type]];
+        }
+
+        $orders = Order::query()
+        ->where('status', 'completed')
+        ->when($name != 'All', function ($query) use ($name)
+        {
+            $query->whereHas('items', function (Builder $query) use ($name)
+            {
+                $query->whereHas('service', function (Builder $query) use ($name)
+                {
+                    $query->where('name', 'like', "%$name%");
+                });
+            });
+        })
+        ->when(($start_date && $end_date), function ($query) use ($end_date, $start_date)
+        {
+            $query->whereBetween('updated_at', [$start_date, $end_date]);
+        })
+        ->with('items', function ($query) use ($request)
+        {
+            if ($request->payment_type == 'all') {
+                $query;
+            } else {
+                $query->where('payment_type', $request->payment_type);
+            }
+        })
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+        return $orders;
+
+        if ($request->submit == 'PDF') {
+            $pdf = PDF::loadView('pdf.cash-report', [] ,[] ,[
+            //   'format' => [80,$pageHeigt],
+              'default_font_size' => '10'
+            ]);
+
+            $pdfString = $pdf->stream();
+
+            return $pdfString;
+        }
+
+
     }
 
     public function inventoryLedgersSearch(Request $request)

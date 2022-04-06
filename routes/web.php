@@ -97,7 +97,8 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
 
     Route::get('/reports/cash-book', [ReportController::class, 'cashBookPage'])->name('cash.index');
     Route::post('/reports/cash-book', [ReportController::class, 'cashBookSearch'])->name('cash.search');
-    Route::get('/reports/cash-book/advance', [ReportController::class, 'cashBookAdvance'])->name('cash.advance');
+    Route::get('/reports/cash-book/advance', [ReportController::class, 'cashBookAdvancePage'])->name('cash.advance');
+    Route::post('/reports/cash-book/advance', [ReportController::class, 'cashBookAdvance'])->name('cash.advance.search');
 
     Route::get('/{encounter}/encounter', [EncounterController::class, 'index'])->name('encounter');
     Route::post('/encounter', [EncounterController::class, 'createEncounter'])->name('encounter.create');
