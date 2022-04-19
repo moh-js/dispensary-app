@@ -17,6 +17,7 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\DashboardController;
 use  Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
@@ -24,7 +25,7 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-Route::view('dashboard', 'dashboard')
+Route::get('dashboard', [DashboardController::class, 'index'])
 	->name('dashboard')
 	->middleware(['auth:sanctum', 'verified']);
 

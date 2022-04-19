@@ -71,7 +71,11 @@
                             <tr>
                                 @if (!$childKey)
                                     <td class="text-center" rowspan="{{ $order->items->count() }}" scope="row">{{ ++$key }}</td>
-                                    <td class="text-center" rowspan="{{ $order->items->count() }}">{{ $item->order->created_at->format('d M y - H:i') }}</td>
+                                    <td class="text-center" rowspan="{{ $order->items->count() }}">
+                                        <a title="View Receipt" href="{{ route('bill.completed', $order->receipt_id) }}">
+                                            {{ $item->order->created_at->format('d M y - H:i') }}
+                                        </a>
+                                    </td>
                                 @endif
                                 <td title="{{ $item->service->name??'' }}">{{ str_limit($item->service->name??'', 15) }}</td>
                                 <td>

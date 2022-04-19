@@ -121,7 +121,14 @@ class ReportController extends Controller
         ->where('status', 'completed')
         ->when($name, function ($query) use ($name)
         {
-            $query->whereHas('items', function (Builder $query) use ($name)
+            $query/* ->whereHas('items', function (Builder $query) use ($name)
+            {
+                $query->whereHas('service', function (Builder $query) use ($name)
+                {
+                    $query->where('name', 'like', "%$name%");
+                });
+            }) */
+            ->with('items', function ($query) use ($name)
             {
                 $query->whereHas('service', function (Builder $query) use ($name)
                 {
@@ -141,6 +148,13 @@ class ReportController extends Controller
         })
         ->orderBy('updated_at', 'desc')
         ->get();
+
+        $orders = $orders->filter(function ($value, $key)
+        {
+            return $value->items??false;
+        });
+
+        // return $orders;
 
         return view('reports.cash', [
             'name' => $name,

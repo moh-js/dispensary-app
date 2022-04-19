@@ -2,4 +2,205 @@
 
 @section('content')
 
+
+<div class="row">
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center m-l-0">
+                    <div class="col-auto">
+                        <i class="icon fa fa-user-injured f-30 text-c-purple"></i>
+                    </div>
+                    <div class="col-auto">
+                        <h6 class="text-muted m-b-10">Total Patients</h6>
+                        <h2 class="m-b-0">{{ App\Models\Patient::query()->count() }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center m-l-0">
+                    <div class="col-auto">
+                        <i class="icon fa fa-stethoscope f-30 text-c-green"></i>
+                    </div>
+                    <div class="col-auto">
+                        <h6 class="text-muted m-b-10">Total Doctors</h6>
+                        <h2 class="m-b-0">{{ App\Models\User::role('doctor')->count() }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center m-l-0">
+                    <div class="col-auto">
+                        <i class="icon fa fa-user-friends f-30 text-c-red"></i>
+                    </div>
+                    <div class="col-auto">
+                        <h6 class="text-muted m-b-10">Total Lab Investigators</h6>
+                        <h2 class="m-b-0">{{ App\Models\User::role('examiner')->count() }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center m-l-0">
+                    <div class="col-auto">
+                        <i class="icon fa fa-user-tie f-30 text-c-blue"></i>
+                    </div>
+                    <div class="col-auto">
+                        <h6 class="text-muted m-b-10">Other Staffs</h6>
+                        <h2 class="m-b-0">{{ App\Models\User::query()->count() - ((App\Models\User::role('examiner')->count()) + (App\Models\User::role('doctor')->count())) }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-8 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="graph col-lg-8">
+                        <h5 class="d-inline">Average Patient Visit</h5>
+                        <select class="float-right" name="visit-duration" id="visit-duration">
+                            <option value="day">Day</option>
+                            <option value="week">Week</option>
+                            <option value="month">Month</option>
+                        </select>
+
+
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="">
+                                    <span class="single-patient-icon">
+                                        <i class="fa fa-male text-primary"></i>
+                                    </span>
+                                    <p class="mt-4">Male</p>
+                                    <h6 class="">40</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="">
+                                    <span class="multiple-patient-icon">
+                                        <i class="fa fa-female text-warning"></i>
+                                    </span>
+                                    <p class="mt-4">Female</p>
+                                    <h6 class="">34</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="d-inline"></h5>
+                <div class="col-md-7">
+                    <input id="calendar" type="hidden" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-md-12">
+        <div class="card latest-activity-card">
+            <div class="card-header">
+                <h5>Latest Activity</h5>
+            </div>
+            <div class="card-body">
+                <div class="latest-update-box">
+                    <div class="row p-t-20 p-b-30">
+                        <div class="col-auto text-end update-meta">
+                            <p class="text-muted m-b-0 d-inline-flex">just now</p>
+                            <i class="feather icon-sunrise bg-c-blue update-icon"></i>
+                        </div>
+                        <div class="col">
+                            <a href="#!">
+                                <h6>John Deo</h6>
+                            </a>
+                            <p class="text-muted m-b-15">The trip was an amazing and a life changing experience!!</p>
+                        </div>
+                    </div>
+                    <div class="row p-b-30">
+                        <div class="col-auto text-end update-meta">
+                            <p class="text-muted m-b-0 d-inline-flex">5 min ago</p>
+                            <i class="feather icon-file-text bg-c-blue update-icon"></i>
+                        </div>
+                        <div class="col">
+                            <a href="#!">
+                                <h6>Administrator</h6>
+                            </a>
+                            <p class="text-muted m-b-0">Free courses for all our customers at A1 Conference Room - 9:00 am tomorrow!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <a href="#!" class=" b-b-primary text-primary">View all Activity</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
+
+
+@push('css')
+    <link href="{{ asset('css/mobiscroll.jquery.min.css') }}" rel="stylesheet" />
+
+    <style>
+        .single-patient-icon {
+            background-color: rgb(83,109,254, .2);
+        }
+        .single-patient-icon,.multiple-patient-icon {
+            padding: 15px 18px 8px 18px;
+            border-radius: 20%;
+        }
+        .multiple-patient-icon {
+            background-color: rgb(254,186,87, .2);
+
+        }
+        .single-patient-icon i,.multiple-patient-icon i {
+            font-size: 25px;
+        }
+        .graph select {
+            background-color: rgb(83,109,254, .2);
+            border-radius: 5px;
+            border: none;
+            padding: 3px 5px;
+        }
+    </style>
+@endpush
+
+@push('js')
+    <script src="{{ asset('js/mobiscroll.jquery.min.js') }}"></script>
+
+    <script>
+        $('#calendar').mobiscroll().datepicker({
+            controls: ['calendar'],
+            display: 'inline',
+            themeVariant: 'light'
+        });
+    </script>
+@endpush
