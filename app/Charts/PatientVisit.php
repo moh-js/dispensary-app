@@ -55,8 +55,8 @@ class PatientVisit extends BaseChart
             {
                 $query->where('gender', $gender);
             })
-            ->select(DB::raw('count(id) as `data`', 'created_at as created_at'),DB::raw("DATE_FORMAT(created_at, '%M') month"))
-            ->orderBy('created_at', 'asc')
+            ->select(DB::raw('count(id) as `data`'),DB::raw("DATE_FORMAT(created_at, '%M') month"))
+            ->orderBy('data', 'asc')
             ->groupby('month')
             ->get();
 
