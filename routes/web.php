@@ -62,9 +62,6 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::get('inventory/{item}/management', [ItemController::class, 'managementPage'])->name('items.management.with-item');
     Route::post('inventory/management', [ItemController::class, 'issue'])->name('items.issue');
 
-    // POS
-    Route::get('/pos', [POSController::class, 'index'])->name('pos.index');
-
     // User Profile
     Route::get('profile', [UserController::class, 'myProfile'])->name('my.profile');
 

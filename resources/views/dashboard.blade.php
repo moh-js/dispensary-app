@@ -13,7 +13,7 @@
                         <i class="icon fa fa-user-injured f-30 text-c-purple"></i>
                     </div>
                     <div class="col-auto">
-                        <h6 class="text-muted m-b-10">Total Patients</h6>
+                        <h6 class="text-muted m-b-10">Patients</h6>
                         <h2 class="m-b-0">{{ App\Models\Patient::query()->count() }}</h2>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                         <i class="icon fa fa-stethoscope f-30 text-c-green"></i>
                     </div>
                     <div class="col-auto">
-                        <h6 class="text-muted m-b-10">Total Doctors</h6>
+                        <h6 class="text-muted m-b-10">Doctors</h6>
                         <h2 class="m-b-0">{{ App\Models\User::role('doctor')->count() }}</h2>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                         <i class="icon fa fa-user-friends f-30 text-c-red"></i>
                     </div>
                     <div class="col-auto">
-                        <h6 class="text-muted m-b-10">Total Lab Investigators</h6>
+                        <h6 class="text-muted m-b-10">Lab Investigators</h6>
                         <h2 class="m-b-0">{{ App\Models\User::role('examiner')->count() }}</h2>
                     </div>
                 </div>
@@ -75,36 +75,38 @@
                 <div class="row">
                     <div class="graph col-lg-8">
                         <h5 class="d-inline">Average Patient Visit</h5>
-                        <select class="float-right" name="visit-duration" id="visit-duration">
+                        <select class="float-right" onchange="loadPatientVisitChart()" name="visit-duration" id="visit-duration">
                             <option value="day">Day</option>
                             <option value="week">Week</option>
                             <option value="month">Month</option>
                         </select>
 
-
+                        <div id="patient-visit" style="height: 300px;"></div>
                     </div>
+
                     <div class="col-lg-2 col-sm-6">
                         <div class="card">
                             <div class="card-body">
                                 <div class="">
-                                    <span class="single-patient-icon">
+                                    <span class="male-patient-icon">
                                         <i class="fa fa-male text-primary"></i>
                                     </span>
                                     <p class="mt-4">Male</p>
-                                    <h6 class="">40</h6>
+                                    <h6 id="male-patient-number">40</h6>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-2 col-sm-6">
                         <div class="card">
                             <div class="card-body">
                                 <div class="">
-                                    <span class="multiple-patient-icon">
+                                    <span class="female-patient-icon">
                                         <i class="fa fa-female text-warning"></i>
                                     </span>
                                     <p class="mt-4">Female</p>
-                                    <h6 class="">34</h6>
+                                    <h6 id="female-patient-number">34</h6>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +131,7 @@
                 <h5>Latest Activity</h5>
             </div>
             <div class="card-body">
-                <div class="latest-update-box">
+                {{-- <div class="latest-update-box">
                     <div class="row p-t-20 p-b-30">
                         <div class="col-auto text-end update-meta">
                             <p class="text-muted m-b-0 d-inline-flex">just now</p>
@@ -154,10 +156,10 @@
                             <p class="text-muted m-b-0">Free courses for all our customers at A1 Conference Room - 9:00 am tomorrow!</p>
                         </div>
                     </div>
-                </div>
-                <div class="text-end">
+                </div> --}}
+                {{-- <div class="text-end">
                     <a href="#!" class=" b-b-primary text-primary">View all Activity</a>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
@@ -170,18 +172,18 @@
     <link href="{{ asset('css/mobiscroll.jquery.min.css') }}" rel="stylesheet" />
 
     <style>
-        .single-patient-icon {
+        .male-patient-icon {
             background-color: rgb(83,109,254, .2);
         }
-        .single-patient-icon,.multiple-patient-icon {
+        .male-patient-icon,.female-patient-icon {
             padding: 15px 18px 8px 18px;
             border-radius: 20%;
         }
-        .multiple-patient-icon {
+        .female-patient-icon {
             background-color: rgb(254,186,87, .2);
 
         }
-        .single-patient-icon i,.multiple-patient-icon i {
+        .male-patient-icon i,.female-patient-icon i {
             font-size: 25px;
         }
         .graph select {
@@ -195,12 +197,69 @@
 
 @push('js')
     <script src="{{ asset('js/mobiscroll.jquery.min.js') }}"></script>
+    <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+    <!-- Chartisan -->
+    <script src="https://unpkg.com/@chartisan/echarts/dist/chartisan_echarts.js"></script>
 
     <script>
+        var duration = $('#visit-duration').val();
+
+        // initialize the chart and get the data
+        const chart = new Chartisan({
+          el: '#patient-visit',
+          url: "@chart('patient_visit')" + "?duration=" + duration,
+          hooks: new ChartisanHooks()
+                .legend()
+                .colors(['#4680FF', '#FFBA57'])
+                .tooltip()
+                .datasets([{ type: 'line', fill: false }, 'bar']),
+        });
+
+        function loadPatientVisitChart() {
+            var duration = $('#visit-duration').val();
+            getPatientVisitNumber(); // get the number of patient
+
+            // update the chart
+            chart.update({
+                url: "@chart('patient_visit')" + "?duration=" + duration,
+            })
+        }
+
+        function getPatientVisitNumber() {
+            var duration = $('#visit-duration').val();
+
+            // spinner loader to be shown when fetching the values
+            var spinnerMale = '<div class="spinner-border text-primary spinner-border-sm" role="status"> <span class="sr-only">Loading...</span> </div>';
+            var spinnerFemale = '<div class="spinner-border text-warning spinner-border-sm" role="status"> <span class="sr-only">Loading...</span> </div>';
+
+            // showing the spinner loader
+            $('#male-patient-number').html(spinnerMale);
+            $('#female-patient-number').html(spinnerFemale);
+
+            // get the number of patients
+            $.ajax({
+                type: "get",
+                url: "@chart('patient_visit')" + "?duration=" + duration,
+                success: function (response) {
+                    const reducer = (accumulator, curr) => accumulator + curr;
+                    var maleNumber = (response.datasets[0].values.reduce(reducer));
+                    var femaleNumber = (response.datasets[1].values.reduce(reducer));
+
+                    // set the values to the front-end
+                    $('#male-patient-number').html(maleNumber);
+                    $('#female-patient-number').html(femaleNumber);
+                }
+            });
+        }
+
         $('#calendar').mobiscroll().datepicker({
             controls: ['calendar'],
             display: 'inline',
             themeVariant: 'light'
         });
+
+        if (document.readyState === 'complete') {
+            getPatientVisitNumber()
+        }
     </script>
 @endpush

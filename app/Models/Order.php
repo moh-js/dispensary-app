@@ -48,4 +48,9 @@ class Order extends Model implements ContractsAuditable
             $query->where('item_id', $item_id);
         })->first();
     }
+
+    public function scopeComplete($query)
+    {
+        $query->where('status', 'completed');
+    }
 }
