@@ -57,7 +57,7 @@ class PatientVisit extends BaseChart
             })
             ->select(DB::raw('count(id) as `data`'),DB::raw("DATE_FORMAT(created_at, '%M') month"))
             ->groupby('month')
-            ->orderBy('created_at', 'asc')
+            ->orderBy('month', 'asc')
             ->get();
 
             $labels = $ordersData->pluck('month')
@@ -77,6 +77,7 @@ class PatientVisit extends BaseChart
             })
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(id) as data'))
             ->groupBy('date')
+            ->orderBy('date', 'asc')
             ->get();
 
             $labels = $ordersData
@@ -97,6 +98,7 @@ class PatientVisit extends BaseChart
             })
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(id) as data'))
             ->groupBy('date')
+            ->orderBy('date', 'asc')
             ->get();
 
             $labels = $ordersData
