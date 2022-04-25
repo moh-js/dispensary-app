@@ -250,13 +250,13 @@
                 success: function (response) {
                     const reducer = (accumulator, curr) => accumulator + curr;
 
-                    if (response.datasets[0].values.filter(Number)) {
+                    if (response.datasets[0].values.filter(Number).length) {
                         var maleNumber = (response.datasets[0].values.filter(Number).reduce(reducer));
                     } else {
                         var maleNumber = 0;
                     }
 
-                    if ((response.datasets[1].values.filter(Number)) {
+                    if (response.datasets[1].values.filter(Number).length) {
                         var femaleNumber = (response.datasets[1].values.filter(Number).reduce(reducer));
                     } else {
                         var femaleNumber = 0;
