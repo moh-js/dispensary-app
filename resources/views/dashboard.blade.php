@@ -249,8 +249,18 @@
                 url: "@chart('patient_visit')" + "?duration=" + duration,
                 success: function (response) {
                     const reducer = (accumulator, curr) => accumulator + curr;
-                    var maleNumber = (response.datasets[0].values.filter(Number).reduce(reducer));
-                    var femaleNumber = (response.datasets[1].values.filter(Number).reduce(reducer));
+
+                    if (response.datasets[0].values.filter(Number)) {
+                        var maleNumber = (response.datasets[0].values.filter(Number).reduce(reducer));
+                    } else {
+                        var maleNumber = 0;
+                    }
+
+                    if ((response.datasets[1].values.filter(Number)) {
+                        var femaleNumber = (response.datasets[1].values.filter(Number).reduce(reducer));
+                    } else {
+                        var femaleNumber = 0;
+                    }
 
                     // set the values to the front-end
                     $('#male-patient-number').html(maleNumber);
