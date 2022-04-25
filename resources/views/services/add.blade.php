@@ -40,7 +40,7 @@
 
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label for="service_price"><strong>Service Price</strong></label>
+                        <label for="service_price"><strong>Service Price ({{ getAppCurrency() }})</strong></label>
                         <input type="text"
                         class="form-control @error('service_price') is-invalid @enderror" name="service_price" value="{{ old('service_price') }}" id="service_price" placeholder="Per Unit">
                         @error('service_price')

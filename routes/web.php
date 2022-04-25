@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\AuditController;
 use Mpdf\Mpdf;
 use App\Models\Order;
 use Mike42\Escpos\Printer;
+use OwenIt\Auditing\Models\Audit;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use Mike42\Escpos\ImagickEscposImage;
@@ -12,13 +12,14 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\RoleController;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\ConfigurationController;
-use App\Http\Controllers\DashboardController;
 use  Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
@@ -116,6 +117,7 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::prefix('audit')->group(function ()
     {
         Route::get('inventory', [AuditController::class, 'inventoryAudits'])->name('inventory-audits');
+        Route::get('service', [AuditController::class, 'serviceAudits'])->name('service-audits');
     });
 });
 
@@ -152,4 +154,9 @@ Route::get('/test', function ()
 
 // $printer -> cut();
 // $printer -> close();
+// });
+
+// Route::get('/test', function ()
+// {
+//     return Audit::where([['auditable_type', 'like', '%Service']])->get();
 // });
