@@ -5,9 +5,9 @@
             <div class="form-group">
               <select wire:model="action" id="action" class="form-control">
                   <option value="{{ null }}" selected>Choose action...</option>
-                  <option value="created" {{ 'created' == $action? 'selected':'' }}>Created</option>
-                  <option value="updated" {{ 'updated' == $action? 'selected':'' }}>Updated</option>
-                  <option value="deleted" {{ 'deleted' == $action? 'selected':'' }}>Deleted</option>
+                  <option value="created" >Created</option>
+                  <option value="updated" >Updated</option>
+                  <option value="deleted" >Deleted</option>
 
               </select>
             </div>
