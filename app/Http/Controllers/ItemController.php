@@ -222,7 +222,7 @@ class ItemController extends Controller
                     ]);
                 }
 
-                } else {
+            } else {
                 flash('Requested Amount is greater than the available amount in the store')->error();
                 return back()->withInput();
             }

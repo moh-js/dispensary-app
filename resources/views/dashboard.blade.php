@@ -92,7 +92,7 @@
                                         <i class="fa fa-male text-primary"></i>
                                     </span>
                                     <p class="mt-4">Male</p>
-                                    <h6 id="male-patient-number">40</h6>
+                                    <h6 id="male-patient-number">0</h6>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                         <i class="fa fa-female text-warning"></i>
                                     </span>
                                     <p class="mt-4">Female</p>
-                                    <h6 id="female-patient-number">34</h6>
+                                    <h6 id="female-patient-number">0</h6>
                                 </div>
                             </div>
                         </div>
@@ -209,10 +209,17 @@
           el: '#patient-visit',
           url: "@chart('patient_visit')" + "?duration=" + duration,
           hooks: new ChartisanHooks()
-                .legend()
-                .colors(['#4680FF', '#FFBA57'])
-                .tooltip()
-                .datasets([{ type: 'line', fill: false }, 'bar']),
+            .legend()
+            .colors(['#4680FF', '#FFBA57'])
+            .tooltip()
+            .datasets([{
+                type: 'line',
+                fill: false,
+                smooth: false,
+                lineStyle: { width: 2 },
+                symbolSize: 7,
+                animationEasing: 'elasticOut'
+                }, 'bar']),
         });
 
         function loadPatientVisitChart() {
@@ -242,8 +249,8 @@
                 url: "@chart('patient_visit')" + "?duration=" + duration,
                 success: function (response) {
                     const reducer = (accumulator, curr) => accumulator + curr;
-                    var maleNumber = (response.datasets[0].values.reduce(reducer));
-                    var femaleNumber = (response.datasets[1].values.reduce(reducer));
+                    var maleNumber = (response.datasets[0].values.filter(Number).reduce(reducer));
+                    var femaleNumber = (response.datasets[1].values.filter(Number).reduce(reducer));
 
                     // set the values to the front-end
                     $('#male-patient-number').html(maleNumber);
@@ -258,8 +265,8 @@
             themeVariant: 'light'
         });
 
-        if (document.readyState === 'complete') {
+        $(function () {
             getPatientVisitNumber()
-        }
+        });
     </script>
 @endpush

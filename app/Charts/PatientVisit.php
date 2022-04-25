@@ -16,7 +16,7 @@ class PatientVisit extends BaseChart
 {
     protected $duration;
     protected const weeks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Suturday', 'Sunday'];
-    protected const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    protected const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     public function __construct()
     {
@@ -55,18 +55,31 @@ class PatientVisit extends BaseChart
             {
                 $query->where('gender', $gender);
             })
-            ->select(DB::raw('count(id) as `data`'),DB::raw("DATE_FORMAT(created_at, '%M') month"))
-            ->orderBy('data', 'asc')
-            ->groupby('month')
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(id) as data'))
+            ->orderBy('date', 'asc')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%M')"))
             ->get();
 
-            $labels = $ordersData->pluck('month')
+
+            $ordersData = $ordersData
             ->map(function ($item, $index)
             {
-                return $item;
+                return ['data' => $item['data'], 'date' => Carbon::parse($item['date'])->format('M')];
             });
 
-            return [array_slice($ordersData->pluck('data')->toArray(), -12), $labels->toArray()];
+            $data = collect();
+            foreach (self::months as $month) {
+                if ($order = $ordersData->where('date', $month)->first()) {
+                    $data->push($order['data']);
+                } else {
+                    $data->push(0);
+                }
+
+            }
+
+            $labels =  self::months;
+
+            return [($data->toArray()), $labels];
 
         } else if ($this->duration == 7) {
             $ordersData = Order::complete()
@@ -80,13 +93,24 @@ class PatientVisit extends BaseChart
             ->orderBy('date', 'asc')
             ->get();
 
-            $labels = $ordersData
+            $ordersData = $ordersData
             ->map(function ($item, $index)
             {
-                return Carbon::parse($item['date'])->format('l');
+                return ['data' => $item['data'], 'date' => Carbon::parse($item['date'])->format('l')];
             });
 
-            return [($ordersData->pluck('data')->toArray()), $labels->toArray()];
+            $data = collect();
+            foreach (self::weeks as $weekDay) {
+                if ($order = $ordersData->where('date', $weekDay)->first()) {
+                    $data->push($order['data']);
+                } else {
+                    $data->push(0);
+                }
+            }
+
+            $labels =  self::weeks;
+
+            return [($data->toArray()), $labels];
 
 
         } else if ($this->duration > 20) {
@@ -101,13 +125,31 @@ class PatientVisit extends BaseChart
             ->orderBy('date', 'asc')
             ->get();
 
-            $labels = $ordersData
+            $dataYear = Carbon::parse($ordersData->first()['date'])->year;
+            $dataMonth = Carbon::parse($ordersData->first()['date'])->month;
+                // return Carbon::parse($item['date'])->format('d M | D');
+
+            $ordersData = $ordersData
             ->map(function ($item, $index)
             {
-                return Carbon::parse($item['date'])->format('d M | D');
+                return ['data' => $item['data'], 'date' => Carbon::parse($item['date'])->format('d')];
             });
 
-            return [array_slice($ordersData->pluck('data')->toArray(), -now()->daysInMonth), $labels->toArray()];
+            $data = collect();
+            for ($i=1; $i <= $this->duration; $i++) {
+                if ($order = $ordersData->where('date', $i)->first()) {
+                    $data->push(['data' => $order['data'], 'labels' => now()->setDate($dataYear, $dataMonth, $i)->format('d M | D')]);
+                } else {
+                    if (now()->setDate($dataYear, $dataMonth, $i) > now()) {
+                        $data->push(['data' => null, 'labels' => now()->setDate($dataYear, $dataMonth, $i)->format('d M | D')]);
+                    } else {
+                        $data->push(['data' => 0, 'labels' => now()->setDate($dataYear, $dataMonth, $i)->format('d M | D')]);
+                    }
+                }
+            }
+
+            return [($data->pluck('data')->toArray()), $data->pluck('labels')->toArray()];
+            return $data->toArray();
         }
     }
 }

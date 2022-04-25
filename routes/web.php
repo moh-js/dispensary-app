@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditController;
 use Mpdf\Mpdf;
 use App\Models\Order;
 use Mike42\Escpos\Printer;
@@ -110,6 +111,12 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::post('/service/{service}/edit', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+
+    // Audits
+    Route::prefix('audit')->group(function ()
+    {
+        Route::get('inventory', [AuditController::class, 'inventoryAudits'])->name('inventory-audits');
+    });
 });
 
 Route::get('/test', function ()

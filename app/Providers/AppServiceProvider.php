@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Charts\PatientVisit;
 use ConsoleTVs\Charts\Registrar as Charts;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,5 +31,7 @@ class AppServiceProvider extends ServiceProvider
         $charts->register([
             PatientVisit::class
         ]);
+
+        Paginator::useBootstrap();
     }
 }

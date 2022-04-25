@@ -88,12 +88,19 @@
             ], [
                 'title' => 'Services', 'url' => route('services.index'), 'permission' => request()->user()->hasAnyPermission('service-view'), 'icon' => 'feather icon-shopping-cart', 'childrens' => collect(),
             ], [
+                'title' => 'Audits', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import']), 'icon' => 'feather icon-alert-octagon', 'childrens' => collect([
+                    [
+                        'title' => 'General', 'url' => route('general.index'), 'permission' => request()->user()->hasAnyPermission('configuration-general')
+                    ], [
+                        'title' => 'Inventory', 'url' => route('inventory-audits'), 'permission' => request()->user()->hasAnyPermission('inventory-audits-view')
+                    ]
+                ]),
+            ], [
                 'title' => 'Configuration', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import']), 'icon' => 'feather icon-settings', 'childrens' => collect([
                     [
                         'title' => 'General', 'url' => route('general.index'), 'permission' => request()->user()->hasAnyPermission('configuration-general')
                     ], [
-                    'title' => 'Data Import', 'url' => route('data.index'), 'permission' => request()->user()->hasAnyPermission('configuration-data-import')
-
+                        'title' => 'Data Import', 'url' => route('data.index'), 'permission' => request()->user()->hasAnyPermission('configuration-data-import')
                     ]
                 ]),
             ], [
@@ -101,9 +108,9 @@
                     [
                         'title' => 'Inventory Ledgers', 'url' => route('inventory-ledger.index'), 'permission' => request()->user()->hasAnyPermission('report-inventory-ledger-view')
                     ], [
-                    'title' => 'Dispensing', 'url' => route('dispensing.index'), 'permission' => request()->user()->hasAnyPermission('report-dispensing-view')
+                        'title' => 'Dispensing', 'url' => route('dispensing.index'), 'permission' => request()->user()->hasAnyPermission('report-dispensing-view')
                     ], [
-                    'title' => 'Cash Book', 'url' => route('cash.index'), 'permission' => request()->user()->hasAnyPermission('report-cash-view')
+                        'title' => 'Cash Book', 'url' => route('cash.index'), 'permission' => request()->user()->hasAnyPermission('report-cash-view')
                     ]
                 ]),
             ]
