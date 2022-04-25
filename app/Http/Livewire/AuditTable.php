@@ -13,13 +13,14 @@ class AuditTable extends Component
 
     protected $paginationTheme = 'bootstrap';
     public $function;
+    public $action;
 
     public function mount()
     {
 
     }
 
-    public function updatingSearch()
+    public function updatingWhen()
     {
         $this->resetPage();
     }
@@ -27,8 +28,13 @@ class AuditTable extends Component
     public function render()
     {
         $function = $this->function;
-        
-        $audits = $this->$function()->paginate(20);
+
+        $audits = $this->$function()
+        ->when($this->action, function ($query)
+        {
+            $query->where('event', $this->action);
+        })
+        ->paginate(20);
         return view('livewire.audit-table', [
             'audits' => $audits
         ]);

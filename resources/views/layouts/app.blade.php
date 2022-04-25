@@ -88,7 +88,7 @@
             ], [
                 'title' => 'Services', 'url' => route('services.index'), 'permission' => request()->user()->hasAnyPermission('service-view'), 'icon' => 'feather icon-shopping-cart', 'childrens' => collect(),
             ], [
-                'title' => 'Audits', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import']), 'icon' => 'feather icon-alert-octagon', 'childrens' => collect([
+                'title' => 'Audits', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['service-audits-view', 'inventory-audits-view']), 'icon' => 'feather icon-alert-octagon', 'childrens' => collect([
                     [
                         'title' => 'Service', 'url' => route('service-audits'), 'permission' => request()->user()->hasAnyPermission('service-audits-view')
                     ], [
