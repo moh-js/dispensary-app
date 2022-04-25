@@ -44,6 +44,7 @@ class RoleSeeder extends Seeder
             ], [
                 'permissions' => [
                     ['inventory-audits', 'action' => ['view']],
+                    ['service-audits', 'action' => ['view']],
                 ]
             ]
         ];

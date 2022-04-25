@@ -12,13 +12,13 @@ trait AuditBuilder
 {
     public function getInventoryAudits()
     {
-        $audits = Audit::where([['auditable_type', 'like', '%Item']]);
+        $audits = Audit::where([['auditable_type', 'like', '%Item']])->orderBy('id', 'desc');
         return $audits;
     }
 
     public function getServiceAudits()
     {
-        $audits = Audit::where([['auditable_type', 'App\Models\Service']]);
+        $audits = Audit::where([['auditable_type', 'App\Models\Service']])->orderBy('id', 'desc');
         return $audits;
     }
 }

@@ -90,7 +90,7 @@
             ], [
                 'title' => 'Audits', 'url' => 'javascript:void(0)', 'permission' => request()->user()->hasAnyPermission(['configuration-general', 'configuration-data-import']), 'icon' => 'feather icon-alert-octagon', 'childrens' => collect([
                     [
-                        'title' => 'General', 'url' => route('general.index'), 'permission' => request()->user()->hasAnyPermission('configuration-general')
+                        'title' => 'Service', 'url' => route('service-audits'), 'permission' => request()->user()->hasAnyPermission('service-audits-view')
                     ], [
                         'title' => 'Inventory', 'url' => route('inventory-audits'), 'permission' => request()->user()->hasAnyPermission('inventory-audits-view')
                     ]
