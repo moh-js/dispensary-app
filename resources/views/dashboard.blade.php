@@ -115,14 +115,43 @@
             </div>
         </div>
 
-        {{-- <div class="card">
+        <div class="card">
             <div class="card-body">
-                <h5 class="d-inline"></h5>
-                <div class="col-md-7">
-                    <input id="calendar" type="hidden" />
+                
+                <div class="col-md-12">
+                    <div class="month">      
+                        <ul>
+                          {{-- <li class="prev">&#10094;</li>
+                          <li class="next">&#10095;</li> --}}
+                          <li>
+                            {{ now()->format('F') }}<br>
+                            <span style="font-size:18px">{{ now()->format('Y') }}</span>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <ul class="weekdays">
+                        <li>Mo</li>
+                        <li>Tu</li>
+                        <li>We</li>
+                        <li>Th</li>
+                        <li>Fr</li>
+                        <li>Sa</li>
+                        <li>Su</li>
+                      </ul>
+                      
+                      <ul class="days">
+                        @for ($i = 1; $i < now()->daysInMonth; $i++)
+                            @if ($i === now()->day)
+                            <li><span class="active">{{ $i }}</span></li>
+                            @else
+                            <li>{{ $i }}</li>  
+                            @endif
+                        @endfor
+                      </ul>
                 </div>
             </div>
-        </div> --}}
+        </div>
     </div>
 
     <div class="col-xl-4 col-md-12">
@@ -131,32 +160,39 @@
                 <h5>Latest Activity</h5>
             </div>
             <div class="card-body">
-                {{-- <div class="latest-update-box">
-                    <div class="row p-t-20 p-b-30">
-                        <div class="col-auto text-end update-meta">
-                            <p class="text-muted m-b-0 d-inline-flex">just now</p>
-                            <i class="feather icon-sunrise bg-c-blue update-icon"></i>
-                        </div>
-                        <div class="col">
-                            <a href="#!">
-                                <h6>John Deo</h6>
-                            </a>
-                            <p class="text-muted m-b-15">The trip was an amazing and a life changing experience!!</p>
-                        </div>
-                    </div>
-                    <div class="row p-b-30">
-                        <div class="col-auto text-end update-meta">
-                            <p class="text-muted m-b-0 d-inline-flex">5 min ago</p>
-                            <i class="feather icon-file-text bg-c-blue update-icon"></i>
-                        </div>
-                        <div class="col">
-                            <a href="#!">
-                                <h6>Administrator</h6>
-                            </a>
-                            <p class="text-muted m-b-0">Free courses for all our customers at A1 Conference Room - 9:00 am tomorrow!</p>
-                        </div>
-                    </div>
-                </div> --}}
+                <div class="latest-update-box">
+                    @foreach ($activities as $activity)
+                        @if ($activity->auditable_type == 'App\Models\Patient' && $activity->event == 'created')
+                            <div class="row p-t-20">
+                                <div class="col-auto text-end update-meta d-flex align-content-center" style="min-width: 70px !important;">
+                                    <i class="feather icon-user-plus bg-c-blue update-icon"></i>
+                                </div>
+                                <div class="col">
+                                    <a href="#!">
+                                        <h6>Registration</h6>
+                                    </a>
+                                    <p class="text-muted m-b-0">New patient registered by name <i><strong>{{ title_case(App\Models\Patient::find($activity->auditable_id)->name) }}</strong></i></p>
+                                    <p class="m-b-0">{{ $activity->created_at->diffForHumans() }}</p>
+                                </div>
+                            </div>
+
+                        @elseif($activity->auditable_type == 'App\Models\Encounter' && $activity->event == 'created')
+                            <div class="row p-t-20">
+                                <div class="col-auto text-end update-meta d-flex align-content-center" style="min-width: 70px !important;">
+                                    <i class="feather icon-file-text bg-c-yellow update-icon"></i>
+                                </div>
+                                <div class="col">
+                                    <a href="#!">
+                                        <h6>Encounter</h6>
+                                    </a>
+                                    <p class="text-muted m-b-0">New patient encounter created for patient <i><strong>{{ title_case(App\Models\Patient::find($activity->new_values['patient_id']??0)->name??'') }}</strong></i></p>
+                                    <p class="m-b-0">{{ $activity->created_at->diffForHumans() }}</p>
+                                </div>
+                            </div>
+                            
+                        @endif
+                    @endforeach
+                </div>
                 {{-- <div class="text-end">
                     <a href="#!" class=" b-b-primary text-primary">View all Activity</a>
                 </div> --}}
@@ -170,6 +206,7 @@
 
 @push('css')
     <link href="{{ asset('css/mobiscroll.jquery.min.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets/css/calender.css') }}">
 
     <style>
         .male-patient-icon {

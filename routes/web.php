@@ -20,6 +20,11 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\ConfigurationController;
+use App\Models\Encounter;
+use App\Models\OrderService;
+use App\Models\Patient;
+use App\Models\Service;
+use App\Models\User;
 use  Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
@@ -123,8 +128,11 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
 
 Route::get('/test', function ()
 {
-    $time = now()->addMonth(9);
-    return $time->format('M');
+    $patientAudits = Audit::where('auditable_type', Patient::class)->latest()->limit(15)->get();
+    $encounterAudits = Audit::where('auditable_type', Encounter::class)->latest()->limit(15)->get();
+
+    $allAudits = $patientAudits->merge($encounterAudits);
+    return $allAudits->sortBy(['id', 'desc']);
 });
 //     $mpdf=new mPDF();
 

@@ -84,7 +84,7 @@
     </div>
 
     <hr>
-
+    <h2 class="text-center">CASHBOOK REPORT FROM {{ $dates }}</h2>
     <table class="table table-bordered">
         <thead class="">
             <tr>
@@ -96,7 +96,6 @@
                 <th class="text-center">Exempted</th>
                 <th>Price</th>
                 <th>Requested By</th>
-                {{-- <th>When</th> --}}
             </tr>
             </thead>
             <tbody>
@@ -106,9 +105,7 @@
                         @if (!$childKey)
                             <td class="text-center" rowspan="{{ $order->items->count() }}" scope="row">{{ ++$key }}</td>
                             <td class="text-center" rowspan="{{ $order->items->count() }}">
-                                <a title="View Receipt" href="{{ route('bill.completed', $order->receipt_id) }}">
-                                    {{ $item->order->created_at->format('d M y - H:i') }}
-                                </a>
+                                {{ $item->order->created_at->format('d M - H:i') }}
                             </td>
                         @endif
                         <td title="{{ $item->service->name??'' }}">{{ str_limit($item->service->name??'', 15) }}</td>

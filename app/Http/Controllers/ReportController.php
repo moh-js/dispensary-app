@@ -178,7 +178,7 @@ class ReportController extends Controller
         $datetimes = explode(' - ', $request->datetimes);
         $start_date = Carbon::parse($datetimes[0]);
         $end_date = Carbon::parse($datetimes[1]);
-
+        $datetimes = $start_date->format('dS M Y'). ' - ' .$end_date->format('dS M Y');
         if ($request->payment_type == 'all') {
             $item_query_clause = [
                 ['payment_type', 'nhif'],
@@ -213,11 +213,11 @@ class ReportController extends Controller
                 $query->where('payment_type', $request->payment_type);
             }
         })
-        ->orderBy('updated_at', 'desc')
+        ->orderBy('updated_at', 'asc')
         ->get();
 
         if ($request->submit == 'PDF') {
-            $pdf = PDF::loadView('pdf.cash-report', ['orders' => $orders] ,[] ,[
+            $pdf = PDF::loadView('pdf.cash-report', ['orders' => $orders, 'dates' => $datetimes] ,[] ,[
             //   'format' => [80,$pageHeigt],
               'default_font_size' => '10'
             ]);
