@@ -6,7 +6,7 @@
     <div class="card-header">
         <h5>Inventory Audit List</h5>
         <div class="float-right">
-            <a href="{{ route('users.add') }}" class="btn btn-primary">Inventory Management Audits</a>
+            {{-- <a href="{{ route('users.add') }}" class="btn btn-primary">Inventory Management Audits</a> --}}
         </div>
     </div>
     <div class="card-body table-bordered-style">

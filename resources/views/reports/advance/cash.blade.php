@@ -32,13 +32,10 @@
                         </select>
                     </div>
 
+
                     <div class="form-group">
                         <label for="datetimes">Date Range</label>
-                        {{-- <div id="reportrange" class="form-control" style="background: #fff; cursor: pointer;">
-                            <i class="fa fa-calendar"></i>&nbsp;
-                            <span></span> <i class="fa fa-caret-down"></i>
-                        </div> --}}
-                        <input type="text" name="datetimes" class="form-control">
+                        <input id="datetimes" type="text" name="datetimes" class="form-control">
                         @error('datetimes')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -71,12 +68,13 @@
 
     <script>
         $(function() {
-          $('input[name="datetimes"]').daterangepicker({
-            timePicker: true,
+          $('#datetimes').daterangepicker({
+            // timePicker: true,
+            drops: 'up',
             startDate: moment().startOf('hour'),
             endDate: moment().startOf('hour').add(32, 'hour'),
             locale: {
-              format: 'DD/MM/Y HH:mm'
+            //   format: 'DD/MM/Y' //HH:mm
             }
           });
         });

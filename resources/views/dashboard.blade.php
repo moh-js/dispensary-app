@@ -115,14 +115,14 @@
             </div>
         </div>
 
-        <div class="card">
+        {{-- <div class="card">
             <div class="card-body">
                 <h5 class="d-inline"></h5>
                 <div class="col-md-7">
                     <input id="calendar" type="hidden" />
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <div class="col-xl-4 col-md-12">
@@ -215,7 +215,7 @@
             .datasets([{
                 type: 'line',
                 fill: false,
-                smooth: false,
+                smooth: true,
                 lineStyle: { width: 2 },
                 symbolSize: 7,
                 animationEasing: 'elasticOut'
@@ -269,11 +269,11 @@
             });
         }
 
-        $('#calendar').mobiscroll().datepicker({
-            controls: ['calendar'],
-            display: 'inline',
-            themeVariant: 'light'
-        });
+        // $('#calendar').mobiscroll().datepicker({
+        //     controls: ['calendar'],
+        //     display: 'inline',
+        //     themeVariant: 'light'
+        // });
 
         $(function () {
             getPatientVisitNumber()

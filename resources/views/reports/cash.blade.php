@@ -42,7 +42,7 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Search</button>
-                        <a href="#{{-- {{ route('cash.advance') }} --}}" class="btn btn-success float-right">Advance</a>
+                        <a href="{{ route('cash.advance') }}" class="btn btn-success float-right">Advance</a>
                     </div>
                 </div>
             </div>

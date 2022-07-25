@@ -16,13 +16,15 @@
             margin-bottom: 1rem;
         }
 
-        td, th {
-            padding-top: 2px !important;
-            padding-bottom: 2px !important;
+        .table tbody tr td, .table thead tr th {
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 5px !important;
+            padding-bottom: 5px !important;
             margin: 0px !important;
         }
 
-        tr {
+        tr, tr {
             padding-top: 10px !important;
             padding-bottom: 10px !important;
         }
@@ -48,6 +50,11 @@
           margin-right: 10px !important;
         }
 
+        .table-bordered, .table-bordered thead tr th, .table-bordered tbody tr td {
+            border: 1px solid;
+            border-collapse: collapse;
+        }
+
         @page {
             /* margin: 0px; */
             /* font-size: 10px !important; */
@@ -56,10 +63,119 @@
 
 </head>
 <body>
-    <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, iusto. Velit dolorem itaque veniam maiores aliquam ipsam nam atque. Ducimus incidunt tempore culpa ipsa ratione totam ullam officia consequuntur at?
-    </p>
-
     
+    <div class="text-left">
+        <table class="">
+            <tbody>
+                <tr>
+                    <td rowspan="3" width="30%">
+                        <img src="{{ public_path('image/must_logo.png') }}" width="100" alt="logo">
+                    </td>
+                    <td><h3>Mbeya University of Science and Technology</h3></td>
+                </tr>
+                <tr>
+                    <td>{{ getAppName() }}</td>
+                </tr>
+                <tr>
+                    <td>{{ getAppAddress() }} | {{ getAppPhone() }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <hr>
+
+    <table class="table table-bordered">
+        <thead class="">
+            <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Date</th>
+                <th class="">Service</th>
+                <th class="text-center">Cash</th>
+                <th class="text-center">NHIF</th>
+                <th class="text-center">Exempted</th>
+                <th>Price</th>
+                <th>Requested By</th>
+                {{-- <th>When</th> --}}
+            </tr>
+            </thead>
+            <tbody>
+                @foreach ($orders as $key => $order)
+                @foreach ($order->items as $childKey => $item)
+                    <tr>
+                        @if (!$childKey)
+                            <td class="text-center" rowspan="{{ $order->items->count() }}" scope="row">{{ ++$key }}</td>
+                            <td class="text-center" rowspan="{{ $order->items->count() }}">
+                                <a title="View Receipt" href="{{ route('bill.completed', $order->receipt_id) }}">
+                                    {{ $item->order->created_at->format('d M y - H:i') }}
+                                </a>
+                            </td>
+                        @endif
+                        <td title="{{ $item->service->name??'' }}">{{ str_limit($item->service->name??'', 15) }}</td>
+                        <td class="text-center">
+                            @if ($item->payment_type == 'cash')
+                                yes
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if ($item->payment_type == 'nhif')
+                                yes
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if ($item->payment_type == 'exempted')
+                                yes
+                            @endif
+                        </td>
+                        <td class="text-right">{{ number_format($item->total_price) }} {{ getAppCurrency() }}</td>
+                        <td>{{ $item->order->cashier->name??'' }}</td>
+                    </tr>
+                @endforeach
+                @endforeach
+                @if ($orders->count())
+                    <tr style="font-weight: 900;">
+                        <td colspan="3" class="text-right">Total</td>
+                        <td class="text-right">
+                            @php
+                                $totalCashPrice = 0;
+                            @endphp
+                            @foreach ($orders as $order)
+                                @php
+                                    $totalCashPrice += $order->items->where('payment_type', 'cash')->sum('total_price')
+                                @endphp
+                            @endforeach
+                            {{ number_format($totalCashPrice) }} {{ getAppCurrency() }}
+                        </td>
+                        <td class="text-right">
+                            @php
+                                $totalCashPrice = 0;
+                            @endphp
+                            @foreach ($orders as $order)
+                                @php
+                                    $totalCashPrice += $order->items->where('payment_type', 'nhif')->sum('total_price')
+                                @endphp
+                            @endforeach
+                            {{ number_format($totalCashPrice) }} {{ getAppCurrency() }}
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            @php
+                                $totalCashPrice = 0;
+                            @endphp
+                            @foreach ($orders as $order)
+                                @php
+                                    $totalCashPrice += $order->items->sum('total_price')
+                                @endphp
+                            @endforeach
+                            {{ number_format($totalCashPrice) }} {{ getAppCurrency() }}
+                        </td>
+                    </tr>
+                @else
+                    <tr>
+                        <td colspan="8" class="text-center">No data found according to your search</td>
+                    </tr>
+                @endif
+            </tbody>
+    </table>
 </body>
 </html>

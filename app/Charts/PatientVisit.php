@@ -16,7 +16,7 @@ class PatientVisit extends BaseChart
 {
     protected $duration;
     protected const weeks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Suturday', 'Sunday'];
-    protected const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    protected const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     public function __construct()
     {
@@ -59,7 +59,6 @@ class PatientVisit extends BaseChart
             ->orderBy('date', 'asc')
             ->groupBy(DB::raw("DATE_FORMAT(created_at, '%M')"))
             ->get();
-
 
             $ordersData = $ordersData
             ->map(function ($item, $index)

@@ -123,8 +123,8 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
 
 Route::get('/test', function ()
 {
-    $arr = preg_split('/(?<=[0-9])(?=[a-z]+)/i','pc/121');
-    return $arr;
+    $time = now()->addMonth(9);
+    return $time->format('M');
 });
 //     $mpdf=new mPDF();
 

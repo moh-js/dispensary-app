@@ -154,8 +154,6 @@ class ReportController extends Controller
             return $value->items??false;
         });
 
-        // return $orders;
-
         return view('reports.cash', [
             'name' => $name,
             'when' => $when,
@@ -170,6 +168,11 @@ class ReportController extends Controller
 
     public function cashBookAdvance(Request $request)
     {
+        $request->validate([
+            "service_name" => ['required', 'string'],
+            "payment_type" => ['required', 'string'],
+            "datetimes" => ['string', 'required'],
+        ]);
 
         $name = $request->service_name;
         $datetimes = explode(' - ', $request->datetimes);
@@ -213,10 +216,8 @@ class ReportController extends Controller
         ->orderBy('updated_at', 'desc')
         ->get();
 
-        return $orders;
-
         if ($request->submit == 'PDF') {
-            $pdf = PDF::loadView('pdf.cash-report', [] ,[] ,[
+            $pdf = PDF::loadView('pdf.cash-report', ['orders' => $orders] ,[] ,[
             //   'format' => [80,$pageHeigt],
               'default_font_size' => '10'
             ]);
