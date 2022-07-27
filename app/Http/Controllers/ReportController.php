@@ -225,6 +225,15 @@ class ReportController extends Controller
             $pdfString = $pdf->stream();
 
             return $pdfString;
+        } elseif ($request->submit == 'View') {
+            return view('reports.cash', [
+                'orders' => $orders,
+                'name' => null,
+                'when' => null,
+            ]);
+        } else {
+            flash()->error('Invalid input');
+            return redirect()->back();
         }
 
 

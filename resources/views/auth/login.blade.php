@@ -13,9 +13,9 @@
                                 @csrf
                                 <div class="form-group mb-3">
                                     <label class="floating-label" for="username">{{ __('Username') }}</label>
-                                    <input type="text" name="username" class="form-control" value="{{ old('username') }}" required autofocus>
+                                    <input type="text" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username') }}" required autofocus>
                                     @error('username')
-                                        <div class="invalid-feedback">
+                                        <div class="invalid-feedback text-left">
                                             {{ $message }}
                                         </div>
                                     @enderror
