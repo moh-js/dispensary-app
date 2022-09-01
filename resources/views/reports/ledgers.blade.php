@@ -42,7 +42,7 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Search</button>
-                        <a href="#" class="btn btn-success float-right">Export</a>
+                        <a href="{{ route('inventory-ledger.advance') }}" class="btn btn-success float-right">Advanced</a>
                     </div>
                 </div>
             </div>

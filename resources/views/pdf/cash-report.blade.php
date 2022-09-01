@@ -8,7 +8,7 @@
 
     <style>
         * {
-            font-size: 13px !important;
+            font-size: 1px !important;
         }
 
         .table {
@@ -99,8 +99,19 @@
             </tr>
             </thead>
             <tbody>
+                {{-- chunk counter --}}
+                @php
+                    $chunkLimiter = 0;
+                @endphp
+
                 @foreach ($orders as $key => $order)
                 @foreach ($order->items as $childKey => $item)
+
+                    {{-- increment chunk on every loop --}}
+                    @php
+                        ++$chunkLimiter;
+                    @endphp
+
                     <tr>
                         @if (!$childKey)
                             <td class="text-center" rowspan="{{ $order->items->count() }}" scope="row">{{ ++$key }}</td>
@@ -111,21 +122,29 @@
                         <td title="{{ $item->service->name??'' }}">{{ str_limit($item->service->name??'', 15) }}</td>
                         <td class="text-center">
                             @if ($item->payment_type == 'cash')
-                                yes
+                                Cash
                             @endif
                         </td>
                         <td class="text-center">
                             @if ($item->payment_type == 'nhif')
-                                yes
+                                NHIF
                             @endif
                         </td>
                         <td class="text-center">
                             @if ($item->payment_type == 'exempted')
-                                yes
+                                Exempted
                             @endif
                         </td>
                         <td class="text-right">{{ number_format($item->total_price) }} {{ getAppCurrency() }}</td>
                         <td>{{ $item->order->cashier->name??'' }}</td>
+
+                        {{-- check chunk limiter --}}
+                        @if ($chunkLimiter === 500)
+                        @php
+                            $chunkLimiter = 0;
+                        @endphp
+                        <html-separator/>
+                        @endif
                     </tr>
                 @endforeach
                 @endforeach

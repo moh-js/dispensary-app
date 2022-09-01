@@ -31,9 +31,9 @@
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <!-- vendor css -->
 
-    <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/print.min.css') }}">
 
-    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+    <link href="{{ asset('assets/css/plugins/googlefonts.css') }}" rel="stylesheet">
 
     <style>
         body {
@@ -379,7 +379,7 @@
     <script src="{{ asset('assets/js/plugins/prism.js') }}"></script>
 
     <script src="{{ asset('assets/js/analytics.js') }}"></script>
-    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    <script src="{{ asset('assets/js/plugins/print.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/select2.full.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/form-select-custom.js') }}"></script>
 
@@ -424,7 +424,7 @@
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
+    <script src="{{ asset('assets/js/alphine.min.js') }}" defer></script>
 
     @endauth
 
@@ -434,10 +434,10 @@
         <!-- [ auth-signin ] end -->
 
         <!-- Required Js -->
-        <script src="assets/js/vendor-all.min.js"></script>
-        <script src="assets/js/plugins/bootstrap.min.js"></script>
-        <script src="assets/js/ripple.js"></script>
-        <script src="assets/js/pcoded.min.js"></script>
+        <script src="{{ asset('assets/js/vendor-all.min.js') }}"></script>
+        <script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('assets/js/ripple.js') }}"></script>
+        <script src="{{ asset('assets/js/pcoded.min.js') }}"></script>
     @endguest
 
     <script type="text/javascript">

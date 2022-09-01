@@ -80,17 +80,20 @@
                                 <td title="{{ $item->service->name??'' }}">{{ str_limit($item->service->name??'', 15) }}</td>
                                 <td>
                                     @if ($item->payment_type == 'cash')
-                                        @include('extras.tick-icon')
+                                        Cash
+                                        {{-- @include('extras.tick-icon') --}}
                                     @endif
                                 </td>
                                 <td>
                                     @if ($item->payment_type == 'nhif')
-                                        @include('extras.tick-icon')
+                                        NHIF
+                                        {{-- @include('extras.tick-icon') --}}
                                     @endif
                                 </td>
                                 <td>
                                     @if ($item->payment_type == 'exempted')
-                                        @include('extras.tick-icon')
+                                        Exempted
+                                        {{-- @include('extras.tick-icon') --}}
                                     @endif
                                 </td>
                                 <td class="text-right">{{ number_format($item->total_price) }} {{ getAppCurrency() }}</td>

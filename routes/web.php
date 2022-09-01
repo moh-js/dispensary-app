@@ -96,6 +96,8 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     // Report
     Route::get('/reports/inventory-ledgers', [ReportController::class, 'inventoryLedgersPage'])->name('inventory-ledger.index');
     Route::post('/reports/inventory-ledgers', [ReportController::class, 'inventoryLedgersSearch'])->name('inventory-ledger.search');
+    Route::get('/reports/inventory-ledgers/advance', [ReportController::class, 'inventoryLedgerAdavancePage'])->name('inventory-ledger.advance');
+    Route::post('/reports/inventory-ledgers/advance', [ReportController::class, 'inventoryLedgerAdavance'])->name('inventory-ledger.advance.search');
 
     Route::get('/reports/dispensing', [ReportController::class, 'dispensingPage'])->name('dispensing.index');
     Route::post('/reports/dispensing', [ReportController::class, 'dispensingSearch'])->name('dispensing.search');
@@ -128,11 +130,11 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
 
 Route::get('/test', function ()
 {
-    $patientAudits = Audit::where('auditable_type', Patient::class)->latest()->limit(15)->get();
-    $encounterAudits = Audit::where('auditable_type', Encounter::class)->latest()->limit(15)->get();
+    // $patientAudits = Audit::where('auditable_type', Patient::class)->latest()->limit(15)->get();
+    // $encounterAudits = Audit::where('auditable_type', Encounter::class)->latest()->limit(15)->get();
 
-    $allAudits = $patientAudits->merge($encounterAudits);
-    return $allAudits->sortBy(['id', 'desc']);
+    // $allAudits = $patientAudits->merge($encounterAudits);
+    // return $allAudits->sortBy(['id', 'desc']);
 });
 //     $mpdf=new mPDF();
 

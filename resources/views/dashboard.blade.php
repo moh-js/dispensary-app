@@ -234,9 +234,9 @@
 
 @push('js')
     <script src="{{ asset('js/mobiscroll.jquery.min.js') }}"></script>
-    <script src="https://unpkg.com/echarts/dist/echarts.min.js"></script>
+    <script src="{{ asset('assets/js/plugins/echarts.min.js') }}"></script>
     <!-- Chartisan -->
-    <script src="https://unpkg.com/@chartisan/echarts/dist/chartisan_echarts.js"></script>
+    <script src="{{ asset('assets/js/plugins/chartisan_echarts.js') }}"></script>
 
     <script>
         var duration = $('#visit-duration').val();

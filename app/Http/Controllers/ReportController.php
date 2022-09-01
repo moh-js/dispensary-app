@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Item;
+use App\Models\Unit;
 use App\Models\Order;
 use App\Models\Ledger;
-use Carbon\Carbon;
+use Mpdf\MpdfException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
-use  Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
-
+use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
 class ReportController extends Controller
 {
@@ -169,62 +170,49 @@ class ReportController extends Controller
     public function cashBookAdvance(Request $request)
     {
         $request->validate([
-            "service_name" => ['required', 'string'],
+            "category" => ['nullable', 'integer'],
             "payment_type" => ['required', 'string'],
             "datetimes" => ['string', 'required'],
         ]);
 
-        $name = $request->service_name;
+        $category_id = $request->category;
         $datetimes = explode(' - ', $request->datetimes);
         $start_date = Carbon::parse($datetimes[0]);
         $end_date = Carbon::parse($datetimes[1]);
         $datetimes = $start_date->format('dS M Y'). ' - ' .$end_date->format('dS M Y');
-        if ($request->payment_type == 'all') {
-            $item_query_clause = [
-                ['payment_type', 'nhif'],
-                ['payment_type', 'exempted'],
-                ['payment_type', 'cash'],
-            ];
-        } else {
-            $item_query_clause = [['payment_type', $request->payment_type]];
-        }
 
         $orders = Order::query()
         ->where('status', 'completed')
-        ->when($name != 'All', function ($query) use ($name)
-        {
-            $query->whereHas('items', function (Builder $query) use ($name)
-            {
-                $query->whereHas('service', function (Builder $query) use ($name)
-                {
-                    $query->where('name', 'like', "%$name%");
-                });
-            });
-        })
         ->when(($start_date && $end_date), function ($query) use ($end_date, $start_date)
         {
             $query->whereBetween('updated_at', [$start_date, $end_date]);
         })
-        ->with('items', function ($query) use ($request)
+        ->with('items', function ($query) use ($request, $category_id)
         {
-            if ($request->payment_type == 'all') {
+            if ($request->payment_type == 'all' && $category_id) {
+                $query->where('service_category_id', $category_id);
+            }elseif ($request->payment_type == 'all' && !$category_id) {
                 $query;
-            } else {
-                $query->where('payment_type', $request->payment_type);
+            } elseif($request->payment_type != 'all' && $category_id) {
+                $query->where('payment_type', $request->payment_type)->where('service_category_id', $category_id);;
             }
         })
         ->orderBy('updated_at', 'asc')
         ->get();
 
         if ($request->submit == 'PDF') {
-            $pdf = PDF::loadView('pdf.cash-report', ['orders' => $orders, 'dates' => $datetimes] ,[] ,[
-            //   'format' => [80,$pageHeigt],
-              'default_font_size' => '10'
-            ]);
+            try {
+                $data = ['orders' => $orders, 'dates' => $datetimes];
 
-            $pdfString = $pdf->stream();
+                PDF::chunkLoadView('<html-separator/>', 'pdf.cash-report', $data ,[
+                'default_font_size' => '8px'
+                ])->stream();
 
-            return $pdfString;
+            } catch (MpdfException $e) {
+                // Process the exception, log, print etc.
+                flash()->error($e->getMessage());
+                return back()->withInput();
+            }
         } elseif ($request->submit == 'View') {
             return view('reports.cash', [
                 'orders' => $orders,
@@ -237,6 +225,76 @@ class ReportController extends Controller
         }
 
 
+    }
+
+    public function inventoryLedgerAdavancePage()
+    {
+        return view('reports.advance.ledgers', [
+            'units' => Unit::all()
+        ]);
+    }
+
+    public function inventoryLedgerAdavance(Request $request)
+    {
+        $request->validate([
+            "service_name" => ['required', 'string'],
+            "unit" => ['required', 'string'],
+            "datetimes" => ['string', 'required'],
+        ]);
+
+        $name = $request->service_name;
+        $unit = $request->unit;
+        $datetimes = explode(' - ', $request->datetimes);
+        $start_date = Carbon::parse($datetimes[0]);
+        $end_date = Carbon::parse($datetimes[1]);
+        $datetimes = $start_date->format('dS M Y'). ' - ' .$end_date->format('dS M Y');
+
+        $ledgers = Ledger::query()
+        ->when($name != 'All', function ($query) use ($name)
+        {
+            $query->whereHas('item', function (Builder $query) use ($name)
+            {
+                $query->where('name', 'like', "%$name%");
+            });
+        })
+        ->when($unit != 'all', function ($query) use ($unit)
+        {
+            $query->whereHas('unit', function (Builder $query) use ($unit)
+            {
+                $query->where('slug', $unit);
+            });
+        })
+        ->when(($start_date && $end_date), function ($query) use ($end_date, $start_date)
+        {
+            $query->whereBetween('created_at', [$start_date, $end_date]);
+        })
+        ->orderBy('created_at', 'asc');
+
+        if ($request->submit == 'PDF') {
+            try {
+                $data = ['ledgers' => $ledgers->get(), 'dates' => $datetimes];
+               
+                PDF::chunkLoadView('<html-separator/>', 'pdf.inventory-ledger-report', $data ,[
+                'default_font_size' => '10'
+                ])->stream();
+
+            } catch (MpdfException $e) {
+                // Process the exception, log, print etc.
+                flash()->error($e->getMessage());
+                return back()->withInput();
+            }
+
+        } elseif ($request->submit == 'View') {
+            return view('reports.ledgers', [
+                'ledgers' => $ledgers->paginate(20),
+                'name' => $name,
+                'unit' => $unit,
+                'when' => null,
+            ]);
+        } else {
+            flash()->error('Invalid input');
+            return redirect()->back();
+        }
     }
 
     public function inventoryLedgersSearch(Request $request)

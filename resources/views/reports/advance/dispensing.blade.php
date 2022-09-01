@@ -13,14 +13,9 @@
                 <div class="col-sm-6">
 
                     <div class="form-group">
-                        <label for="category">Service Category</label>
-                        <select name="category" id="category" class="form-control">
-                            <option value="{{ null }}">Choose...</option>
-                            @foreach (\App\Models\ServiceCategory::all() as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                      @error('category')
+                      <label for="service_name">Service Name</label>
+                      <input type="text" name="service_name" id="service_name" class="form-control @error('service_name') is-invalid @enderror" placeholder="Enter service name" value="{{ old('service_name', 'All') }}">
+                      @error('service_name')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
@@ -28,13 +23,18 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="payment_type">Payment Type</label>
-                      <select name="payment_type" id="payment_type" class="form-control">
+                      <label for="unit_id">Unit</label>
+                      <select name="unit_id" id="unit_id" class="form-control">
                             <option value="all" selected>All</option>
-                            <option value="nhif">NHIF</option>
-                            <option value="cash">Cash</option>
-                            <option value="exempted">Exempted</option>
+                            @foreach ($units as $unit)
+                                <option {{ old('unit') == $unit->id? 'selected':'' }} value="{{ $unit->id }}">{{ $unit->name }}</option>
+                            @endforeach
                         </select>
+                        @error('unit_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
 
 

@@ -3,24 +3,18 @@
 @section('content')
 
 <div class="card">
-    <div class="card-header"><h5>Advanced Cash Report</h5></div>
+    <div class="card-header"><h5>Advanced Inventory Ledger Report</h5></div>
     <div class="card-body">
-        <form action="{{ route('cash.advance.search') }}" method="post">
-
+        <form action="{{ route('inventory-ledger.advance.search') }}" method="post">
             @csrf
 
             <div class="row justify-content-center">
                 <div class="col-sm-6">
 
                     <div class="form-group">
-                        <label for="category">Service Category</label>
-                        <select name="category" id="category" class="form-control">
-                            <option value="{{ null }}">Choose...</option>
-                            @foreach (\App\Models\ServiceCategory::all() as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                      @error('category')
+                      <label for="service_name">Service Name</label>
+                      <input type="text" name="service_name" id="service_name" class="form-control @error('service_name') is-invalid @enderror" placeholder="Enter service name" value="{{ old('service_name', 'All') }}">
+                      @error('service_name')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
@@ -28,13 +22,18 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="payment_type">Payment Type</label>
-                      <select name="payment_type" id="payment_type" class="form-control">
+                      <label for="unit">Unit</label>
+                      <select name="unit" id="unit" class="form-control">
                             <option value="all" selected>All</option>
-                            <option value="nhif">NHIF</option>
-                            <option value="cash">Cash</option>
-                            <option value="exempted">Exempted</option>
+                            @foreach ($units as $unit)
+                                <option {{ old('unit') == $unit->slug? 'selected':'' }} value="{{ $unit->slug }}">{{ $unit->name }}</option>
+                            @endforeach
                         </select>
+                        @error('unit')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
 
 
