@@ -198,4 +198,20 @@ class UserController extends Controller
         flash('Password updated successfully');
         return back();
     }
+
+    public function changePersonalInfo(Request $request)
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            'email' => ['required', 'email', "unique:users,email,$user->id,id"],
+            'phone' => ['required', 'digits:9', 'integer'],
+            'salutation' => ['required', 'string', 'max:20']
+        ]);
+
+        $user->update($data);
+
+        flash()->success('Personal Information Updated Successfully');
+        return redirect()->back();
+    }
 }

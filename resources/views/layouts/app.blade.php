@@ -174,6 +174,9 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
+                    <li>
+                        Logged in as <strong><span class="text-warning">{{ auth()->user()->name }}</span></strong> 
+                    </li>
                     {{-- <li>
                         <div class="dropdown">
                             <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon feather icon-bell"></i></a>

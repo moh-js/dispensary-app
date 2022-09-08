@@ -205,12 +205,14 @@ class ItemController extends Controller
 
 
         if ($type == 'receive') {
-
+            $action = 'received';
             $itemUnit->update([
                 'remain' => $request->quantity + $itemUnit->remain
             ]);
 
         } elseif($type == 'sent') {
+            $action = 'issued';
+
             if ($request->quantity <= $itemFromStore->remain) {
                 $itemFromStore->update([
                     'remain' => $itemFromStore->remain - $request->quantity
@@ -241,7 +243,7 @@ class ItemController extends Controller
             'remain_to' => $itemUnit->remain
         ]);
 
-        flash('Item issued successfully');
+        flash("Item $action successfully");
         return redirect()->route('items.index', $item->inventoryCategory->slug);
 
     }

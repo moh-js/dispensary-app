@@ -75,7 +75,7 @@
                 <div class="row">
                     <div class="graph col-lg-8">
                         <h5 class="d-inline">Average Patient Visit</h5>
-                        <select class="float-right" onchange="loadPatientVisitChart()" name="visit-duration" id="visit-duration">
+                        <select style="cursor: pointer;" class="float-right" onchange="loadPatientVisitChart()" name="visit-duration" id="visit-duration">
                             <option value="day">Day</option>
                             <option value="week">Week</option>
                             <option value="month">Month</option>

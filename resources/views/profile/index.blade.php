@@ -71,45 +71,114 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
-                <h5>Change Password</h5>
+                <h5>Change Personal Information</h5>
             </div>
             <div class="card-body">
 
                 <div class="row justify-content-center">
                     <div class="col-sm-8">
                         <div class="" style="border-radius: 5px">
-                            <form action="{{ route('change.password') }}" method="POST">
+                            <form action="{{ route('change.personal.info') }}" method="POST">
                                 @csrf
 
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                      <select class="form-control @error('salutation') is-invalid @enderror" name="salutation" id="salutation">
+
+                                        <option selected value="{{ null }}">Choose your Salutation</option>
+                                        @foreach (["Mr.","Miss.","Mrs.","Doctor","Nurse","Surgeon","Pharmacist","Accountant","Dentist","Laboratory Scientist"] as $salutation)
+                                            <option {{ old('salutation', auth()->user()->salutation) == $salutation? 'selected':'' }} value="{{ $salutation }}">{{ $salutation }}</option>
+                                        @endforeach
+                                      </select>
+                                        @error('salutation')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                      <input type="email"
+                                        class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', auth()->user()->email) }}" id="email" placeholder="E-mail Address">
+                                        @error('email')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroupPrepend">+255</span>
+                                        </div>
+                                        <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone', auth()->user()->phone) }}" id="phone" placeholder="677239833">
+                                        @error('phone')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 mt-2">
+                                    <div class="form-group d-flex justify-content-end">
+                                        <button class="btn btn-primary" type="submit">Update</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Change Password</h5>
+            </div>
+            <div class="card-body">
+    
+                <div class="row justify-content-center">
+                    <div class="col-sm-8">
+                        <div class="" style="border-radius: 5px">
+                            <form action="{{ route('change.password') }}" method="POST">
+                                @csrf
+    
                                 <div class="form-group">
                                   <label for="old_password"><strong>Old Password</strong></label>
                                   <input type="password" name="old_password" id="old_password" class="form-control @error('old_password') is-invalid @enderror" placeholder="" aria-describedby="password">
-
+    
                                   @error('old_password')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                   @enderror
                                 </div>
-
+    
                                 <div class="form-group">
                                   <label for="password"><strong>New Password</strong></label>
                                   <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="" aria-describedby="password">
-
+    
                                   @error('password')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                   @enderror
                                 </div>
-
+    
                                 <div class="form-group">
                                   <label for="password_confirmation"><strong>Confirm Password</strong></label>
                                   <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="" aria-describedby="password">
                                 </div>
-
-                                <div class="form-group">
-                                    <button class="btn btn-primary" type="submit">Change Password</button>
+    
+                                <div class="col-sm-12 mt-2">
+                                    <div class="form-group d-flex justify-content-end">
+                                        <button class="btn btn-primary" type="submit">Change Password</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -118,5 +187,6 @@
             </div>
         </div>
     </div>
+    
 </div>
 @endsection

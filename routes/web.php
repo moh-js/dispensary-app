@@ -71,6 +71,7 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
 
     // User Profile
     Route::get('profile', [UserController::class, 'myProfile'])->name('my.profile');
+    Route::post('profile/change-personal-info', [UserController::class, 'changePersonalInfo'])->name('change.personal.info');
 
     // Patient
     Route::get('patient/add', [PatientController::class, 'create'])->name('patient.create');

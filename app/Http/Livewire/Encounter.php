@@ -68,7 +68,7 @@ class Encounter extends Component
     {
         if ($message['type'] == 'success') {
             flash()->success($message['text']);
-            return redirect()->route('encounter', $this->encounter->name);
+            // return redirect()->route('encounter', $this->encounter->name);
         }
         session()->flash('message', $message);
     }

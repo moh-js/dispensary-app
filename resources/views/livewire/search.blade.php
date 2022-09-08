@@ -24,11 +24,12 @@
                 </div>
             @endforeach
         </div>
-
-        @else
-        <div class="text-center">
-            <a href="{{ route('patient.create') }}" class="text-primary">Add New Patient</a>
-        </div>
+        @elseif (strlen($query) >= 3 && $patients->count() === 0)
+            <div class="text-center text-dark">No patient found!</div>
+            <hr>
         @endif
+        <div class="text-center mt-1">
+            <a href="{{ route('patient.create') }}" class="btn btn-primary btn-block">ADD NEW PATIENT</a>
+        </div>
     </div>
 </div>
