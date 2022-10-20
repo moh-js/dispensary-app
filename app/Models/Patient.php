@@ -32,7 +32,8 @@ class Patient extends Model implements ContractsAuditable
 
     public function getAgeAttribute()
     {
-        return $this->dob->diff(now())->y;
+        return ($this->dob->diff(now())->y)?
+        ($this->dob->diff(now())->y. ' years'):($this->dob->diff(now())->m.' months');
     }
 
     function getRouteKeyName()

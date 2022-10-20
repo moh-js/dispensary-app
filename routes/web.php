@@ -33,11 +33,10 @@ Route::get('/', function () {
 });
 
 Route::get('dashboard', [DashboardController::class, 'index'])
-	->name('dashboard')
-	->middleware(['auth:sanctum', 'verified']);
+    ->name('dashboard')
+    ->middleware(['auth:sanctum', 'verified']);
 
-Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
-{
+Route::prefix('dashboard')->middleware('auth:sanctum')->group(function () {
     Route::prefix('users')->group(function () // Users
     {
         Route::get('/', [UserController::class, 'index'])->name('users.index');
@@ -100,6 +99,12 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::get('/reports/inventory-ledgers/advance', [ReportController::class, 'inventoryLedgerAdavancePage'])->name('inventory-ledger.advance');
     Route::post('/reports/inventory-ledgers/advance', [ReportController::class, 'inventoryLedgerAdavance'])->name('inventory-ledger.advance.search');
 
+    Route::get('/reports/patient-visit', [ReportController::class, 'patientVisitPage'])->name('patient-visit.index');
+    Route::get('/reports/patient-visit/advance', [ReportController::class, 'patientVisitAdavancePage'])->name('patient-visit.advance');
+    Route::post('/reports/patient-visit', [ReportController::class, 'patientVisitSearch'])->name('patient-visit.search');
+    Route::post('/reports/patient-visit/advance', [ReportController::class, 'patientVisitAdavance'])->name('patient-visit.advance.search');
+    
+
     Route::get('/reports/dispensing', [ReportController::class, 'dispensingPage'])->name('dispensing.index');
     Route::post('/reports/dispensing', [ReportController::class, 'dispensingSearch'])->name('dispensing.search');
 
@@ -122,15 +127,14 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function ()
     Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
 
     // Audits
-    Route::prefix('audit')->group(function ()
-    {
+    Route::prefix('audit')->group(function () {
         Route::get('inventory', [AuditController::class, 'inventoryAudits'])->name('inventory-audits');
         Route::get('service', [AuditController::class, 'serviceAudits'])->name('service-audits');
+        Route::get('general', [AuditController::class, 'generalAudits'])->name('general-audits');
     });
 });
 
-Route::get('/test', function ()
-{
+Route::get('/test', function () {
     // $patientAudits = Audit::where('auditable_type', Patient::class)->latest()->limit(15)->get();
     // $encounterAudits = Audit::where('auditable_type', Encounter::class)->latest()->limit(15)->get();
 

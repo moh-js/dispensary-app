@@ -8,6 +8,7 @@ use App\Models\Unit;
 use App\Models\Order;
 use App\Models\Ledger;
 use Mpdf\MpdfException;
+use App\Models\Encounter;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
@@ -204,7 +205,7 @@ class ReportController extends Controller
             try {
                 $data = ['orders' => $orders, 'dates' => $datetimes];
 
-                PDF::chunkLoadView('<html-separator/>', 'pdf.cash-report', $data ,[
+                PDF::chunkLoadView('<html-separator/>', 'pdf.cash-report', [], $data ,[
                 'default_font_size' => '8px'
                 ])->stream();
 
@@ -274,7 +275,7 @@ class ReportController extends Controller
             try {
                 $data = ['ledgers' => $ledgers->get(), 'dates' => $datetimes];
                
-                PDF::chunkLoadView('<html-separator/>', 'pdf.inventory-ledger-report', $data ,[
+                PDF::chunkLoadView('<html-separator/>', 'pdf.inventory-ledger-report', $data, [] ,[
                 'default_font_size' => '10'
                 ])->stream();
 
@@ -326,5 +327,121 @@ class ReportController extends Controller
         return redirect()->route('dispensing.index', [
             'when' => $request->when,
         ]);
+    }
+
+    public function patientVisitPage(Request $request)
+    {
+        $this->authorize('report-patient-visit-view');
+
+        $when = $request['when']??'today';
+        $name = $request['name'];
+
+        $encounters = Encounter::query()
+        ->when($name, function ($query) use ($name)
+        {
+            $query->whereHas('patient', function (Builder $query) use ($name)
+            {
+                $query
+                ->where('first_name', 'like', "%$name%")
+                ->orWhere('middle_name', 'like', "%$name%")
+                ->orWhere('last_name', 'like', "%$name%")
+                ->orWhere('patient_id', 'like', "%$name%");
+            });
+        })
+        ->when($when, function ($query) use ($when)
+        {
+            if ($when == 'today') {
+                $startDate = now()->today();
+            } else {
+                $startDate = now()->subDays($this->$when);
+            }
+
+            $query->whereBetween('created_at', [$startDate, now()]);
+        })
+        ->orderBy('id', 'desc')
+        ->paginate(20);
+
+        return view('reports.patient', [
+            'encounters' => $encounters,
+            'name' => $name,
+            'when' => $when,
+        ]);
+
+    }
+
+    public function patientVisitSearch(Request $request)
+    {
+        $this->authorize('report-cash-view');
+
+        return redirect()->route('patient-visit.index', [
+            'name' => $request->name,
+            'when' => $request->when,
+        ]);
+    }
+
+    public function patientVisitAdavancePage()
+    {
+        return view('reports.advance.patient', [
+            'units' => Unit::all()
+        ]);
+    }
+
+    public function patientVisitAdavance(Request $request)
+    {
+        $request->validate([
+            "name" => ['required', 'string'],
+            "datetimes" => ['string', 'required'],
+        ]);
+
+        $name = $request->service_name;
+        $datetimes = explode(' - ', $request->datetimes);
+        $start_date = Carbon::parse($datetimes[0]);
+        $end_date = Carbon::parse($datetimes[1]);
+        $datetimes = $start_date->format('dS M Y'). ' - ' .$end_date->format('dS M Y');
+
+        $encounters = Encounter::query()
+        ->when($name != 'All', function ($query) use ($name)
+        {
+            $query->whereHas('patient', function (Builder $query) use ($name)
+            {
+                $query
+                ->where('first_name', 'like', "%$name%")
+                ->orWhere('middle_name', 'like', "%$name%")
+                ->orWhere('last_name', 'like', "%$name%")
+                ->orWhere('patient_id', 'like', "%$name%");
+            });
+        })
+        ->when(($start_date && $end_date), function ($query) use ($end_date, $start_date)
+        {
+            $query->whereBetween('created_at', [$start_date, $end_date]);
+        })
+        ->orderBy('created_at', 'asc');
+
+        if ($request->submit == 'PDF') {
+            try {
+                $data = ['encounters' => $encounters->get(), 'dates' => $datetimes];
+               
+                PDF::chunkLoadView('<html-separator/>', 'pdf.patient-report', $data, [] ,[
+                'default_font_size' => '10',
+                'format' => 'a4',
+                'orientation' => 'L'
+                ])->stream();
+
+            } catch (MpdfException $e) {
+                // Process the exception, log, print etc.
+                flash()->error($e->getMessage());
+                return back()->withInput();
+            }
+
+        } elseif ($request->submit == 'View') {
+            return view('reports.patient', [
+                'encounters' => $encounters->paginate(20),
+                'name' => $name,
+                'when' => null,
+            ]);
+        } else {
+            flash()->error('Invalid input');
+            return redirect()->back();
+        }
     }
 }

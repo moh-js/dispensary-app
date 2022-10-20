@@ -21,4 +21,14 @@ trait AuditBuilder
         $audits = Audit::where([['auditable_type', 'App\Models\Service']])->orderBy('id', 'desc');
         return $audits;
     }
+
+    public function getGeneralAudits()
+    {
+        $clauses = [
+            ['auditable_type', '!=', 'App\Models\OrderService'],
+            ['auditable_type', '!=', 'App\Models\ItemUnit'],
+        ];
+        $audits = Audit::where($clauses)->orderBy('id', 'desc');
+        return $audits;
+    }
 }

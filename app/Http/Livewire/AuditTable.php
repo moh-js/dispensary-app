@@ -14,6 +14,8 @@ class AuditTable extends Component
     protected $paginationTheme = 'bootstrap';
     public $function;
     public $action;
+    public $collection = 50;
+    public $component = 'audit-table-row';
 
     public function mount()
     {
@@ -34,7 +36,7 @@ class AuditTable extends Component
         {
             $query->where('event', $this->action);
         })
-        ->paginate(20);
+        ->paginate($this->collection);
         return view('livewire.audit-table', [
             'audits' => $audits
         ]);

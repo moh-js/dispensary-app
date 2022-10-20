@@ -34,7 +34,7 @@ class RoleSeeder extends Seeder
                     ['investigation', 'action' => ['view', 'create', 'update', 'delete']],
                     ['procedure', 'action' => ['view', 'create', 'update', 'delete']],
                     ['vital', 'action' => ['view', 'add']],
-                    ['report', 'action' => ['dispensing-view', 'inventory-ledger-view']],
+                    ['report', 'action' => ['dispensing-view', 'dispensing-advanced-view', 'inventory-ledger-view', 'inventory-ledger-advanced-view', 'patient-visit-view', 'patient-visit-advanced-view']],
                 ]
             ], [
                 'name' => 'cashier', 'permissions' => [
@@ -43,8 +43,9 @@ class RoleSeeder extends Seeder
                 ]
             ], [
                 'permissions' => [
-                    ['inventory-audits', 'action' => ['view']],
-                    ['service-audits', 'action' => ['view']],
+                    ['audits-inventory', 'action' => ['view']],
+                    ['audits-service', 'action' => ['view']],
+                    ['audits-general', 'action' => ['view']],
                 ]
             ]
         ];

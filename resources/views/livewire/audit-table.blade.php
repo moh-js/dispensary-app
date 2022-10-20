@@ -12,6 +12,18 @@
               </select>
             </div>
         </div>
+        <div class="col-sm-1">
+            <div class="form-group">
+              <select wire:model="collection" id="action" class="form-control">
+                  <option value="50" >50</option>
+                  <option value="100" >100</option>
+                  <option value="300" >300</option>
+                  <option value="500" >500</option>
+                  <option value="1000" >1000</option>
+
+              </select>
+            </div>
+        </div>
     </div>
 
 
@@ -29,7 +41,7 @@
                 </thead>
                 <tbody>
                     @foreach ($audits as $key => $audit)
-                        @livewire('audit-table-row', ['audit' => $audit, 'sr' => ($key + $audits->firstItem())], key($audit->id))
+                        @livewire($component, ['audit' => $audit, 'sr' => ($key + $audits->firstItem())], key($audit->id))
                     @endforeach
                 </tbody>
         </table>
