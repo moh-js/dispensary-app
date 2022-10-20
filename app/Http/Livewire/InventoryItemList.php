@@ -12,6 +12,7 @@ class InventoryItemList extends Component
     use WithPagination;
 
     public $category;
+    public $collection = 50;
     public $search = '';
 
     protected $paginationTheme = 'bootstrap';
@@ -30,7 +31,7 @@ class InventoryItemList extends Component
                         {
                             $query->where('name', 'like', "%{$this->search}%");
                         })
-                        ->paginate(20)
+                        ->paginate($this->collection)
         ]);
     }
 }

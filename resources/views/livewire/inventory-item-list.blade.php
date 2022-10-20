@@ -13,8 +13,25 @@
             <h5 class="">{{ $category->name }} Inventory List</h5>
         </div> --}}
         <div class="card-body table-bordered-style">
-            <div class="form-group">
-                <input type="text" class="form-control" wire:model="search" placeholder="Search {{ $category->name }} Name">
+            <div class="row">
+
+                <div class="col-sm-7">
+                    <div class="form-group">
+                        <input type="text" class="form-control" wire:model="search" placeholder="Search {{ $category->name }} Name">
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group">
+                      <select wire:model="collection" id="action" class="form-control">
+                          <option value="50" >50</option>
+                          <option value="100" >100</option>
+                          <option value="300" >300</option>
+                          <option value="500" >500</option>
+                          <option value="1000" >1000</option>
+        
+                      </select>
+                    </div>
+                </div>
             </div>
 
             <div class="table-responsive">
