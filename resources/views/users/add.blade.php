@@ -67,13 +67,28 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-3">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroupPrepend">+255</span>
                         </div>
                         <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" id="phone" placeholder="677239833">
                         @error('phone')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <select aria-placeholder="Choose Station" name="station" id="station" class="form-control @error('station') is-invalid @enderror">
+                            <option selected value="{{ null }}">Choose Work Station</option>
+                            @foreach ($stations as $station)
+                                <option value="{{ $station->name }}" {{ old('station') == $station->name ? 'selected':''}}>{{ title_case($station->name) }}</option>
+                            @endforeach
+                        </select>
+                        @error('station')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>

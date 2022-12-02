@@ -46,6 +46,7 @@ class RoleSeeder extends Seeder
                     ['audits-inventory', 'action' => ['view']],
                     ['audits-service', 'action' => ['view']],
                     ['audits-general', 'action' => ['view']],
+                    ['station', 'action' => ['change']],
                 ]
             ]
         ];

@@ -34,10 +34,10 @@ Route::get('/', function () {
 
 Route::get('dashboard', [DashboardController::class, 'index'])
     ->name('dashboard')
-    ->middleware(['auth:sanctum', 'verified']);
+    ->middleware(['auth:sanctum', 'verified', 'dynamic']);
 
-Route::prefix('dashboard')->middleware('auth:sanctum')->group(function () {
-    Route::prefix('users')->group(function () // Users
+Route::prefix('dashboard')->middleware('auth:sanctum', 'dynamic')->group(function () {
+    Route::prefix('users')->withoutMiddleware('dynamic')->group(function () // Users
     {
         Route::get('/', [UserController::class, 'index'])->name('users.index');
         Route::get('/add', [UserController::class, 'create'])->name('users.add');

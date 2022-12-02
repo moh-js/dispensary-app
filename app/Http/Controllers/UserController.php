@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\Station;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -36,6 +37,7 @@ class UserController extends Controller
 
         return view('users.add', [
             'roles' => Role::all(),
+            'stations' => Station::all(),
         ]);
     }
 
@@ -94,6 +96,7 @@ class UserController extends Controller
 
         return view('users.edit', [
             'user' => $user,
+            'stations' => Station::all(),
             'roles' => Role::all()
         ]);
     }

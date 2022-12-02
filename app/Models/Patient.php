@@ -22,7 +22,7 @@ class Patient extends Model implements ContractsAuditable
 
     public function getNameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return title_case("{$this->first_name} {$this->middle_name} {$this->last_name}");
     }
 
     public function getDateAttribute()

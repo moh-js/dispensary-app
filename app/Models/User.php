@@ -19,6 +19,8 @@ class User extends Authenticatable implements ContractsAuditable
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
     use Auditable;
 
+    protected $connection = 'mysql';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -72,5 +74,10 @@ class User extends Authenticatable implements ContractsAuditable
     public function resolveRouteBinding($value, $field = null)
     {
         return User::withTrashed()->where('username', $value)->first();
+    }
+
+    public function stationModel()
+    {
+        return $this->belongsTo(Station::class, 'station', 'name');
     }
 }

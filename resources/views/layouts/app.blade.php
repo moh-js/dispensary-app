@@ -292,71 +292,14 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
+                        @can('station-change')
+                            @livewire('change-station')
+                        @endcan
+
                         <li>
                             Logged in as <i>{{ auth()->user()->salutation }}</i> <strong><span
                                     class="text-warning"><i>{{ auth()->user()->name }}</i></span></strong>
                         </li>
-                        {{-- <li>
-                        <div class="dropdown">
-                            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon feather icon-bell"></i></a>
-                            <div class="dropdown-menu dropdown-menu-right notification">
-                                <div class="noti-head">
-                                    <h6 class="d-inline-block m-b-0">Notifications</h6>
-                                    <div class="float-right">
-                                        <a href="#!" class="m-r-10">mark as read</a>
-                                        <a href="#!">clear all</a>
-                                    </div>
-                                </div>
-                                <ul class="noti-body">
-                                    <li class="n-title">
-                                        <p class="m-b-0">NEW</p>
-                                    </li>
-                                    <li class="notification">
-                                        <div class="media">
-                                            <img class="img-radius" src="assets/images/user/avatar-1.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <p><strong>John Doe</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>5 min</span></p>
-                                                <p>New ticket Added</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="n-title">
-                                        <p class="m-b-0">EARLIER</p>
-                                    </li>
-                                    <li class="notification">
-                                        <div class="media">
-                                            <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <p><strong>Joseph William</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>10 min</span></p>
-                                                <p>Prchace New Theme and make payment</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="notification">
-                                        <div class="media">
-                                            <img class="img-radius" src="assets/images/user/avatar-1.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <p><strong>Sara Soudein</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>12 min</span></p>
-                                                <p>currently login</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="notification">
-                                        <div class="media">
-                                            <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <p><strong>Joseph William</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>30 min</span></p>
-                                                <p>Prchace New Theme and make payment</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="noti-footer">
-                                    <a href="#!">show all</a>
-                                </div>
-                            </div>
-                        </div>
-                    </li> --}}
                         <li>
                             <div class="dropdown drp-user">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -446,48 +389,48 @@
         <!-- Warning Section start -->
         <!-- Older IE warning message -->
         <!--[if lt IE 11]>
-            <div class="ie-warning">
-                <h1>Warning!!</h1>
-                <p>You are using an outdated version of Internet Explorer, please upgrade
-                    <br/>to any of the following web browsers to access this website.
-                </p>
-                <div class="iew-container">
-                    <ul class="iew-download">
-                        <li>
-                            <a href="http://www.google.com/chrome/">
-                                <img src="assets/images/browser/chrome.png" alt="Chrome">
-                                <div>Chrome</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://www.mozilla.org/en-US/firefox/new/">
-                                <img src="assets/images/browser/firefox.png" alt="Firefox">
-                                <div>Firefox</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://www.opera.com">
-                                <img src="assets/images/browser/opera.png" alt="Opera">
-                                <div>Opera</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://www.apple.com/safari/">
-                                <img src="assets/images/browser/safari.png" alt="Safari">
-                                <div>Safari</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                                <img src="assets/images/browser/ie.png" alt="">
-                                <div>IE (11 & above)</div>
-                            </a>
-                        </li>
-                    </ul>
+                <div class="ie-warning">
+                    <h1>Warning!!</h1>
+                    <p>You are using an outdated version of Internet Explorer, please upgrade
+                        <br/>to any of the following web browsers to access this website.
+                    </p>
+                    <div class="iew-container">
+                        <ul class="iew-download">
+                            <li>
+                                <a href="http://www.google.com/chrome/">
+                                    <img src="assets/images/browser/chrome.png" alt="Chrome">
+                                    <div>Chrome</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.mozilla.org/en-US/firefox/new/">
+                                    <img src="assets/images/browser/firefox.png" alt="Firefox">
+                                    <div>Firefox</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://www.opera.com">
+                                    <img src="assets/images/browser/opera.png" alt="Opera">
+                                    <div>Opera</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.apple.com/safari/">
+                                    <img src="assets/images/browser/safari.png" alt="Safari">
+                                    <div>Safari</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+                                    <img src="assets/images/browser/ie.png" alt="">
+                                    <div>IE (11 & above)</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <p>Sorry for the inconvenience!</p>
                 </div>
-                <p>Sorry for the inconvenience!</p>
-            </div>
-        <![endif]-->
+            <![endif]-->
         <!-- Warning Section Ends -->
 
         <!-- Required Js -->
