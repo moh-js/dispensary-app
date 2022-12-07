@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use OwenIt\Auditing\Auditable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use OwenIt\Auditing\Auditable;
 use OwenIt\Auditing\Contracts\Auditable as ContractsAuditable;
 
 class Patient extends Model implements ContractsAuditable
@@ -54,5 +55,10 @@ class Patient extends Model implements ContractsAuditable
     public function getLastPendingOrder()
     {
         return $this->orders()->where([['patient_id', $this->id], ['status', 'pending']])->get()->last();
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where('patient_id', $value)->first();
     }
 }

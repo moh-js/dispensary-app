@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateUsersTableAddDbField extends Migration
+class UpdateForeignConstraitsOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateUsersTableAddDbField extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('station_id')->nullable()->after('email_verified_at')->constrained()->cascadeOnDelete();
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropForeign('cashier_id');
         });
     }
 
@@ -25,8 +25,8 @@ class UpdateUsersTableAddDbField extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('station_id');
+        Schema::table('orders', function (Blueprint $table) {
+            
         });
     }
 }

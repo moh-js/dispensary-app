@@ -21,7 +21,6 @@ class ItemController extends Controller
         return view('inventory.index', [
             'category' => $category
         ]);
-
     }
 
     /**
@@ -67,7 +66,7 @@ class ItemController extends Controller
         $service_category_id = request('service_category_id');
 
         $item->service()->firstOrCreate([
-            'name' => $request->service_name??$request->name,
+            'name' => $request->service_name ?? $request->name,
             'price' => $request->service_price,
             'service_category_id' => $service_category_id
         ]);
@@ -93,10 +92,10 @@ class ItemController extends Controller
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function edit(Item $item)
+    public function edit($slug)
     {
         $this->authorize('item-update');
-
+        $item = Item::where('slug', $slug)->first();
         return view('inventory.edit', [
             'item' => $item
         ]);
@@ -109,9 +108,12 @@ class ItemController extends Controller
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Item $item)
+    public function update(Request $request, $slug)
     {
         $this->authorize('item-update');
+
+        $item = Item::where('slug', $slug)->first();
+
 
         $request->validate([
             'name' => ['required', 'string', 'max:255', "unique:items,name,$item->id,id"],
@@ -132,14 +134,13 @@ class ItemController extends Controller
         $service_category_id = request('service_category_id');
 
         $item->service->update([
-            'name' => $request->service_name??$request->name,
+            'name' => $request->service_name ?? $request->name,
             'price' => $request->service_price,
             'service_category_id' => $service_category_id
         ]);
 
         flash("$item->name updated successfully");
         return redirect()->route('items.index', $item->inventoryCategory->slug);
-
     }
 
     /**
@@ -148,8 +149,10 @@ class ItemController extends Controller
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Item $item)
+    public function destroy($slug)
     {
+        $item = Item::withTrashed()->where('slug', $slug)->first();
+
         if ($item->trashed()) {
             $this->authorize('item-activate');
             $item->restore();
@@ -170,9 +173,11 @@ class ItemController extends Controller
         return redirect()->route('items.index', $item->inventoryCategory->slug);
     }
 
-    public function managementPage(Item $item)
+    public function managementPage($slug)
     {
         $this->authorize('item-management');
+
+        $item = Item::where('slug', $slug)->first();
 
         return view('inventory.management', [
             'item_id' => $item->id
@@ -209,8 +214,7 @@ class ItemController extends Controller
             $itemUnit->update([
                 'remain' => $request->quantity + $itemUnit->remain
             ]);
-
-        } elseif($type == 'sent') {
+        } elseif ($type == 'sent') {
             $action = 'issued';
 
             if ($request->quantity <= $itemFromStore->remain) {
@@ -223,28 +227,25 @@ class ItemController extends Controller
                         'remain' => $itemUnit->remain + $request->quantity
                     ]);
                 }
-
             } else {
                 flash('Requested Amount is greater than the available amount in the store')->error();
                 return back()->withInput();
             }
-
         }
 
         $item->ledgers()->firstOrCreate([
             'type' => $type,
-            'from' => $type == 'sent'? 'Store':$request->from,
+            'from' => $type == 'sent' ? 'Store' : $request->from,
             'to' => $request->to,
             'quantity' => $request->quantity,
             'issued_by' => $request->user()->id,
             'created_at' => $request->issued_date,
             'batch_receipt_no' => $request->unique_id,
-            'remain_from' => $type == 'receive'? null : $itemFromStore->remain,
+            'remain_from' => $type == 'receive' ? null : $itemFromStore->remain,
             'remain_to' => $itemUnit->remain
         ]);
 
         flash("Item $action successfully");
         return redirect()->route('items.index', $item->inventoryCategory->slug);
-
     }
 }

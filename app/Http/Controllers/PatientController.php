@@ -55,7 +55,7 @@ class PatientController extends Controller
             "middle_name" => ['nullable', 'string'],
             "last_name" => ['required', 'string'],
             "dob" => ['date', 'required'],
-            "phone" => ['string', 'required'],
+            "phone" => ['string', 'nullable'],
             "gender" => ['string', 'required'],
             "address" => ['string', 'required']
         ]);
@@ -72,9 +72,11 @@ class PatientController extends Controller
      * @param  \App\Models\Patient  $patient
      * @return \Illuminate\Http\Response
      */
-    public function show(Patient $patient)
+    public function show($patient_id)
     {
         $this->authorize('patient-view');
+
+        $patient = Patient::where('patient_id', $patient_id)->first();
 
         $users = User::role('doctor')->get();
         $services = Service::where('service_category_id', 4)->get();

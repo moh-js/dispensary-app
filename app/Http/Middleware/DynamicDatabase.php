@@ -21,7 +21,7 @@ class DynamicDatabase
     {
         $user = Auth::user();
 
-        Config::set('database.connections.dynamic.database', $user->stationModel->db_name);
+        Config::set('database.connections.dynamic.database', $user->station->db_name);
 
         DB::purge('dynamic');
         DB::reconnect('dynamic');

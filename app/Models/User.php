@@ -76,8 +76,15 @@ class User extends Authenticatable implements ContractsAuditable
         return User::withTrashed()->where('username', $value)->first();
     }
 
-    public function stationModel()
+    public function station()
     {
-        return $this->belongsTo(Station::class, 'station', 'name');
+        return $this->belongsTo(Station::class);
     }
+
+    // protected static function booted()
+    // {
+    //     static::addGlobalScope('fromStation', function (Builder $builder) {
+    //         $builder->where('station_id', request()->user()->station_id);
+    //     });
+    // }
 }

@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Validator;
 
 class EncounterController extends Controller
 {
-    public function index(Encounter $encounter)
+    public function index($name)
     {
         $this->authorize('encounter-view');
-
+        $encounter = Encounter::where('name', $name)->first();
         return view('encounter.index', [
             'encounter' => $encounter,
             'patient' => $encounter->patient_id
@@ -53,9 +53,10 @@ class EncounterController extends Controller
 
     }
 
-    public function ToggleEncounterStatus(Request $request, Encounter $encounter)
+    public function ToggleEncounterStatus(Request $request, $name)
     {
         $this->authorize('encounter-status-toggle');
+        $encounter = Encounter::where('name', $name)->first();
 
         $encounter->status = !$encounter->status;
         $encounter->update();

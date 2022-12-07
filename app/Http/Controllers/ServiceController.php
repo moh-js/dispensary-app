@@ -12,7 +12,7 @@ class ServiceController extends Controller
         $this->authorize('service-view');
 
         return view('services.index', [
-            'services' => Service::with('item')->get()
+            'services' => Service::withTrashed()->with('item')->get()
         ]);
     }
 
@@ -45,18 +45,22 @@ class ServiceController extends Controller
         return redirect()->route('services.index');
     }
 
-    public function edit(Service $service)
+    public function edit($slug)
     {
         $this->authorize('service-update');
+
+        $service = Service::where('slug', $slug)->first();
 
         return view('services.edit', [
             'service' => $service
         ]);
     }
 
-    public function update(Request $request, Service $service)
+    public function update(Request $request, $slug)
     {
         $this->authorize('service-update');
+
+        $service = Service::where('slug', $slug)->first();
 
         $request->validate([
             "service_name" => ['required', 'string', "unique:services,name,$service->id,id"],
@@ -76,8 +80,10 @@ class ServiceController extends Controller
         return redirect()->route('services.index');
     }
 
-    public function destroy(Service $service)
+    public function destroy($slug)
     {
+        $service = Service::withTrashed()->where('slug', $slug)->first();
+
         if ($service->trashed()) {
             $this->authorize('service-activate');
             $service->restore();
@@ -88,7 +94,7 @@ class ServiceController extends Controller
             $action = 'deleted';
         }
 
-        flash("User $action successfully");
-        return redirect()->route('users.index');
+        flash("Service $action successfully");
+        return redirect()->route('services.index');
     }
 }

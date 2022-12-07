@@ -8,6 +8,7 @@ class AuditTableGeneralRow extends Component
 {
     public $audit;
     public $sr;
+    public $restored = 'warning';
     public $created = 'primary';
     public $updated = 'warning';
     public $deleted = 'danger';

@@ -8,19 +8,19 @@ use Livewire\Component;
 
 class ChangeStation extends Component
 {
-    public $station;
+    public $station_id;
     public $stations = [];
 
     public function mount()
     {
-        $this->station = request()->user()->station;
+        $this->station_id = request()->user()->station_id;
         $this->stations = Station::all();
     }
 
-    public function updatedStation($value)
+    public function updatedStationId($value)
     {
         request()->user()->update([
-            'station' => $value
+            'station_id' => $value
         ]);
 
         return redirect()->route('dashboard');

@@ -69,7 +69,7 @@
                     <strong>Unit of Measure:</strong> {{ $audit->old_values['uom'] }}
                     @endisset
                     @isset($audit->old_values['price'])
-                    <strong>Price:</strong> {{ $audit->new_values['price'] }} {{ getAppCurrency() }}
+                    <strong>Price:</strong> {{ $audit->old_values['price'] }} {{ getAppCurrency() }}
                     @endisset
                     <div class="clearfix"></div>
                     @isset($audit->old_values['countable'])

@@ -12,6 +12,7 @@ class AuditTableRow extends Component
     public $sr;
     public $created = 'primary';
     public $updated = 'warning';
+    public $restored = 'warning';
     public $deleted = 'danger';
     public $inventoryCategory;
     public $serviceCategory;

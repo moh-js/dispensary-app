@@ -19,9 +19,11 @@ class BillingController extends Controller
 {
     use ReceiptGenerator;
 
-    public function patientBillPage(Patient $patient, $invoice_id = null)
+    public function patientBillPage($patient_id, $invoice_id = null)
     {
         $this->authorize('bill-view');
+
+        $patient = Patient::where('patient_id', $patient_id)->first();
 
         if ($invoice_id) {
             $order = Order::where('invoice_id', $invoice_id)->first();
@@ -35,11 +37,13 @@ class BillingController extends Controller
         ]);
     }
 
-    public function addBillService(Request $request, Patient $patient, $invoice_id = null)
+    public function addBillService(Request $request, $patient_id, $invoice_id = null)
     {
         $this->authorize('bill-add');
 
-        $service_name = strtolower((ServiceCategory::find($request->category)->name)??'');
+        $patient = Patient::where('patient_id', $patient_id)->first();
+
+        $service_name = strtolower((ServiceCategory::find($request->category)->name) ?? '');
 
         $validator = Validator::make($request->toArray(), [
             'unit' => ['required_if:category,1',],
@@ -47,10 +51,10 @@ class BillingController extends Controller
             'quantity' => ['required', 'integer'],
             'service' => ['required', 'integer'],
         ], [
-            'required_if' => ':attribute field is required when service category is '. $service_name
+            'required_if' => ':attribute field is required when service category is ' . $service_name
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             foreach ($validator->errors()->toArray() as $error) {
                 flash()->error($error[0]);
             }
@@ -60,13 +64,12 @@ class BillingController extends Controller
         // Retrieve order instance or create when not found
         if ($invoice_id) {
             $order = Order::where('invoice_id', $invoice_id)->first();
-        }
-        elseif($order = $patient->getLastPendingOrder()) {}
-        else {
+        } elseif ($order = $patient->getLastPendingOrder()) {
+        } else {
             $order = $patient->orders()->firstOrCreate([
                 'patient_id' => $patient->id,
                 'order_date' => now(),
-                'cashier_id' => auth()->id(),
+                'cashier_id' => request()->user()->id,
             ]);
 
             $order->update([
@@ -80,11 +83,11 @@ class BillingController extends Controller
         }
 
         $service = Service::find($request->service);
-        if ($service->item->countable??false) {
+        if ($service->item->countable ?? false) {
             $unitItem = $service->item->getUnitById($request->unit);
 
             if ($unitItem->remain < $request->quantity) {
-                flash()->error('The quantity requested is greater than the available amount in the inventory - '.$service->name);
+                flash()->error('The quantity requested is greater than the available amount in the inventory - ' . $service->name);
                 return back();
             }
         }
@@ -104,15 +107,16 @@ class BillingController extends Controller
         return redirect()->route('bill.patient.page', [$patient->patient_id, $order->invoice_id]);
     }
 
-    public function removeBillService(OrderService $billService)
+    public function removeBillService($billServiceId)
     {
         $this->authorize('bill-remove-single');
 
+        $billService = OrderService::find($billServiceId);
 
         if ($billService->order->status == 'pending') {
             if ($billService->service_category_id == 1) {
                 $relationship = 'prescriptions';
-            } elseif($billService->service_category_id == 2) {
+            } elseif ($billService->service_category_id == 2) {
                 $relationship = 'investigations';
             } else {
                 $relationship = null;
@@ -121,7 +125,7 @@ class BillingController extends Controller
             if ($relationship) { // remove associated service
 
                 $service = $billService->$relationship;
-                
+
                 if ($service) {
                     $service->delete();
                     flash('Bill Service deleted successfully');
@@ -134,13 +138,11 @@ class BillingController extends Controller
                 $billService->delete();
                 flash('Bill Service deleted successfully');
             }
-        }
-        else {
+        } else {
             flash()->error('Cannot delete this bill service');
         }
 
         return back();
-
     }
 
     public function completeBill($invoice_id)
@@ -152,20 +154,20 @@ class BillingController extends Controller
         // 1 = Medicine
         foreach ($order->items as $orderService) {
             if (!$orderService->payment_type) { // check if payment type is present
-                flash()->error('Add payment type to '.$orderService->service->name);
+                flash()->error('Add payment type to ' . $orderService->service->name);
                 return back();
             }
 
-            if ($orderService->service->item->countable??false) { // check if item is countable
+            if ($orderService->service->item->countable ?? false) { // check if item is countable
                 $unitItem = $orderService->service->item->getUnitById($orderService->unit_id);
 
                 if ($unitItem->remain < $orderService->quantity) {
-                    flash()->error('The quantity requested is greater than the available amount in the inventory - '.$orderService->service->name);
+                    flash()->error('The quantity requested is greater than the available amount in the inventory - ' . $orderService->service->name);
                     return back();
                 }
             } else {
-                if (($orderService->service->item->inventoryCategory->id??false) == 1) {
-                    flash()->error($orderService->service->item->name.' should be a countable item');
+                if (($orderService->service->item->inventoryCategory->id ?? false) == 1) {
+                    flash()->error($orderService->service->item->name . ' should be a countable item');
                     return back();
                 }
             }
@@ -181,12 +183,12 @@ class BillingController extends Controller
 
         foreach ($order->items as $orderService) {
             // forget session created when entering payment type manualy if is found
-            $sessionName = $orderService->order->patient->patient_id.'session'.$orderService->id;
+            $sessionName = $orderService->order->patient->patient_id . 'session' . $orderService->id;
             if (session()->has($sessionName)) {
                 session()->forget($sessionName);
             }
 
-            if ($orderService->service->item->countable??false) {
+            if ($orderService->service->item->countable ?? false) {
                 $unitItem = $orderService->service->item->getUnitById($orderService->unit_id);
 
                 if ($unitItem->remain >= $orderService->quantity) {
@@ -219,30 +221,29 @@ class BillingController extends Controller
             'receiptPath' => $receiptPath,
             'order' => $order
         ]);
-
     }
 
     public function generateReceipt($order)
     {
         // Calculate the receipt height
-        $mpdf=new mPDF();
+        $mpdf = new mPDF();
         $mpdf->WriteHTML(View::make('invoice', ['order' => $order], [])->render());
         $pageHeigt = $mpdf->y;
         unset($mpdf);
 
         // Generate PDF for Receipt
-        $pdf = PDF::loadView('invoice', ['order' => $order] ,[] ,[
-        'format' => [80,$pageHeigt+10],
-        'default_font_size' => '10'
+        $pdf = PDF::loadView('invoice', ['order' => $order], [], [
+            'format' => [80, $pageHeigt + 10],
+            'default_font_size' => '10'
         ]);
 
         // Save receipt
-        $fileName = now()->format('Y-m-d-H-i').rand(112,21213).'.pdf';
-        $pdf->save(storage_path('app/public/receipts/'.$fileName));
+        $fileName = now()->format('Y-m-d-H-i') . rand(112, 21213) . '.pdf';
+        $pdf->save(storage_path('app/public/receipts/' . $fileName));
 
         // Update receipt saved Path
         $order->update([
-            'receipt_file' => 'storage/receipts/'.$fileName,
+            'receipt_file' => 'storage/receipts/' . $fileName,
         ]);
     }
 }
