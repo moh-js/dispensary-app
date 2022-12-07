@@ -82,13 +82,13 @@
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <select aria-placeholder="Choose Station" name="station" id="station" class="form-control @error('station') is-invalid @enderror">
+                        <select aria-placeholder="Choose Station" name="station_id" id="station" class="form-control @error('station_id') is-invalid @enderror">
                             <option selected value="{{ null }}">Choose Work Station</option>
                             @foreach ($stations as $station)
-                                <option value="{{ $station->id }}" {{ old('station') == $station->id ? 'selected':''}}>{{ title_case($station->name) }}</option>
+                                <option value="{{ $station->id }}" {{ old('station_id') == $station->id ? 'selected':''}}>{{ title_case($station->name) }}</option>
                             @endforeach
                         </select>
-                        @error('station')
+                        @error('station_id')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
