@@ -85,7 +85,7 @@
                         <select aria-placeholder="Choose Station" name="station" id="station" class="form-control @error('station') is-invalid @enderror">
                             <option selected value="{{ null }}">Choose Work Station</option>
                             @foreach ($stations as $station)
-                                <option value="{{ $station->name }}" {{ old('station') == $station->name ? 'selected':''}}>{{ title_case($station->name) }}</option>
+                                <option value="{{ $station->id }}" {{ old('station') == $station->id ? 'selected':''}}>{{ title_case($station->name) }}</option>
                             @endforeach
                         </select>
                         @error('station')

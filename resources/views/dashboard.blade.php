@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-auto">
                         <h6 class="text-muted m-b-10">Doctors</h6>
-                        <h2 class="m-b-0">{{ App\Models\User::role('doctor')->count() }}</h2>
+                        <h2 class="m-b-0">{{ App\Models\User::getUsers()->role('doctor')->count() }}</h2>
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-auto">
                         <h6 class="text-muted m-b-10">Lab Investigators</h6>
-                        <h2 class="m-b-0">{{ App\Models\User::role('examiner')->count() }}</h2>
+                        <h2 class="m-b-0">{{ App\Models\User::getUsers()->role('examiner')->count() }}</h2>
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-auto">
                         <h6 class="text-muted m-b-10">Other Staffs</h6>
-                        <h2 class="m-b-0">{{ App\Models\User::query()->count() - ((App\Models\User::role('examiner')->count()) + (App\Models\User::role('doctor')->count())) }}</h2>
+                        <h2 class="m-b-0">{{ App\Models\User::getUsers()->count() - ((App\Models\User::getUsers()->role('examiner')->count()) + (App\Models\User::getUsers()->role('doctor')->count())) }}</h2>
                     </div>
                 </div>
             </div>

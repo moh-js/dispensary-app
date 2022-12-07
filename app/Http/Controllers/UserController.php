@@ -57,6 +57,7 @@ class UserController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', "unique:users,email"],
             'phone' => ['nullable', 'digits:9', 'integer'],
+            'station_id' => ['required', 'integer'],
             'role' => ['required', 'array']
         ]);
 
@@ -117,6 +118,7 @@ class UserController extends Controller
             'middle_name' => ['nullable', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', "unique:users,email,$user->id,id"],
+            'station_id' => ['required', 'integer'],
             'phone' => ['nullable', 'digits:9', 'integer'],
             'role' => ['required', 'array']
         ]);
