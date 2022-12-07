@@ -70,7 +70,7 @@
     </div>
 
     <div class="col-xl-8 col-md-12">
-        <div class="card">
+        {{-- <div class="card">
             <div class="card-body">
                 <div class="row">
                     <div class="graph col-lg-8">
@@ -113,7 +113,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="card">
             <div class="card-body">
@@ -121,8 +121,7 @@
                 <div class="col-md-12">
                     <div class="month">      
                         <ul>
-                          {{-- <li class="prev">&#10094;</li>
-                          <li class="next">&#10095;</li> --}}
+                          
                           <li>
                             {{ now()->format('F') }}<br>
                             <span style="font-size:18px">{{ now()->format('Y') }}</span>

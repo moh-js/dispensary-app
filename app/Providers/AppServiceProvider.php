@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Charts\PatientVisit;
-use ConsoleTVs\Charts\Registrar as Charts;
+// use ConsoleTVs\Charts\Registrar as Charts;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -25,12 +25,12 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(Charts $charts)
+    public function boot()
     {
         // Schema::defaultStringLength(255);
-        $charts->register([
-            PatientVisit::class
-        ]);
+        // $charts->register([
+        //     PatientVisit::class
+        // ]);
 
         Paginator::useBootstrap();
     }
