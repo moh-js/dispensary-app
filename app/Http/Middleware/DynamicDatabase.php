@@ -21,10 +21,10 @@ class DynamicDatabase
     {
         $user = Auth::user();
 
-        Config::set('database.connections.dynamic.database', $user->station->db_name);
+        // Config::set('database.connections.dynamic.database', $user->station->db_name);
 
-        DB::purge('dynamic');
-        DB::reconnect('dynamic');
+        // DB::purge('dynamic');
+        // DB::reconnect('dynamic');
 
         return $next($request);
     }
