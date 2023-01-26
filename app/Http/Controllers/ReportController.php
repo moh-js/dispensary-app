@@ -176,6 +176,8 @@ class ReportController extends Controller
             "datetimes" => ['string', 'required'],
         ]);
 
+        $status = $request->status??'complete';
+
         $category_id = $request->category;
         $datetimes = explode(' - ', $request->datetimes);
         $start_date = Carbon::parse($datetimes[0]);
@@ -183,7 +185,7 @@ class ReportController extends Controller
         $datetimes = $start_date->format('dS M Y'). ' - ' .$end_date->format('dS M Y');
 
         $orders = Order::query()
-        ->where('status', 'completed')
+        ->where('status', $status)
         ->when(($start_date && $end_date), function ($query) use ($end_date, $start_date)
         {
             $query->whereBetween('updated_at', [$start_date, $end_date]);
@@ -203,10 +205,10 @@ class ReportController extends Controller
 
         if ($request->submit == 'PDF') {
             try {
-                $data = ['orders' => $orders, 'dates' => $datetimes];
+                $data = ['orders' => $orders, 'dates' => $datetimes, 'status' => $status];
 
                 PDF::chunkLoadView('<html-separator/>', 'pdf.cash-report', [], $data ,[
-                'default_font_size' => '8px'
+                'default_font_size' => '8'
                 ])->stream();
 
             } catch (MpdfException $e) {
