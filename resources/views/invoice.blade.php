@@ -86,19 +86,19 @@
                 </tr>
                 <tr>
                     <th class="text-left">Receipt #</th>
-                    <td class="text-left"><strong>: </strong>{{ $order->receipt_id }}</td>
+                    <td class="text-left"><strong>: </strong>{{ $order->receipt_id??'' }}</td>
                 </tr>
                 <tr>
                     <th class="text-left">Cashier</th>
-                    <td class="text-left"><strong>: </strong>{{ $order->cashier->name }}</td>
+                    <td class="text-left"><strong>: </strong>{{ $order->cashier->name??'' }}</td>
                 </tr>
                 <tr>
                     <th class="text-left">Customer</th>
-                    <td class="text-left"><strong>: </strong>{{ $order->patient->name }}</td>
+                    <td class="text-left"><strong>: </strong>{{ $order->patient->name??'' }}</td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td class="text-left">&nbsp;&nbsp;0{{ $order->patient->phone }}</td>
+                    <td class="text-left">&nbsp;&nbsp;0{{ $order->patient->phone??'' }}</td>
                 </tr>
             </tbody>
         </table>
