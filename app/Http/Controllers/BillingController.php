@@ -149,7 +149,9 @@ class BillingController extends Controller
     {
         $this->authorize('bill-complete');
 
-        $order = Order::where('invoice_id', $invoice_id)->first();
+        $myOrder = Order::where('invoice_id', $invoice_id)->first();
+        
+        $order = $myOrder;
 
         // 1 = Medicine
         foreach ($order->items as $orderService) {
@@ -173,7 +175,7 @@ class BillingController extends Controller
             }
         }
 
-        $order->update([
+        $myOrder->update([
             'total_price' => $order->items()->sum('total_price'),
             'receipt_id' => $this->generate($order),
             'cashier_id' => request()->user()->id,
