@@ -173,7 +173,7 @@ class BillingController extends Controller
             }
         }
 
-        $order->save([
+        $order->update([
             'total_price' => $order->items()->sum('total_price'),
             'receipt_id' => $this->generate($order),
             'cashier_id' => auth()->id(),
