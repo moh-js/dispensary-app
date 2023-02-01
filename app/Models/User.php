@@ -19,8 +19,6 @@ class User extends Authenticatable implements ContractsAuditable
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
     use Auditable;
 
-    protected $connection = 'mysql';
-
     /**
      * The attributes that are mass assignable.
      *
