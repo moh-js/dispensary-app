@@ -88,7 +88,7 @@
                     'url' => 'javascript:void(0)',
                     'permission' => request()
                         ->user()
-                        ->hasAnyPermission('user-view', 'user-add', 'user-update', 'user-delete', 'user-activate', 'user-deactivate'),
+                        ->hasAnyPermission(['user-view', 'user-add', 'user-update', 'user-delete', 'user-activate', 'user-deactivate']),
                     'icon' => 'feather icon-users',
                     'childrens' => collect([
                         [
@@ -137,7 +137,7 @@
                     'url' => 'javascript:void(0)',
                     'permission' => request()
                         ->user()
-                        ->hasAnyPermission(['service-audits-view', 'inventory-audits-view']),
+                        ->hasAnyPermission(['audits-general-view', 'audits-service-view', 'audits-inventory-view']),
                     'icon' => 'feather icon-alert-octagon',
                     'childrens' => collect([
                         [
@@ -192,7 +192,7 @@
                     'url' => 'javascript:void(0)',
                     'permission' => request()
                         ->user()
-                        ->hasAnyPermission(['configuration-general', 'configuration-data-import', 'report-cash-view']),
+                        ->hasAnyPermission(['dispensing-view', 'dispensing-advanced-view', 'inventory-ledger-view', 'inventory-ledger-advanced-view', 'patient-visit-view', 'patient-visit-advanced-view']),
                     'icon' => 'feather icon-clipboard',
                     'childrens' => collect([
                         [
