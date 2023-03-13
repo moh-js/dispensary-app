@@ -54,7 +54,7 @@ class ItemController extends Controller
             "uom" => ['nullable', 'string'],
             "manufacture" => ['nullable', 'string'],
             "service_name" => ['nullable', 'string', "unique:services,name"],
-            "service_price" => ['required_with:service_name', 'string'],
+            "service_price" => ['required_with:service_name', 'integer'],
             "price" => ['nullable', 'integer'],
             "expire_date" => ['nullable', 'date']
         ]);

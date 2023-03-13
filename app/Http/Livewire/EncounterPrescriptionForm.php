@@ -13,6 +13,7 @@ class EncounterPrescriptionForm extends Component
     use AuthorizesRequests;
 
     public $encounter;
+    public $prescription;
     public $service_id;
     public $unit_id;
     public $services = [];

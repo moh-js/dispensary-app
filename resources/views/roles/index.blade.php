@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="card">
-    <div class="card-header"><h5>User List</h5>
+    <div class="card-header"><h5>Role List</h5>
         <div class="float-right">
                 <a href="{{ route('roles.add') }}" class="btn btn-primary">Add Role</a>
         </div>

@@ -21,6 +21,7 @@ class Encounter extends Component
     public $procedure_flag = 0;
     public $signs_flag = 0;
     public $allergies_flag = 0;
+    public $form_flag = 0;
     public $medical_flag = 0;
     public $bill_flag = 0;
     public $prescription_flag = 0;

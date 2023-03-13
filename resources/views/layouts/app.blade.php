@@ -192,7 +192,7 @@
                     'url' => 'javascript:void(0)',
                     'permission' => request()
                         ->user()
-                        ->hasAnyPermission(['dispensing-view', 'dispensing-advanced-view', 'inventory-ledger-view', 'inventory-ledger-advanced-view', 'patient-visit-view', 'patient-visit-advanced-view']),
+                        ->hasAnyPermission(['dispensing-view', 'dispensing-advanced-view', 'inventory-ledger-view', 'inventory-ledger-advanced-view', 'patient-visit-view', 'patient-visit-advanced-view', 'report-cash-view']),
                     'icon' => 'feather icon-clipboard',
                     'childrens' => collect([
                         [

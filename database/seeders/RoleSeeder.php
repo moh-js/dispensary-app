@@ -38,7 +38,7 @@ class RoleSeeder extends Seeder
                 ]
             ], [
                 'name' => 'cashier', 'permissions' => [
-                    ['report', 'action' => ['cash-view']],
+                    ['report', 'action' => ['cash-view', 'cash-advanced-view']],
                     ['bill', 'action' => ['view', 'completed', 'complete', 'add', 'remove-single', 'remove-all', ]],
                 ]
             ], [
