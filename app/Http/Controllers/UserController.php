@@ -206,7 +206,7 @@ class UserController extends Controller
 
     public function resetPassword(Request $request, User $user)
     {
-        $this->authorize('password-reset');
+        $this->authorize('user-password-reset');
 
         $user->update([
             'password' => bcrypt(123456)

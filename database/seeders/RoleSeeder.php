@@ -20,7 +20,7 @@ class RoleSeeder extends Seeder
                 'name' => 'super-admin'
             ], [
                 'name' => 'admin', 'permissions' => [
-                    ['user', 'action' => ['view', 'add', 'update', 'delete', 'activate', 'deactivate']],
+                    ['user', 'action' => ['view', 'add', 'update', 'delete', 'activate', 'deactivate, password-reset']],
                     ['role', 'action' => ['view', 'add', 'update', 'delete', 'activate', 'deactivate', 'grant-permission']],
                     ['configuration', 'action' => ['general', 'data-import']],
                 ]
