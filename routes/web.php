@@ -45,6 +45,7 @@ Route::prefix('dashboard')->middleware('auth:sanctum')->group(function () {
         Route::post('/add', [UserController::class, 'store'])->name('users.store');
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::put('/{user}/edit', [UserController::class, 'update'])->name('users.update');
+        Route::put('/{user}/reset', [UserController::class, 'resetPassword'])->name('users.password.reset');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 
