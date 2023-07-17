@@ -71,6 +71,7 @@ class EncounterPrescriptionForm extends Component
         $validatedData = collect($validatedData)->merge(['encounter_id' => $this->encounter->id])->toArray();
 
         $service = Service::find($this->service_id);
+        $this->unit_id;
         $unitItem = $service->item->getUnitById($this->unit_id);
 
         if ($unitItem->remain < $this->quantity) {

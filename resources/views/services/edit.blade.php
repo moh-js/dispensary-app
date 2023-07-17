@@ -62,7 +62,7 @@
 
                         @else
                         <select name="item_id" data-placeholder="Select used items" multiple id="item_id" class="form-control js-example-basic-hide-search @error('item_id') is-invalid @enderror">
-                            @foreach (App\Models\Item::where('inventory_category_id', 2)->get() as $item)
+                            @foreach (App\Models\Item::query(/* 'inventory_category_id', 2 */)->get() as $item)
                                 <option {{ old('item_id')?((old('item_id')) == ($item->id)? 'selected':''):(($service->item->id??false) == ($item->id)?'selected':'') }} value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach
                         </select>

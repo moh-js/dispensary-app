@@ -36,6 +36,10 @@
                 </div>
             </div>
 
+            @php
+                $unit_id
+            @endphp
+
             <div class="form-group col-sm-2">
                 <label for="quantity">Quantity</label>
                 <input type="number" wire:model="quantity" id="quantity" class="form-control @error('quantity') is-invalid @enderror">
