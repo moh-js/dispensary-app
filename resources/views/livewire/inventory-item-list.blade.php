@@ -50,7 +50,11 @@
                         @foreach ($items as $key => $item)
                             <tr wire:loading.remove wire:target="search">
                                 <td scope="row">{{ $items->firstItem() + $key }}</td>
-                                <td>{{ strtoupper($item->name) }}</td>
+                                <td>{{ strtoupper($item->name) }}
+                                    @if (!$item->service)
+                                        <span class="badge badge-danger">Service not linked</span>
+                                    @endif
+                                </td>
 
                                 <td>
                                     <a data-toggle="collapse" href="#{{ $item->slug }}"  role="button" aria-expanded="false" aria-controls="{{ $item->slug }}">
