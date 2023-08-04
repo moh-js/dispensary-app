@@ -75,6 +75,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="float-right">
+                {{ $users->links() }}
+            </div>
         </div>
     </div>
 @endsection
