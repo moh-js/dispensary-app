@@ -42,6 +42,9 @@ class RoleSeeder extends Seeder
                     ['bill', 'action' => ['view', 'completed', 'complete', 'add', 'remove-single', 'remove-all', ]],
                 ]
             ], [
+                'name' => 'examiner', 'permissions' => [
+                ]
+            ], [
                 'permissions' => [
                     ['audits-inventory', 'action' => ['view']],
                     ['audits-service', 'action' => ['view']],

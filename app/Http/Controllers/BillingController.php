@@ -13,7 +13,8 @@ use Illuminate\Http\Request;
 use App\Traits\ReceiptGenerator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
-use  Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
+use PDF;
+// use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
 class BillingController extends Controller
 {
