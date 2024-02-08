@@ -5,7 +5,7 @@
            {{ class_basename($audit->auditable_type) }} {{ $audit->event }}
         </span>
     </td>
-    <td>{{ $audit->user->name }}</td>
+    <td>{{ $audit->user->name??'' }}</td>
     <td>
         <div class="text-small">
             @empty(!$audit->new_values)
