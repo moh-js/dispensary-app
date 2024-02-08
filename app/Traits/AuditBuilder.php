@@ -3,7 +3,7 @@ namespace App\Traits;
 
 use App\Models\Item;
 use Illuminate\Support\Facades\DB;
-use OwenIt\Auditing\Models\Audit;
+use App\Models\Audit;
 
 /**
  * Audit
@@ -31,4 +31,5 @@ trait AuditBuilder
         $audits = Audit::where($clauses)->orderBy('id', 'desc');
         return $audits;
     }
+
 }
