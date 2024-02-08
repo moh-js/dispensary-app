@@ -19,7 +19,7 @@
     <meta name="keywords" content="">
     <meta name="author" content="Phoenixcoded" />
     <!-- Favicon icon -->
-    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('image/logo.jpg') }}" type="image/x-icon">
 
     @stack('css')
 
@@ -72,7 +72,7 @@
                         ->hasAnyPermission('item-view'),
                 ]);
             }
-            
+
             $navigations = collect([
                 [
                     'title' => 'Dashboard',
@@ -332,11 +332,11 @@
         <!-- [ Header ] end -->
 
         @php
-            
+
             $segment_1 = Request::segment(1);
             $segment_2 = Request::segment(2);
             $segment_3 = Request::segment(3);
-            
+
         @endphp
 
         <!-- [ Main Content ] start -->

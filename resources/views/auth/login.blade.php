@@ -7,7 +7,7 @@
                 <div class="row align-items-center text-center">
                     <div class="col-md-12">
                         <div class="card-body">
-                            <img src="{{ asset('image/must_logo.png') }}" alt="" width="200" class="img-fluid mb-4">
+                            <img src="{{ asset('image/logo.jpg') }}" alt="" width="200" class="img-fluid mb-4">
                             <h4 class="mb-3 f-w-400">{{ strtoupper(getAppName()) }}</h4>
                             <form action="{{ route('login') }}" method="post">
                                 @csrf
