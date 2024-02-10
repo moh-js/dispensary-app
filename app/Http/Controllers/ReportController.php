@@ -11,7 +11,7 @@ use Mpdf\MpdfException;
 use App\Models\Encounter;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
-use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
+use PDF;
 
 class ReportController extends Controller
 {
@@ -276,7 +276,7 @@ class ReportController extends Controller
         if ($request->submit == 'PDF') {
             try {
                 $data = ['ledgers' => $ledgers->get(), 'dates' => $datetimes];
-               
+
                 PDF::chunkLoadView('<html-separator/>', 'pdf.inventory-ledger-report', $data, [] ,[
                 'default_font_size' => '10'
                 ])->stream();
@@ -422,7 +422,7 @@ class ReportController extends Controller
         if ($request->submit == 'PDF') {
             try {
                 $data = ['encounters' => $encounters->get(), 'dates' => $datetimes];
-               
+
                 PDF::chunkLoadView('<html-separator/>', 'pdf.patient-report', $data, [] ,[
                 'default_font_size' => '10',
                 'format' => 'a4',
