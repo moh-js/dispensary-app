@@ -119,7 +119,7 @@ class EncounterLabForm extends Component
             }
         }
 
-        return 0;
+        return 1;
     }
 
 

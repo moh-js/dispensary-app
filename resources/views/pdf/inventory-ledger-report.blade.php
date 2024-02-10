@@ -63,13 +63,13 @@
 
 </head>
 <body>
-    
+
     <div class="text-left">
         <table class="">
             <tbody>
                 <tr>
                     <td rowspan="3" width="30%">
-                        <img src="{{ public_path('image/must_logo.png') }}" width="100" alt="logo">
+                        <img src="{{ public_path('image/logo.jpg') }}" width="100" alt="logo">
                     </td>
                     <td><h3>Mbeya University of Science and Technology</h3></td>
                 </tr>

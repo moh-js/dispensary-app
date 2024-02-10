@@ -61,7 +61,7 @@
             <tbody>
                 <tr>
                     <td rowspan="3">
-                        <img src="{{ public_path('image/must_logo.png') }}" width="80" alt="logo">
+                        <img src="{{ public_path('image/logo.jpg') }}" width="80" alt="logo">
                     </td>
                     <td>{{ getAppName() }}</td>
                 </tr>
